@@ -1,327 +1,281 @@
 <template>
-    <main class="enrollment-page">
-        <!-- Breadcrumbs -->
-        <nav class="enrollment-page__breadcrumbs" v-if="formation">
-            <RouterLink to="/">Inicio</RouterLink>
-            <span class="separator">/</span>
-            <RouterLink to="/formaciones">Formaciones</RouterLink>
-            <span class="separator">/</span>
-            <RouterLink :to="`/formaciones/${formation.slug}`">{{ formation.title }}</RouterLink>
-            <span class="separator">/</span>
-            <span class="current">Inscripción</span>
-        </nav>
+    <div class="page-container">
+        <div class="container enrollment-container">
+            <div class="row">
+                <div class="col-md-5 order-md-2">
+                    <div class="summary-card">
+                        <h3>Resumen del pedido</h3>
+                        <div v-if="product" class="product-summary">
+                            <img :src="product.cover_image" alt="Product" class="product-thumb">
+                            <div class="product-details">
+                                <h4>{{ product.title }}</h4>
+                                <span class="price">{{ product.price }}€</span>
+                            </div>
+                        </div>
+                        <LoadingComponent v-else />
 
-        <!-- Error State -->
-        <div v-if="error" class="enrollment-page__error">
-            <h2>⚠️ Acceso denegado</h2>
-            <p>{{ error }}</p>
-            <div class="enrollment-page__error-actions">
-                <RouterLink :to="`/formaciones/${route.params.formation_slug}`" class="action-btn">
-                    Volver a la formación
-                </RouterLink>
-                <a :href="util_store.whatsapp_link" target="_blank" class="nobg-btn">
-                    Contactar por WhatsApp
-                </a>
-            </div>
-        </div>
+                        <div class="divider"></div>
+                        <div class="total-row">
+                            <span>Total a pagar:</span>
+                            <span class="total-price" v-if="product">{{ product.price }}€</span>
+                        </div>
+                    </div>
+                </div>
 
-        <!-- Content -->
-        <div v-else-if="access_granted && formation" class="enrollment-page__content">
-            <div class="enrollment-page__info">
-                <h1>Inscripción a la formación</h1>
-                <div class="formation-summary">
-                    <img :src="formation.formation_cover.secure_url" :alt="formation.title">
-                    <div class="formation-summary__details">
-                        <h2>{{ formation.title }}</h2>
-                        <p>{{ formation.description }}</p>
-                        <div class="formation-summary__meta">
-                            <span>📅 {{ format_date(formation.start_date) }}</span>
-                            <span>⏱️ {{ formation.duration }}</span>
-                            <span>💰 {{ formation.price }}€</span>
+                <div class="col-md-7 order-md-1">
+                    <div class="payment-form-card">
+                        <h2>Finalizar inscripción</h2>
+                        <p class="mb-4">Elige tu método de pago preferido</p>
+
+                        <div class="payment-methods">
+                            <div class="payment-option" :class="{ active: payment_method === 'paypal' }"
+                                @click="payment_method = 'paypal'">
+                                <div class="option-header">
+                                    <input type="radio" :checked="payment_method === 'paypal'">
+                                    <span>Tarjeta / PayPal</span>
+                                </div>
+                                <p class="option-desc">Pago seguro e inmediato con tarjeta de crédito o débito.</p>
+                            </div>
+
+                            <div class="payment-option" :class="{ active: payment_method === 'offline' }"
+                                @click="payment_method = 'offline'">
+                                <div class="option-header">
+                                    <input type="radio" :checked="payment_method === 'offline'">
+                                    <span>Transferencia / Bizum</span>
+                                </div>
+                                <p class="option-desc">Realiza el pago manual y sube tu comprobante para que te demos
+                                    acceso.</p>
+                            </div>
+                        </div>
+
+                        <div class="action-area mt-4">
+
+                            <div v-if="payment_method === 'paypal'">
+                                <button class="btn-paypal" @click="handlePaypal" :disabled="util_store.loading">
+                                    {{ util_store.loading ? 'Conectando...' : 'Pagar con PayPal / Tarjeta' }}
+                                </button>
+                            </div>
+
+                            <div v-if="payment_method === 'offline'" class="offline-form">
+                                <div class="alert-info">
+                                    <p><strong>Datos para el pago:</strong></p>
+                                    <p>Bizum: <strong>+34 604 82 23 85</strong></p>
+                                    <p>Concepto: <strong>{{ product?.title }}</strong></p>
+                                </div>
+
+                                <div class="form-group mt-3">
+                                    <label>Sube aquí la captura de tu pago:</label>
+                                    <input type="file" @change="handleFileUpload" accept="image/*" class="form-control">
+                                    <small class="text-muted">Formatos: JPG, PNG. Máx 5MB.</small>
+                                </div>
+
+                                <button class="btn-primary mt-3 full-width" @click="handleOffline"
+                                    :disabled="!reference_image || util_store.loading">
+                                    {{ util_store.loading ? 'Enviando...' : 'Confirmar Pago' }}
+                                </button>
+                            </div>
+
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Mostrar componente según el estado de autenticación -->
-            <AccessValidationComponent v-if="!auth_store.token" :formation="formation" :access_key="access_key"
-                :payment_method="payment_method" @access-validated="handle_access_validated" />
-
-            <EnrollmentFormComponent v-else :formation="formation" :access_key="access_key"
-                :payment_method="payment_method" />
         </div>
-    </main>
+    </div>
 </template>
 
 <script setup>
-import { ref, onBeforeMount } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { useFormationStore } from '../stores/formation-store'
-import { useAuthStore } from '../stores/auth-store'
+import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { useProductStore } from '../stores/product-store'
+import { useOrderStore } from '../stores/order-store'
 import { useUtilStore } from '../stores/util-store'
-import { useEnrollmentStore } from '../stores/enrollment-store'
-import AccessValidationComponent from '../components/enrollment/AccessValidationComponent.vue'
-import EnrollmentFormComponent from '../components/enrollment/EnrollmentFormComponent.vue'
+import LoadingComponent from '../components/common/LoadingComponent.vue'
 
 const route = useRoute()
-const router = useRouter()
-const formation_store = useFormationStore()
-const auth_store = useAuthStore()
+const product_store = useProductStore()
+const order_store = useOrderStore()
 const util_store = useUtilStore()
-const enrollment_store = useEnrollmentStore()
 
-const formation = ref(null)
-const error = ref(null)
-const access_granted = ref(false)
-const access_key = ref(null)
-const payment_method = ref(null)
+const product = ref(null)
+const payment_method = ref('paypal') // 'paypal' | 'offline'
+const reference_image = ref(null) // Base64 string
 
-onBeforeMount(async () => {
-    try {
-        util_store.set_loading(true)
-
-        // 1. Cargar la formación
-        await formation_store.get_formation_by_slug(route.params.formation_slug)
-        formation.value = formation_store.formation
-
-        if (!formation.value) {
-            error.value = 'Formación no encontrada'
-            return
-        }
-
-        // 2. Detectar método de acceso
-        const query_params = route.query
-
-        // Si tiene success_payment=true (viene de PayPal)
-        if (query_params.success_payment === 'true') {
-            payment_method.value = 'paypal'
-            access_granted.value = true
-            return
-        }
-
-        // Si tiene key en la URL (bizum/efectivo)
-        if (query_params.key) {
-            access_key.value = query_params.key
-
-            // Validar la clave
-            const is_valid = await enrollment_store.validate_access_key(
-                formation.value._id,
-                access_key.value
-            )
-
-            if (is_valid) {
-                payment_method.value = 'bizum'
-                access_granted.value = true
-            } else {
-                error.value = 'Clave de acceso inválida o expirada'
-            }
-
-            return
-        }
-
-        // Si la formación es gratuita
-        if (formation.value.price === 0) {
-            payment_method.value = 'gratuito'
-            access_granted.value = true
-            return
-        }
-
-        // Si es admin
-        if (auth_store.user_data?.user?.role === 'Admin') {
-            payment_method.value = 'gratuito'
-            access_granted.value = true
-            return
-        }
-
-        // Si llegó aquí sin método de pago válido
-        error.value = 'Debes pagar la formación o tener una clave de acceso válida para inscribirte'
-
-    } catch (err) {
-        console.error(err)
-        error.value = 'Error al cargar la información de la formación'
-    } finally {
-        util_store.set_loading(false)
-    }
+// Cargar producto
+onMounted(async () => {
+    const slug = route.params.formation_slug
+    product.value = await product_store.fetch_product_by_slug(slug)
 })
 
-const format_date = (date) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' }
-    return new Date(date).toLocaleDateString('es-ES', options)
+// Procesar PayPal
+const handlePaypal = () => {
+    if (!product.value) return
+    order_store.init_paypal_checkout(product.value._id)
 }
 
-const handle_access_validated = () => {
-    router.go(0)
+// Manejar subida de archivo (File -> Base64)
+const handleFileUpload = (event) => {
+    const file = event.target.files[0]
+    if (!file) return
+
+    const reader = new FileReader()
+    reader.onload = (e) => {
+        reference_image.value = e.target.result // Base64 completo
+    }
+    reader.readAsDataURL(file)
+}
+
+// Procesar Offline
+const handleOffline = async () => {
+    if (!product.value || !reference_image.value) return
+
+    const success = await order_store.create_offline_order({
+        product_id: product.value._id,
+        payment_method: 'transfer', // O 'bizum'
+        reference_image: reference_image.value
+    })
+
+    if (success) {
+        // Redirigir a confirmación o historial
+        // router.push('/mi-espacio') -> Idealmente a una 'Thank You Page'
+        // Por ahora, vamos al historial de pedidos para ver el estado 'pending'
+        window.location.href = '/mi-espacio'
+    }
 }
 </script>
 
-<style scoped lang="scss">
-.enrollment-page {
-    width: 100%;
+<style lang="scss" scoped>
+.page-container {
+    background: #f9f9f9;
     min-height: 100vh;
-    padding: 6rem 4rem 4rem;
-    margin: 0;
-    box-sizing: border-box;
-    animation: fade-in 0.6s ease-out;
+    padding: 4rem 0;
+}
 
-    &__breadcrumbs {
-        max-width: 1000px;
-        margin: 0 auto 2rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-size: 0.9rem;
-        font-family: 'Text';
-        color: var(--color-text-dark);
+.enrollment-container {
+    max-width: 1000px;
+}
 
-        a {
-            color: var(--color-secondary);
-            transition: color 0.3s ease;
+.summary-card,
+.payment-form-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
+}
 
-            &:hover {
-                color: var(--color-primary);
-            }
-        }
-
-        .separator {
-            color: var(--color-disable);
-        }
-
-        .current {
-            color: var(--color-text-dark);
-        }
+.summary-card {
+    h3 {
+        font-family: 'Cormorant Garamond', serif;
+        margin-bottom: 1.5rem;
     }
 
-    &__loading,
-    &__error {
-        max-width: 600px;
-        margin: 4rem auto;
-        text-align: center;
-        padding: 3rem;
-        background: var(--color-white);
-        border-radius: 1rem;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-
-        h2 {
-            margin: 0 0 1rem;
-            color: var(--color-primary);
-        }
-
-        p {
-            margin: 0 0 2rem;
-            color: var(--color-text-dark);
-            font-size: 1.1rem;
-        }
-    }
-
-    &__error-actions {
+    .product-summary {
         display: flex;
         gap: 1rem;
-        justify-content: center;
-        flex-wrap: wrap;
-    }
+        align-items: center;
 
-    &__content {
-        max-width: 1000px;
-        margin: 0 auto;
-    }
-
-    &__info {
-        margin-bottom: 3rem;
-
-        h1 {
-            text-align: center;
-            margin: 0 0 2rem;
-            color: var(--color-primary);
-        }
-    }
-}
-
-.formation-summary {
-    display: flex;
-    gap: 2rem;
-    padding: 2rem;
-    background: var(--color-white);
-    border-radius: 1rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-
-    img {
-        width: 200px;
-        height: 200px;
-        object-fit: cover;
-        border-radius: 0.5rem;
-        flex-shrink: 0;
-    }
-
-    &__details {
-        flex: 1;
-
-        h2 {
-            margin: 0 0 1rem;
-            color: var(--color-black);
-            font-size: 1.5rem;
+        .product-thumb {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
         }
 
-        p {
-            margin: 0 0 1.5rem;
-            color: var(--color-text-dark);
-            line-height: 1.6;
+        .product-details {
+            h4 {
+                font-size: 1.1rem;
+                margin: 0;
+            }
+
+            .price {
+                color: var(--primary-color);
+                font-weight: bold;
+            }
         }
     }
 
-    &__meta {
+    .divider {
+        height: 1px;
+        background: #eee;
+        margin: 1.5rem 0;
+    }
+
+    .total-row {
         display: flex;
-        gap: 1.5rem;
-        flex-wrap: wrap;
-        font-size: 0.95rem;
-        color: var(--color-text-dark);
-        font-family: 'Text';
-
-        span {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
+        justify-content: space-between;
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #333;
     }
 }
 
-@keyframes fade-in {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
+.payment-methods {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.payment-option {
+    border: 2px solid #eee;
+    border-radius: 8px;
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+        border-color: #ddd;
     }
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
+    &.active {
+        border-color: var(--primary-color);
+        background: rgba(var(--primary-rgb), 0.05);
+    }
+
+    .option-header {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .option-desc {
+        margin: 0;
+        font-size: 0.9rem;
+        color: #666;
+        padding-left: 1.8rem;
     }
 }
 
-@media screen and (max-width: 768px) {
-    .enrollment-page {
-        padding: 5rem 1rem 2rem;
+.btn-paypal {
+    background: #0070ba;
+    color: white;
+    border: none;
+    width: 100%;
+    padding: 1rem;
+    font-weight: bold;
+    border-radius: 50px;
+    cursor: pointer;
 
-        &__breadcrumbs {
-            font-size: 0.8rem;
-            flex-wrap: wrap;
-        }
+    &:hover {
+        background: #005ea6;
     }
 
-    .formation-summary {
-        flex-direction: column;
-        padding: 1.5rem;
+    &:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+}
 
-        img {
-            width: 100%;
-            height: auto;
-        }
+.alert-info {
+    background: #e3f2fd;
+    padding: 1rem;
+    border-radius: 8px;
+    color: #0d47a1;
+    font-size: 0.9rem;
 
-        &__details h2 {
-            font-size: 1.25rem;
-        }
-
-        &__meta {
-            gap: 1rem;
-        }
+    p {
+        margin-bottom: 0.3rem;
     }
 }
 </style>

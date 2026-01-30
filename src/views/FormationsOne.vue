@@ -1,210 +1,232 @@
 <template>
-    <main class="formation-landing-page">
-        <!-- Error: Formation not found -->
-        <div v-if="error_loading" class="error-state">
-            <h2>⚠️ Formación no encontrada</h2>
-            <p>Lo sentimos, no pudimos cargar esta formación.</p>
-            <RouterLink to="/formaciones" class="action-btn">
-                Volver a formaciones
-            </RouterLink>
-        </div>
-
-        <!-- Error: No landing available for this formation -->
-        <div v-else-if="error_no_landing && formation" class="error-state">
-            <h2>🚧 Página en construcción</h2>
-            <p>Esta formación aún no tiene una página configurada.</p>
-            <div class="error-actions">
-                <RouterLink to="/formaciones" class="action-btn">
-                    Volver a formaciones
-                </RouterLink>
-                <a :href="util_store.whatsapp_link" target="_blank" class="nobg-btn">
-                    Contactar por WhatsApp
-                </a>
+    <div class="page-container" v-if="product">
+        <div class="product-hero"
+            :style="{ backgroundImage: `url(${product.cover_image || '/img/background-individual.webp'})` }">
+            <div class="hero-overlay">
+                <div class="container hero-content">
+                    <span class="badge">{{ product.category || 'Formación' }}</span>
+                    <h1>{{ product.title }}</h1>
+                    <p class="subtitle" v-if="product.subtitle">{{ product.subtitle }}</p>
+                </div>
             </div>
         </div>
 
-        <!-- Dynamic Landing Component -->
-        <component v-else-if="landing_component && formation" :is="landing_component" :formation="formation" />
-    </main>
+        <div class="container product-body">
+            <div class="row">
+                <div class="col-md-8 content-column">
+                    <div class="description-section">
+                        <h3>Sobre esta formación</h3>
+                        <div class="html-content" v-html="product.description"></div>
+                    </div>
+
+                    <div class="modules-preview" v-if="product.modules && product.modules.length">
+                        <h3>Contenido del curso</h3>
+                        <div class="modules-list">
+                            <div v-for="(module, index) in product.modules" :key="index" class="module-item">
+                                <div class="module-header">
+                                    <span class="module-number">{{ index + 1 }}</span>
+                                    <span class="module-title">{{ module.title }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 sidebar-column">
+                    <div class="action-card sticky-top">
+                        <div class="price-tag">
+                            <span v-if="product.price > 0">{{ product.price }}€</span>
+                            <span v-else>Gratuito</span>
+                        </div>
+
+                        <div class="action-buttons">
+                            <router-link v-if="has_access"
+                                :to="{ name: 'FormationsDashboard', params: { formation_slug: product.slug } }"
+                                class="btn-primary full-width">
+                                Acceder al Taller
+                            </router-link>
+
+                            <router-link v-else :to="{ name: 'Enrollment', params: { formation_slug: product.slug } }"
+                                class="btn-primary full-width">
+                                {{ product.price > 0 ? 'Inscribirme ahora' : 'Acceder gratis' }}
+                            </router-link>
+                        </div>
+
+                        <div class="features-list">
+                            <ul>
+                                <li><img src="/icon/icon-clock.svg" alt="Clock"> Duración flexible</li>
+                                <li><img src="/icon/icon-post.svg" alt="Access"> Acceso de por vida</li>
+                                <li v-if="product.certificate"><img src="/icon/icon-formacion.svg" alt="Cert">
+                                    Certificado incluido</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <LoadingComponent v-else />
 </template>
 
 <script setup>
-import { ref, onBeforeMount, shallowRef } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { useFormationStore } from '../stores/formation-store'
-import { useUtilStore } from '../stores/util-store'
+import { computed, onMounted, ref } from 'vue'
+import { useRoute } from 'vue-router'
+import { useProductStore } from '../stores/product-store'
 import { useAuthStore } from '../stores/auth-store'
+import LoadingComponent from '../components/common/LoadingComponent.vue'
 
 const route = useRoute()
-const router = useRouter()
-const formation_store = useFormationStore()
-const util_store = useUtilStore()
+const product_store = useProductStore()
 const auth_store = useAuthStore()
 
-const formation = ref(null)
-const error_loading = ref(false)
-const error_no_landing = ref(false)
+const product = ref(null)
 
-// shallowRef para evitar que Vue haga reactivo el componente completo
-const landing_component = shallowRef(null)
+// Verificar si el usuario ya tiene acceso (comprado)
+const has_access = computed(() => {
+    if (!auth_store.user_data) return false
 
-// Mapa de slugs a nombres de archivo de componentes
-const landing_map = {
-    'despierta-a-tu-mente': 'DespiertaTuMenteLanding',
-    'construye-relaciones-saludables': 'ApegoLanding',
-    // Agregar más landings aquí conforme se crean (1 línea por landing)
-}
+    // Admin siempre tiene acceso
+    if (auth_store.user_data.role === 'admin') return true
 
-const load_landing_component = async (slug) => {
-    const componentName = landing_map[slug]
+    // Verificar en el progreso (lista de cursos activos del usuario)
+    // Nota: El backend en 'get_login_user_data' devuelve 'progress' populado
+    const user_courses = auth_store.user_data.progress || []
 
-    if (!componentName) {
-        error_no_landing.value = true
-        return
-    }
+    // Buscamos si el ID del producto actual está en los cursos del usuario
+    // (Aseguramos comparación de strings por si acaso)
+    return user_courses.some(p => {
+        const p_id = typeof p.product_id === 'object' ? p.product_id._id : p.product_id
+        return p_id === product.value?._id
+    })
+})
 
-    try {
-        const module = await import(`../components/landings/${componentName}.vue`)
-        landing_component.value = module.default
-    } catch (error) {
-        console.error(`Error cargando landing component para ${slug}:`, error)
-        error_no_landing.value = true
-    }
-}
-
-onBeforeMount(async () => {
-    try {
-        util_store.set_loading(true)
-
-        // 1. Cargar datos de la formación desde BD
-        await formation_store.get_formation_by_slug(route.params.formation_slug)
-        formation.value = formation_store.formation
-
-        if (!formation.value) {
-            error_loading.value = true
-            return
-        }
-
-        // 2. Validar si el usuario está inscrito
-        const is_enrolled = auth_store.user_data?.progress?.some(progress => progress.formation_id === formation.value._id)
-
-        if (is_enrolled) {
-            router.push(`/formaciones/${route.params.formation_slug}/dashboard`)
-            return
-        }
-        // 3. Cargar el componente de landing dinámicamente
-        await load_landing_component(formation.value.slug)
-
-    } catch (error) {
-        console.error('Error cargando formación:', error)
-        error_loading.value = true
-    } finally {
-        util_store.set_loading(false)
-    }
+onMounted(async () => {
+    // Obtenemos producto por SLUG
+    const slug = route.params.formation_slug
+    product.value = await product_store.fetch_product_by_slug(slug)
 })
 </script>
 
-<style scoped lang="scss">
-.formation-landing-page {
-    width: 100%;
-    min-height: 100vh;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    background: var(--color-white);
+<style lang="scss" scoped>
+.page-container {
+    padding-bottom: 4rem;
 }
 
-.loading-state {
-    width: 100%;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 1.5rem;
+.product-hero {
+    height: 400px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+
+    .hero-overlay {
+        background: rgba(0, 0, 0, 0.4);
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: white;
+    }
+
+    h1 {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 3.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .badge {
+        background: var(--primary-color);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 1px;
+        margin-bottom: 1rem;
+        display: inline-block;
+    }
+}
+
+.product-body {
+    margin-top: -3rem; // Efecto de solapamiento
+    position: relative;
+    z-index: 10;
+}
+
+.content-column {
+    background: white;
+    padding: 3rem;
+    border-radius: 8px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+}
+
+.sidebar-column {
+    padding-left: 2rem;
+
+    @media(max-width: 768px) {
+        padding-left: 0.75rem; // Corrección bootstrap padding
+        margin-top: 2rem;
+    }
+}
+
+.action-card {
+    background: white;
     padding: 2rem;
-
-    .spinner {
-        width: 50px;
-        height: 50px;
-        border: 4px solid var(--color-disable);
-        border-top-color: var(--color-primary);
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-    }
-
-    p {
-        font-size: 1.1rem;
-        color: var(--color-text-dark);
-        font-family: 'Text';
-    }
-}
-
-.error-state {
-    width: 100%;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 2rem;
-    padding: 4rem 2rem;
+    border-radius: 8px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
     text-align: center;
 
-    h2 {
+    .price-tag {
         font-size: 2.5rem;
-        color: var(--color-primary);
-        margin: 0;
+        font-weight: bold;
+        color: var(--primary-color);
+        font-family: 'Cormorant Garamond', serif;
+        margin-bottom: 1.5rem;
     }
 
-    p {
-        font-size: 1.2rem;
-        color: var(--color-text-dark);
-        max-width: 500px;
-        margin: 0;
-    }
+    .btn-primary {
+        display: block;
+        padding: 1rem;
+        font-size: 1.1rem;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: all 0.3s;
 
-    .error-actions {
-        display: flex;
-        gap: 1rem;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-
-    .action-btn,
-    .nobg-btn {
-        max-width: fit-content;
-    }
-}
-
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-@media screen and (max-width: 768px) {
-    .error-state {
-        padding: 3rem 1rem;
-
-        h2 {
-            font-size: 2rem;
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
+    }
 
-        p {
-            font-size: 1rem;
-        }
+    .features-list {
+        margin-top: 2rem;
+        text-align: left;
+        border-top: 1px solid #eee;
+        padding-top: 1rem;
 
-        .error-actions {
-            flex-direction: column;
-            width: 100%;
+        ul {
+            list-style: none;
+            padding: 0;
 
-            .action-btn,
-            .nobg-btn {
-                width: 100%;
-                max-width: 100%;
+            li {
+                margin-bottom: 0.8rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                color: #666;
+
+                img {
+                    width: 20px;
+                    opacity: 0.7;
+                }
             }
         }
     }
+}
+
+.sticky-top {
+    position: sticky;
+    top: 2rem;
 }
 </style>

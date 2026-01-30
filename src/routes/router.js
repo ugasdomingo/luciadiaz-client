@@ -25,6 +25,7 @@ const routes = [
         name: 'BlogOne',
         component: () => import('../views/BlogOne.vue')
     },
+    // NOTA: Aunque el backend es "Products", mantenemos la URL semántica para el usuario
     {
         path: '/formaciones',
         name: 'Formations',
@@ -110,42 +111,57 @@ const routes = [
 
 const router = createRouter({
     history: createWebHistory(),
-    routes
+    routes,
+    // Resetear scroll al cambiar de página
+    scrollBehavior(to, from, savedPosition) {
+        if (savedPosition) return savedPosition
+        return { top: 0 }
+    }
 })
 
+// Navigation Guard
 router.beforeEach(async (to, from, next) => {
     const auth_store = useAuthStore()
     const requires_auth = to.matched.some(record => record.meta.requires_auth)
-    const login = localStorage.getItem('login')
+    const has_refresh_token = localStorage.getItem('refresh_token') // Antes era 'login'
 
-    if (!requires_auth) {
-        return next()
-    }
-
+    // Si ya tenemos token en memoria, pasamos
     if (auth_store.token) {
         return next()
     }
 
-    if (login) {
+    // Si hay refresh token en localstorage, intentamos restaurar sesión
+    if (has_refresh_token) {
         try {
-            await auth_store.refresh()
-            if (auth_store.token) {
+            const success = await auth_store.refresh()
+            if (success) {
                 return next()
             }
         } catch (error) {
-            console.error('Error al refrescar token:', error)
+            console.error('Error auto-login:', error)
+            // Si falla el refresh, limpiaremos todo en auth_store.logout()
         }
     }
 
-    return next('/acceso', { query: { redirect: to.fullPath } })
+    // Si la ruta requiere auth y no logramos autenticar
+    if (requires_auth) {
+        return next({
+            path: '/acceso',
+            query: { redirect: to.fullPath }
+        })
+    }
+
+    next()
 })
 
 router.afterEach((to, from) => {
-    if (to.name === 'Verify Login' || to.name === 'Verify Email') {
-        return
+    // No guardamos estas páginas en el historial de redirección
+    const excluded_pages = ['Verify Login', 'Verify Email', 'Acceso', 'Go To Email']
+
+    if (!excluded_pages.includes(to.name)) {
+        const util_store = useUtilStore()
+        util_store.set_last_page(to.fullPath)
     }
-    const util_store = useUtilStore()
-    util_store.set_last_page(from.fullPath)
 })
 
 export default router

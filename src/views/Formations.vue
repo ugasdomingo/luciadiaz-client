@@ -1,100 +1,57 @@
 <template>
-    <main class="formations-page">
-        <div class="formations-page__header">
-            <h1>Formaciones Vivenciales</h1>
-            <p class="formations-page__subtitle">Te guío en tu aprendizaje y desarrollo personal</p>
-        </div>
+    <div class="page-container">
+        <HeroComponent title="Formaciones" subtitle="Espacios de aprendizaje y transformación personal"
+            image="/img/background-individual.webp" />
 
-        <div class="formations-page__grid">
-            <FormationCardComponent v-for="(formation, index) in formation_store.formations" :key="formation._id"
-                :formation="formation" :style="{ '--delay': index * 0.1 + 's' }" />
+        <div class="container main-content">
+            <LoadingComponent v-if="util_store.loading" />
+
+            <div v-else class="formations-grid">
+                <div v-if="product_store.products.length === 0" class="no-results">
+                    <p>No hay formaciones disponibles en este momento.</p>
+                </div>
+
+                <FormationCardComponent v-else v-for="product in product_store.products" :key="product._id"
+                    :formation="product" />
+            </div>
         </div>
-    </main>
+    </div>
 </template>
 
 <script setup>
+import { onMounted } from 'vue'
+import { useProductStore } from '../stores/product-store'
+import { useUtilStore } from '../stores/util-store'
+import HeroComponent from '../components/home/HeroComponent.vue'
+import LoadingComponent from '../components/common/LoadingComponent.vue'
 import FormationCardComponent from '../components/common/cards/FormationCardComponent.vue'
-import { useFormationStore } from '../stores/formation-store'
-import { onBeforeMount } from 'vue'
 
-const formation_store = useFormationStore()
+const product_store = useProductStore()
+const util_store = useUtilStore()
 
-onBeforeMount(async () => {
-    if (formation_store.formations.length === 0) {
-        await formation_store.get_all_formations('0')
-    }
+onMounted(async () => {
+    // Pedimos solo los productos que sean Cursos/Formaciones
+    await product_store.fetch_products({ type: 'course' })
 })
 </script>
 
-<style scoped lang="scss">
-.formations-page {
+<style lang="scss" scoped>
+.main-content {
+    padding: 4rem 1rem;
+}
+
+.formations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.no-results {
+    text-align: center;
     width: 100%;
-    min-height: 100vh;
-    padding: 8rem 4rem 4rem;
-    margin: 0;
-    box-sizing: border-box;
-
-    &__header {
-        text-align: center;
-        margin-bottom: 4rem;
-
-        h1 {
-            margin: 0 0 1rem;
-            font-size: 3.5rem;
-            color: var(--color-primary);
-        }
-    }
-
-    &__subtitle {
-        font-size: 1.2rem;
-        color: var(--color-text-dark);
-        font-weight: 300;
-        margin: 0;
-    }
-
-    &__grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 3rem;
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-}
-
-@media screen and (max-width: 1024px) {
-    .formations-page {
-        padding: 7rem 2rem 3rem;
-
-        &__header h1 {
-            font-size: 2.5rem;
-        }
-
-        &__grid {
-            gap: 2.5rem;
-        }
-    }
-}
-
-@media screen and (max-width: 768px) {
-    .formations-page {
-        padding: 6rem 1rem 2rem;
-
-        &__header {
-            margin-bottom: 3rem;
-
-            h1 {
-                font-size: 2rem;
-            }
-        }
-
-        &__subtitle {
-            font-size: 1rem;
-        }
-
-        &__grid {
-            grid-template-columns: 1fr;
-            gap: 2rem;
-        }
-    }
+    padding: 3rem;
+    color: var(--text-light);
+    font-size: 1.2rem;
 }
 </style>

@@ -1,182 +1,174 @@
 <template>
-    <aside class="user__dashboard__aside">
-        <h2>Tus datos registrados</h2>
-        <p>Nombre completo: <span> {{ auth_store.user_data.user.name }}</span></p>
-        <p>Correo: <span> {{ auth_store.user_data.user.email }}</span></p>
-        <p>Historia Clínica: <span> {{ auth_store.user_data.user.medical_record }}</span></p>
-        <div class="user__dashboard__aside__actions">
-            <button class="action-btn" @click="show_component = 'medical'"
-                v-if="auth_store.user_data.user.role === 'patient'">
-                {{ auth_store.user_data.history.length < 13 ? 'Completa tu historia clínica' : 'Historial clínico' }}
-                    </button>
-                    <button class="action-btn" @click="show_component = 'tasks'"
-                        v-if="auth_store.user_data.user.role === 'patient'">
-                        Tareas pendientes
-                    </button>
-                    <button class="action-btn" @click="show_component = 'results'">Resultados de Tests</button>
-                    <button class="action-btn" @click="show_component = 'courses'">Cursos Inscritos</button>
-                    <button class="action-btn" @click="show_component = 'likes'">Tus likes</button>
-                    <RouterLink to="/tests/anamnesis" v-if="auth_store.user_data.user.anamnesis_kids === true"
-                        class="action-btn">Anamnesis</RouterLink>
-                    <RouterLink to="/terapias" class="nobg-btn">Agendar una consulta</RouterLink>
-        </div>
-    </aside>
-    <section class="user__dashboard__component">
-        <div class="user__dashboard__component__greeting" v-if="show_component === 'initial'">
-            <h2>Hola {{ auth_store.user_data.user.name.split(' ')[0] }} </h2>
-            <p>
-                Este es tu espacio personal, aquí puedes ir viendo tus resultados,
-                tus logros, avances y descubrir novedades.
-            </p>
-        </div>
-        <UserMedicalHistoryComponent v-if="show_component === 'medical'"
-            :history_number_to_show="auth_store.user_data.history.length" />
-        <UserTaskComponent v-if="show_component === 'tasks'" />
-        <UserTestResultsComponent v-if="show_component === 'results'" />
-        <UserCoursesComponent v-if="show_component === 'courses'" />
-        <UserLikesComponent v-if="show_component === 'likes'" />
-    </section>
+    <div class="dashboard-layout">
+        <aside class="dashboard-sidebar">
+            <div class="user-profile">
+                <div class="avatar-placeholder">
+                    {{ auth_store.user_data?.user?.name?.charAt(0) }}
+                </div>
+                <h3>{{ auth_store.user_data?.user?.name }}</h3>
+                <p class="email">{{ auth_store.user_data?.user?.email }}</p>
+                <span v-if="auth_store.user_data?.user?.medical_record" class="hc-badge">
+                    HC: {{ auth_store.user_data.user.medical_record }}
+                </span>
+            </div>
+
+            <nav class="dashboard-nav">
+                <button @click="current_view = 'courses'" :class="{ active: current_view === 'courses' }">
+                    📚 Mis Cursos
+                </button>
+
+                <button @click="current_view = 'orders'" :class="{ active: current_view === 'orders' }">
+                    🛍️ Mis Compras
+                </button>
+
+                <button v-if="is_patient" @click="current_view = 'tasks'" :class="{ active: current_view === 'tasks' }">
+                    📝 Tareas Terapéuticas
+                </button>
+
+                <button v-if="is_patient" @click="current_view = 'medical'"
+                    :class="{ active: current_view === 'medical' }">
+                    🏥 Historial Clínico
+                </button>
+
+                <div class="divider"></div>
+
+                <RouterLink to="/terapias" class="nav-link">
+                    📅 Agendar cita
+                </RouterLink>
+            </nav>
+        </aside>
+
+        <section class="dashboard-content">
+            <UserCoursesComponent v-if="current_view === 'courses'" />
+
+            <div v-else-if="current_view === 'orders'">
+                <h2>Historial de Pedidos</h2>
+                <p>Próximamente verás aquí tus facturas y pedidos.</p>
+            </div>
+
+            <UserTaskComponent v-else-if="current_view === 'tasks'" />
+
+            <UserMedicalHistoryComponent v-else-if="current_view === 'medical'"
+                :history_number_to_show="auth_store.user_data?.history?.length || 0" />
+        </section>
+    </div>
 </template>
 
 <script setup>
+import { ref, computed } from 'vue'
 import { useAuthStore } from '../../stores/auth-store.js'
-import { RouterLink } from 'vue-router'
-import { ref } from 'vue'
-
-//IMport components
+import UserCoursesComponent from './user/UserCoursesComponent.vue'
 import UserMedicalHistoryComponent from './user/UserMedicalHistoryComponent.vue'
 import UserTaskComponent from './user/UserTaskComponent.vue'
-import UserTestResultsComponent from './user/UserTestResultsComponent.vue'
-import UserCoursesComponent from './user/UserCoursesComponent.vue'
-import UserLikesComponent from './user/UserLikesComponent.vue'
 
 const auth_store = useAuthStore()
-const show_component = ref('initial')
+const current_view = ref('courses')
 
+const is_patient = computed(() => {
+    return auth_store.user_data?.user?.role === 'patient'
+})
 </script>
 
 <style scoped lang="scss">
-.user__dashboard__aside {
-    width: 35%;
-    min-height: 70vh;
-    margin: 0;
-    padding: 4rem 0 0 4rem;
+.dashboard-layout {
+    display: flex;
+    min-height: 80vh;
+    background: #f9f9f9;
+}
+
+.dashboard-sidebar {
+    width: 280px;
+    background: white;
+    padding: 2rem;
+    border-right: 1px solid #eee;
     display: flex;
     flex-direction: column;
-    box-sizing: border-box;
-    position: absolute;
-    top: 0;
-    left: 0;
-    overflow-y: hidden;
 
-    h2 {
-        margin-bottom: 1.5rem;
-    }
-
-    p {
-        margin: 0;
-
-        span {
-            font-weight: 500;
-        }
-    }
-
-    &__actions {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        padding: 1rem 1rem 1rem 0;
-
-        a {
-            text-align: center;
-            width: fit-content;
-        }
-
-        button {
-            width: 80%;
-        }
-
+    @media(max-width: 768px) {
+        display: none; // En móvil debería ser un menú hamburguesa o superior
     }
 }
 
-.user__dashboard__component {
-    width: 65%;
-    max-width: 65%;
-    min-height: 70vh;
-    margin: 0;
-    padding: 4rem 4rem 4rem 0;
-    display: flex;
-    flex-direction: column;
-    box-sizing: border-box;
-    position: absolute;
-    top: 0;
-    right: 0;
-    overflow-y: hidden;
-    box-sizing: border-box;
+.user-profile {
+    text-align: center;
+    margin-bottom: 2rem;
 
-    &__greeting {
-        width: 100%;
-        min-height: 70vh;
+    .avatar-placeholder {
+        width: 80px;
+        height: 80px;
+        background: var(--primary-color);
+        color: white;
+        border-radius: 50%;
         display: flex;
-        flex-direction: column;
-        justify-content: center;
         align-items: center;
-        gap: 1rem;
-        box-sizing: border-box;
+        justify-content: center;
+        font-size: 2rem;
+        margin: 0 auto 1rem;
+    }
 
-        h2 {
-            margin-bottom: 1rem;
-        }
+    h3 {
+        font-size: 1.1rem;
+        margin: 0;
+    }
 
-        p {
-            width: 50%;
-            margin: 0;
-            text-align: center;
-        }
+    .email {
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    .hc-badge {
+        display: inline-block;
+        margin-top: 0.5rem;
+        background: #eee;
+        padding: 0.2rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
     }
 }
 
-@media screen and (max-width: 768px) {
-    .user__dashboard__aside {
-        width: 100%;
-        max-width: 100%;
-        min-height: fit-content;
-        margin: 0;
-        padding: 0;
-        position: relative;
+.dashboard-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 
-        h2 {
-            margin-bottom: 1rem;
-            text-align: center;
+    button,
+    .nav-link {
+        text-align: left;
+        background: none;
+        border: none;
+        padding: 0.8rem 1rem;
+        border-radius: 8px;
+        cursor: pointer;
+        color: #555;
+        font-size: 1rem;
+        transition: all 0.2s;
+        text-decoration: none;
+
+        &:hover {
+            background: #f5f5f5;
+            color: var(--primary-color);
         }
 
-        p {
-            margin: 0;
-
-            span {
-                font-weight: 500;
-            }
-        }
-
-        &__actions {
-            padding: 1rem 0 0;
-            align-items: center;
-
+        &.active {
+            background: rgba(var(--primary-rgb), 0.1);
+            color: var(--primary-color);
+            font-weight: 600;
         }
     }
 
-    .user__dashboard__component {
-        width: 100%;
-        max-width: 100%;
-        position: relative;
-        margin: 0;
-        padding: 0;
+    .divider {
+        height: 1px;
+        background: #eee;
+        margin: 1rem 0;
+    }
+}
 
-        &__greeting {
-            p {
-                width: 100%;
-            }
-        }
+.dashboard-content {
+    flex: 1;
+    padding: 3rem;
+
+    @media(max-width: 768px) {
+        padding: 1.5rem;
     }
 }
 </style>
