@@ -2,48 +2,92 @@ import { defineStore } from 'pinia'
 import { api } from '../service/axios'
 import { ref } from 'vue'
 import { useUtilStore } from './util-store'
+import { useAuthStore } from './auth-store'
 
 export const useProductStore = defineStore('product', () => {
     const util_store = useUtilStore()
-
-    // State
     const products = ref([])
-    const current_product = ref(null) // Para la vista individual
+    const product = ref()
+
+    /**
+     * ✨ SIMPLE: Verificar si el usuario tiene acceso a un producto por slug
+     * Consulta localmente en auth_store.user_data.purchases
+     * @param {string} slug - Slug del producto a verificar
+     * @returns {boolean} - true si tiene acceso (comprado y completado)
+     */
+    const has_access = (slug) => {
+        const auth_store = useAuthStore()
+
+
+        // Si no está logueado, no tiene acceso
+        if (!auth_store.user_data) return false
+
+        // Admin siempre tiene acceso
+        if (auth_store.is_admin) return true
+
+        // Buscar en purchases si tiene este slug comprado y completado
+        const purchases = auth_store.user_data.purchases || []
+
+        const purchase = purchases.find(p =>
+            p.slug === slug &&
+            p.payment_status === 'completed'
+        )
+
+        return !!purchase
+    }
+
+    /**
+     * Helper: Verificar si tiene orden pendiente de un producto por slug
+     * @param {string} slug
+     * @returns {boolean}
+     */
+    const has_pending_order = (slug) => {
+        const auth_store = useAuthStore()
+
+        if (!auth_store.user_data) return false
+
+        const purchases = auth_store.user_data.purchases || []
+        const purchase = purchases.find(p =>
+            p.slug === slug &&
+            p.payment_status === 'pending'
+        )
+
+        return !!purchase
+    }
 
     /**
      * Obtener productos (Catálogo público)
-     * @param {Object} filters - Ej: { type: 'course' } o { category: 'salud' }
+     * @param {Object} filters - { type: 'course', category: 'salud', search: 'texto' }
      */
     const fetch_products = async (filters = {}) => {
         try {
             util_store.set_loading(true)
 
-            // Convertimos el objeto de filtros a query params (ej. ?type=course)
             const params = new URLSearchParams(filters).toString()
             const url = params ? `/products?${params}` : '/products'
 
             const response = await api.get(url)
             products.value = response.data.data
         } catch (error) {
-            console.error(error)
-            // No mostramos error al usuario en fetchs de listas por UX, solo log
+            console.error('Error al obtener productos:', error)
+            return []
         } finally {
             util_store.set_loading(false)
         }
     }
 
     /**
-     * Obtener un producto por Slug (Vista detalle)
-     * Auth opcional manejada por axios (si hay token lo envía) para saber si ya lo compró
+     * Obtener un producto por Slug (público)
+     * @param {string} slug
      */
     const fetch_product_by_slug = async (slug) => {
         try {
             util_store.set_loading(true)
             const response = await api.get(`/products/${slug}`)
-            current_product.value = response.data.data
-            return response.data.data
+            product.value = response.data.data
         } catch (error) {
-            console.error(error)
+            console.error('Error al obtener producto:', error)
+            util_store.set_message('Producto no encontrado', 'error')
             return null
         } finally {
             util_store.set_loading(false)
@@ -56,14 +100,40 @@ export const useProductStore = defineStore('product', () => {
         try {
             util_store.set_loading(true)
             const response = await api.post('/products', product_data)
+            util_store.set_message(response.data.message, 'success')
+            return response.data.data
+        } catch (error) {
+            const msg = error.response?.data?.message || 'Error al crear producto'
+            util_store.set_message(msg, 'error')
+            return null
+        } finally {
+            util_store.set_loading(false)
+        }
+    }
 
-            // Actualizamos la lista local si es exitoso
-            products.value.push(response.data.data)
+    const update_product = async (product_id, product_data) => {
+        try {
+            util_store.set_loading(true)
+            const response = await api.put(`/products/${product_id}`, product_data)
+            util_store.set_message(response.data.message, 'success')
+            return response.data.data
+        } catch (error) {
+            const msg = error.response?.data?.message || 'Error al actualizar producto'
+            util_store.set_message(msg, 'error')
+            return null
+        } finally {
+            util_store.set_loading(false)
+        }
+    }
 
+    const delete_product = async (product_id) => {
+        try {
+            util_store.set_loading(true)
+            const response = await api.delete(`/products/${product_id}`)
             util_store.set_message(response.data.message, 'success')
             return true
         } catch (error) {
-            const msg = error.response?.data?.message || 'Error al crear producto'
+            const msg = error.response?.data?.message || 'Error al eliminar producto'
             util_store.set_message(msg, 'error')
             return false
         } finally {
@@ -71,45 +141,16 @@ export const useProductStore = defineStore('product', () => {
         }
     }
 
-    /* NOTA: Estas rutas (PUT/DELETE) no aparecen en tu product-router.js actual.
-       Las dejo preparadas para cuando actualices el backend.
-    */
-    const update_product = async (id, product_data) => {
-        try {
-            util_store.set_loading(true)
-            const response = await api.put(`/products/${id}`, product_data)
-
-            // Actualizar en local
-            const index = products.value.findIndex(p => p._id === id)
-            if (index !== -1) products.value[index] = response.data.data
-
-            util_store.set_message(response.data.message, 'success')
-        } catch (error) {
-            util_store.set_message('Error al actualizar (Verifica backend)', 'error')
-        } finally {
-            util_store.set_loading(false)
-        }
-    }
-
-    const delete_product = async (id) => {
-        try {
-            util_store.set_loading(true)
-            const response = await api.delete(`/products/${id}`)
-
-            products.value = products.value.filter(p => p._id !== id)
-            util_store.set_message(response.data.message, 'success')
-        } catch (error) {
-            util_store.set_message('Error al eliminar (Verifica backend)', 'error')
-        } finally {
-            util_store.set_loading(false)
-        }
-    }
-
     return {
-        products,
-        current_product,
+        // Validación de acceso (llamada desde router)
+        has_access,
+        has_pending_order,
+
+        // Acciones
         fetch_products,
         fetch_product_by_slug,
+
+        // Admin
         create_product,
         update_product,
         delete_product

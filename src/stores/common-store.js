@@ -5,25 +5,38 @@ import { useUtilStore } from './util-store'
 
 export const useCommonStore = defineStore('common', () => {
     const util_store = useUtilStore()
-    const posts = ref(null)
-    const formations = ref(null)
-    const videos = ref(null)
 
+    // State
+    const posts = ref([])
+    const products = ref([]) // ✨ CAMBIO: Antes era 'formations'
+    const videos = ref([])
+
+    /**
+     * Obtener datos para la página Home
+     * Backend devuelve: { posts, videos, products }
+     */
     const getCommon = async () => {
         try {
             util_store.set_loading(true)
-            const response = await api({
-                method: 'get',
-                url: '/common/home'
-            })
-            posts.value = response.data.data.posts
-            formations.value = response.data.data.formations
-            videos.value = response.data.data.videos
+            const response = await api.get('/common/home')
+
+            posts.value = response.data.data.posts || []
+            products.value = response.data.data.products || []
+            videos.value = response.data.data.videos || []
+
+            return response.data.data
         } catch (error) {
-            console.error(error)
+            console.error('Error al obtener datos comunes:', error)
+            return null
         } finally {
             util_store.set_loading(false)
         }
     }
-    return { posts, formations, videos, getCommon }
+
+    return {
+        posts,
+        products,
+        videos,
+        getCommon
+    }
 })

@@ -25,32 +25,25 @@ const routes = [
         name: 'BlogOne',
         component: () => import('../views/BlogOne.vue')
     },
-    // NOTA: Aunque el backend es "Products", mantenemos la URL semántica para el usuario
     {
-        path: '/formaciones',
-        name: 'Formations',
-        component: () => import('../views/Formations.vue')
+        path: '/:productType(formaciones|guias|productos)',
+        name: 'ProductCatalog',
+        component: () => import('@/views/ProductCatalog.vue')
     },
+
+    // Detalle de producto
     {
-        path: '/formaciones/:formation_slug',
-        name: 'FormationsOne',
-        component: () => import('../views/FormationsOne.vue')
+        path: '/productos/:slug',
+        name: 'ProductDetail',
+        component: () => import('@/views/ProductDetail.vue')
     },
+
+    // Checkout
     {
-        path: '/formaciones/:formation_slug/dashboard',
-        name: 'FormationsDashboard',
-        component: () => import('../views/FormationsDashboard.vue'),
-        meta: { requires_auth: true }
-    },
-    {
-        path: '/inscripcion/:formation_slug',
-        name: 'Enrollment',
-        component: () => import('../views/Enrollment.vue')
-    },
-    {
-        path: '/inscripcion-exitosa/:formation_slug',
-        name: 'EnrollmentConfirmation',
-        component: () => import('../views/confirmations/EnrollmentConfirmation.vue')
+        path: '/checkout/:slug',
+        name: 'ProductCheckout',
+        component: () => import('@/views/ProductCheckout.vue'),
+        meta: { requires_auth: true } // Solo logueados
     },
     // Test Pages *************************************
     {
