@@ -5,9 +5,9 @@ import { useRoute } from 'vue-router';
 const auth_store = useAuthStore();
 const route = useRoute();
 const email = route.query.email;
-const token = route.query.token;
+const login_token = route.query.token;
 
-auth_store.verify_email(token, email)
+auth_store.verify_email(login_token, email)
 
 </script>
 

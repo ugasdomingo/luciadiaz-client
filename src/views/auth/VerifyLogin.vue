@@ -1,12 +1,13 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useAuthStore } from '../../stores/auth-store';
 
 const auth_store = useAuthStore();
 const login_token = ref('');
+const email = computed(() => auth_store.email)
 
 const handle_submit = async () => {
-    await auth_store.verify_login(login_token.value, auth_store.email)
+    await auth_store.verify_login(login_token.value, email.value)
 }
 </script>
 

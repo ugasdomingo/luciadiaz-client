@@ -15,7 +15,7 @@ const auth_store = useAuthStore()
 
 // Computada segura para evitar errores si user_data es null al cargar
 const is_admin = computed(() => {
-    return auth_store.user_data?.user?.role === 'admin'
+    return auth_store.user_data?.user?.role === 'Admin'
 })
 </script>
 

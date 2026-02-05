@@ -141,6 +141,8 @@ export const useProductStore = defineStore('product', () => {
             util_store.set_loading(true)
             const auth_store = useAuthStore()
 
+            console.log(product_data)
+
             const response = await api({
                 method: 'post',
                 url: '/products',
@@ -152,9 +154,6 @@ export const useProductStore = defineStore('product', () => {
             })
 
             util_store.set_message(response.data.message, 'success')
-
-            // Recargar lista de productos
-            await fetch_all_products_admin()
 
             return response.data.data
         } catch (error) {

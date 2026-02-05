@@ -56,7 +56,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { useRoute } from 'vue-router';
 import { useAdminStore } from '../../stores/admin-store';
 
@@ -70,7 +70,7 @@ import InfoUserNotesComponent from '../../components/dashboard/admin/info-user/I
 
 const route = useRoute()
 const admin_store = useAdminStore()
-const user_info = ref(admin_store.user)
+const user_info = computed(() => admin_store.user)
 const show_component = ref('tasks')
 
 onMounted(async () => {

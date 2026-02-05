@@ -56,8 +56,8 @@
 
 <script setup>
 import { computed, ref } from 'vue'
-import { useAuthStore } from '../../stores/auth-store'
-import { useProductStore } from '../../stores/product-store'
+import { useAuthStore } from '../../../stores/auth-store'
+import { useProductStore } from '../../../stores/product-store'
 
 const props = defineProps({
     product: {

@@ -1,21 +1,13 @@
 <script setup>
-import { defineProps, ref, reactive } from 'vue';
+import { computed, ref, reactive } from 'vue';
 import { useNoteStore } from '../../../../stores/note-store';
+import { useAdminStore } from '../../../../stores/admin-store';
 
-const props = defineProps({
-    user_notes: {
-        type: Object,
-        required: true
-    },
-    user_id: {
-        type: String,
-        required: true
-    }
-})
 const note_store = useNoteStore()
-
+const admin_store = useAdminStore()
 const reason = ref('')
 const notes = ref('')
+const user_notes = computed(() => admin_store.user?.therapy_notes)
 const create_note = ref(false)
 const expanded_items = reactive({})
 
@@ -25,13 +17,15 @@ const toggle_answers = (note_id) => {
 
 const handle_submit = async () => {
     const new_note = {
-        user_id: props.user_id,
+        user_id: admin_store.user.user._id,
         reason: reason.value,
         notes: notes.value
     }
     await note_store.create_note(new_note)
     reason.value = ''
     notes.value = ''
+    create_note.value = false
+    await admin_store.get_user_by_id(admin_store.user.user._id)
 }
 
 </script>
@@ -39,7 +33,7 @@ const handle_submit = async () => {
 <template>
     <section class="notes">
         <button class="action-btn" @click="create_note = !create_note">{{ create_note ? 'Cancelar' : 'Crear nota'
-            }}</button>
+        }}</button>
         <div class="notes__create" v-if="create_note">
             <h2>Crear nota</h2>
             <form @submit.prevent="handle_submit">
@@ -50,7 +44,7 @@ const handle_submit = async () => {
         </div>
         <div class="notes__display" v-else>
             <h2>Notas</h2>
-            <article v-for="note in props.user_notes" :key="note._id" class="note-item">
+            <article v-for="note in user_notes" :key="note._id" class="note-item">
                 <h4 @click="toggle_answers(note._id)" class="note-title"
                     :class="{ 'active': expanded_items[note._id] }">
                     {{ new Date(note.createdAt).toLocaleDateString() + ' - ' + new

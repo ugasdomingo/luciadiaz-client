@@ -123,16 +123,12 @@ export const useAuthStore = defineStore('auth', () => {
     /**
      * Paso 2: Verificar Login (2FA)
      */
-    const verify_login = async (login_token) => {
+    const verify_login = async (login_token, email) => {
         try {
             util_store.set_loading(true)
 
-            const payload = {
-                login_token,
-                email: email.value
-            }
-
-            const response = await api.post('/auth/verify-login', payload)
+            console.log(login_token, email)
+            const response = await api.post('/auth/verify-login', { login_token, email })
 
             _set_session(response.data.data)
             util_store.set_message(response.data.message, 'success')
@@ -155,16 +151,11 @@ export const useAuthStore = defineStore('auth', () => {
     /**
      * Verificar email (primer registro)
      */
-    const verify_email = async (verification_token) => {
+    const verify_email = async (login_token, email) => {
         try {
             util_store.set_loading(true)
 
-            const payload = {
-                verification_token,
-                email: email.value
-            }
-
-            const response = await api.post('/auth/verify-email', payload)
+            const response = await api.post('/auth/verify-email', { login_token, email })
 
             _set_session(response.data.data)
             util_store.set_message(response.data.message, 'success')
@@ -179,8 +170,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     /**
-     * ✨ OPTIMIZADO: Renovar token usando refresh_token
-     * Ahora incluye purchases en user_data
+     * Renovar token usando refresh_token
      */
     const refresh = async () => {
         try {

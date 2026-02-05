@@ -1,6 +1,6 @@
 <script setup>
 import { useCommonStore } from '../../stores/common-store'
-import FormationCardComponent from '../common/cards/FormationCardComponent.vue'
+import ProductCardComponent from '../common/cards/ProductCardComponent.vue' // ✅ CAMBIO
 import { use_scroll_reveal } from '../../composables/use-scroll-reveal.js'
 
 use_scroll_reveal()
@@ -13,10 +13,12 @@ const common_store = useCommonStore()
         <div class="formation__decoratio__bottom__right" data-scroll-reveal></div>
         <h2 data-scroll-reveal>Próximas formaciones y talleres vivenciales</h2>
         <div class="formation__content">
-            <FormationCardComponent v-for="formation in common_store.formations" :key="formation.id"
-                :formation="formation" data-scroll-reveal :style="{ '--delay': `${0.6 + index * 0.15}s` }" />
+            <ProductCardComponent v-for="(product, index) in common_store.products" :key="product._id"
+                :product="product" data-scroll-reveal :style="{ '--delay': `${0.6 + index * 0.15}s` }" />
         </div>
-        <RouterLink to="/formaciones" class="action" data-scroll-reveal>Ver todas las formaciones</RouterLink>
+        <RouterLink to="/formaciones" class="action" data-scroll-reveal>
+            Ver todas las formaciones
+        </RouterLink>
     </section>
 </template>
 

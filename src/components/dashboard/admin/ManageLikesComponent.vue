@@ -1,12 +1,18 @@
 <script setup>
-import { onBeforeMount } from 'vue'
+import { onBeforeMount, computed, ref } from 'vue'
 import { useLikeStore } from '../../../stores/like-store.js'
 
 const like_store = useLikeStore()
+const likes = computed(() => like_store.likes)
+const show_get_all_likes = ref(false)
 
 onBeforeMount(() => {
     like_store.get_all_likes()
 })
+
+const toggle_get_all_likes = () => {
+    show_get_all_likes.value = !show_get_all_likes.value
+}
 </script>
 
 <template>
@@ -24,7 +30,7 @@ onBeforeMount(() => {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="like in like_store.likes" :key="like.id">
+                    <tr v-for="like in likes" :key="like.id">
                         <td>{{ like.id }}</td>
                         <td>{{ like.name }}</td>
                         <td>{{ like.last_name }}</td>

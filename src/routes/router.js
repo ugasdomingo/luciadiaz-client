@@ -26,23 +26,23 @@ const routes = [
         component: () => import('../views/BlogOne.vue')
     },
     {
-        path: '/:productType(formaciones|guias|productos)',
+        path: '/:productType',
         name: 'ProductCatalog',
-        component: () => import('@/views/ProductCatalog.vue')
+        component: () => import('../views/ProductCatalog.vue')
     },
 
     // Detalle de producto
     {
         path: '/productos/:slug',
         name: 'ProductDetail',
-        component: () => import('@/views/ProductDetail.vue')
+        component: () => import('../views/ProductDetail.vue')
     },
 
     // Checkout
     {
         path: '/checkout/:slug',
         name: 'ProductCheckout',
-        component: () => import('@/views/ProductCheckout.vue'),
+        component: () => import('../views/ProductCheckout.vue'),
         meta: { requires_auth: true } // Solo logueados
     },
     // Test Pages *************************************

@@ -19,7 +19,11 @@ const links = [
     {
         name: 'Formaciones',
         path: '/formaciones'
-    }
+    },
+    {
+        name: 'Productos',
+        path: '/productos'
+    },
 ]
 </script>
 
@@ -47,7 +51,7 @@ nav {
     top: 4.25rem;
     right: 2rem;
     z-index: 100;
-    background: linear-gradient(to bottom, var(--color-tertiary), var(--color-secondary));    
+    background: linear-gradient(to bottom, var(--color-tertiary), var(--color-secondary));
     border-radius: 1rem;
 
     ul {

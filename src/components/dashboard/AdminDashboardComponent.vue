@@ -1,5 +1,5 @@
 <script setup>
-import { onBeforeMount, ref, watch, defineAsyncComponent, markRaw } from 'vue'
+import { ref, watch, defineAsyncComponent, markRaw } from 'vue'
 import { useAuthStore } from '../../stores/auth-store'
 import { useUtilStore } from '../../stores/util-store'
 
@@ -43,11 +43,11 @@ watch(() => show_component.value, async (new_value) => {
             <button class="action-btn" @click="show_component = 'ManageUserComponent'">Buscar usuarios</button>
             <button class="action-btn" @click="show_component = 'ManagePostComponent'">Gestionar posts</button>
             <button class="action-btn" @click="show_component = 'ManageVideoComponent'">Gestionar videos</button>
-            <button class="action-btn" @click="show_component = 'ManageFormationComponent'">Gestionar
-                formaciones</button>
-            <button class="action-btn" @click="show_component = 'ManageEnrollmentComponent'">Ver ultimas
-                inscripciones</button>
-            <button class="action-btn" @click="show_component = 'ManageLikeComponent'">Ver ultimos likes</button>
+            <button class="action-btn" @click="show_component = 'ManageOrdersComponent'">Gestionar
+                pedidos</button>
+            <button class="action-btn" @click="show_component = 'ManageProductComponent'">Gestionar
+                productos</button>
+            <button class="action-btn" @click="show_component = 'ManageLikesComponent'">Ver ultimos likes</button>
         </div>
         <div class="admin__dashboard__component__displayer" v-if="display_component">
             <Suspense>
