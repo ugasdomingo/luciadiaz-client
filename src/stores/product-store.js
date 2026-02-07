@@ -30,8 +30,13 @@ export const useProductStore = defineStore('product', () => {
         try {
             util_store.set_loading(true)
 
+            // Limpiar filtros vacíos para no enviar type=&category=& al backend
+            const cleanFilters = Object.fromEntries(
+                Object.entries(filters).filter(([_, v]) => v !== '' && v != null)
+            )
+
             const queryParams = new URLSearchParams({
-                ...filters,
+                ...cleanFilters,
                 page: String(page),
                 limit: String(limit)
             }).toString()
