@@ -345,11 +345,11 @@ onMounted(async () => {
     background: var(--color-white);
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    box-shadow: var(--shadow-sm);
     transition: all 0.2s ease;
 
     &:hover {
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        box-shadow: var(--shadow-md);
     }
 
     &--completed {
@@ -492,7 +492,7 @@ onMounted(async () => {
     font-family: 'Montserrat', sans-serif;
 
     &:hover:not(:disabled) {
-        background: #a67c30; // Versión oscura del secondary
+        background: var(--color-secondary-dark);
         transform: translateY(-2px);
     }
 
@@ -514,7 +514,7 @@ onMounted(async () => {
     display: flex;
     align-items: center;
     gap: 32px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--shadow-sm);
 
     @media (max-width: 768px) {
         flex-direction: column;
@@ -562,7 +562,7 @@ onMounted(async () => {
     font-family: 'Montserrat', sans-serif;
 
     &:hover {
-        background: #a67c30;
+        background: var(--color-secondary-dark);
         transform: translateY(-2px);
     }
 }
@@ -597,7 +597,7 @@ onMounted(async () => {
     background: var(--color-white);
     border-radius: 12px;
     padding: 24px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    box-shadow: var(--shadow-sm);
 
     &__icon {
         font-size: 32px;

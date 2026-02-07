@@ -93,30 +93,30 @@ const user_name = computed(() => auth_store.user_data?.user?.name?.split(' ')[0]
 }
 
 .section-title {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Title', serif;
     font-size: 2.2rem;
-    color: var(--primary-color);
+    color: var(--color-primary);
     margin-bottom: 2rem;
 }
 
 .subsection-title {
     font-size: 1.2rem;
-    color: #666;
+    color: var(--color-text-muted);
     margin-bottom: 1rem;
     margin-top: 2rem;
     text-transform: uppercase;
     letter-spacing: 1px;
     font-size: 0.9rem;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--color-border-light);
     padding-bottom: 0.5rem;
 }
 
 .empty-state {
-    background: white;
-    border-radius: 12px;
+    background: var(--color-bg-card);
+    border-radius: var(--radius-md);
     padding: 4rem 2rem;
     text-align: center;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    box-shadow: var(--shadow-sm);
 
     .icon {
         font-size: 3rem;
@@ -130,7 +130,7 @@ const user_name = computed(() => auth_store.user_data?.user?.name?.split(' ')[0]
     }
 
     p {
-        color: #666;
+        color: var(--color-text-muted);
         margin-bottom: 2rem;
         max-width: 500px;
         margin-left: auto;
@@ -140,10 +140,10 @@ const user_name = computed(() => auth_store.user_data?.user?.name?.split(' ')[0]
     .btn-primary {
         display: inline-block;
         padding: 0.8rem 2rem;
-        background: var(--primary-color);
-        color: white;
+        background: var(--color-secondary);
+        color: var(--color-white);
         text-decoration: none;
-        border-radius: 50px;
+        border-radius: var(--radius-full);
         transition: transform 0.2s;
 
         &:hover {

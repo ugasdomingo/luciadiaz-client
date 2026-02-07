@@ -135,7 +135,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="form-label">Precio (€) *</label>
+                                <label class="form-label">Precio ($) *</label>
                                 <input v-model.number="formData.price" type="number" min="0" step="0.01" required
                                     class="form-input" placeholder="0.00">
                             </div>
@@ -543,7 +543,7 @@ const getStatusLabel = (status) => {
 
 const formatPrice = (price) => {
     if (price === 0) return 'Gratis'
-    return `${price}€`
+    return `${price}$`
 }
 
 const formatDate = (date) => {
@@ -562,7 +562,7 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .manage-products {
-    background: var(--color-background);
+    background: var(--color-bg);
     min-height: 100vh;
     padding: 40px 20px;
 }
@@ -628,7 +628,7 @@ onMounted(() => {
     background: var(--color-white);
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--shadow-sm);
 }
 
 .products-table {
@@ -641,7 +641,7 @@ onMounted(() => {
     }
 
     thead {
-        background: var(--color-background);
+        background: var(--color-bg);
 
         th {
             padding: 16px;
@@ -659,7 +659,7 @@ onMounted(() => {
             transition: background 0.2s ease;
 
             &:hover {
-                background: var(--color-background);
+                background: var(--color-bg);
             }
 
             &:last-child {
@@ -729,40 +729,40 @@ onMounted(() => {
 
 .type-badge {
     &--course {
-        background: #dbeafe;
-        color: #1e40af;
+        background: rgba(30, 86, 160, 0.12);
+        color: var(--color-primary);
     }
 
     &--ebook {
-        background: #fef3c7;
-        color: #92400e;
+        background: rgba(212, 160, 23, 0.12);
+        color: var(--color-secondary-dark);
     }
 
     &--bundle {
-        background: #ede9fe;
-        color: #6d28d9;
+        background: rgba(20, 61, 117, 0.12);
+        color: var(--color-primary-dark);
     }
 
     &--service {
-        background: #f3f4f6;
-        color: #374151;
+        background: var(--color-border-light);
+        color: var(--color-text-muted);
     }
 }
 
 .status-badge {
     &--active {
-        background: var(--color-approve-alert);
-        color: #065f46;
+        background: rgba(16, 185, 129, 0.12);
+        color: var(--color-success);
     }
 
     &--draft {
-        background: #fef3c7;
-        color: #92400e;
+        background: rgba(245, 158, 11, 0.12);
+        color: var(--color-warning);
     }
 
     &--archived {
-        background: #f3f4f6;
-        color: #6b7280;
+        background: var(--color-border-light);
+        color: var(--color-text-muted);
     }
 }
 
@@ -787,7 +787,7 @@ onMounted(() => {
     padding: 8px 12px;
     border: none;
     border-radius: 6px;
-    background: var(--color-background);
+    background: var(--color-bg);
     font-size: 16px;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -797,11 +797,11 @@ onMounted(() => {
     }
 
     &--edit:hover {
-        background: #dbeafe;
+        background: rgba(30, 86, 160, 0.12);
     }
 
     &--delete:hover {
-        background: #fee2e2;
+        background: rgba(239, 68, 68, 0.12);
     }
 }
 
@@ -889,7 +889,7 @@ onMounted(() => {
     width: 36px;
     height: 36px;
     border: none;
-    background: var(--color-background);
+    background: var(--color-bg);
     border-radius: 50%;
     font-size: 20px;
     cursor: pointer;
@@ -1060,7 +1060,7 @@ onMounted(() => {
 
     &:hover {
         border-color: var(--color-primary);
-        background: var(--color-background);
+        background: var(--color-bg);
     }
 
     .placeholder-icon {
@@ -1086,7 +1086,7 @@ onMounted(() => {
     padding: 16px;
     border: 2px solid var(--color-border);
     border-radius: 12px;
-    background: var(--color-background);
+    background: var(--color-bg);
 }
 
 .lesson-header {
@@ -1196,7 +1196,7 @@ onMounted(() => {
 
     &:hover {
         border-color: var(--color-primary);
-        background: var(--color-background);
+        background: var(--color-bg);
     }
 }
 

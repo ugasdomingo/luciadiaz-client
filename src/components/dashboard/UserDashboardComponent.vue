@@ -73,14 +73,14 @@ const is_patient = computed(() => {
 .dashboard-layout {
     display: flex;
     min-height: 80vh;
-    background: #f9f9f9;
+    background: var(--color-bg);
 }
 
 .dashboard-sidebar {
     width: 280px;
-    background: white;
+    background: var(--color-bg-card);
     padding: 2rem;
-    border-right: 1px solid #eee;
+    border-right: 1px solid var(--color-border-light);
     display: flex;
     flex-direction: column;
 
@@ -96,8 +96,8 @@ const is_patient = computed(() => {
     .avatar-placeholder {
         width: 80px;
         height: 80px;
-        background: var(--primary-color);
-        color: white;
+        background: var(--color-primary);
+        color: var(--color-white);
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -112,14 +112,14 @@ const is_patient = computed(() => {
     }
 
     .email {
-        color: #666;
+        color: var(--color-text-muted);
         font-size: 0.9rem;
     }
 
     .hc-badge {
         display: inline-block;
         margin-top: 0.5rem;
-        background: #eee;
+        background: var(--color-border-light);
         padding: 0.2rem 0.5rem;
         border-radius: 4px;
         font-size: 0.8rem;
@@ -139,26 +139,26 @@ const is_patient = computed(() => {
         padding: 0.8rem 1rem;
         border-radius: 8px;
         cursor: pointer;
-        color: #555;
+        color: var(--color-text-muted);
         font-size: 1rem;
         transition: all 0.2s;
         text-decoration: none;
 
         &:hover {
-            background: #f5f5f5;
-            color: var(--primary-color);
+            background: var(--color-bg);
+            color: var(--color-primary);
         }
 
         &.active {
-            background: rgba(var(--primary-rgb), 0.1);
-            color: var(--primary-color);
+            background: rgba(30, 86, 160, 0.1);
+            color: var(--color-primary);
             font-weight: 600;
         }
     }
 
     .divider {
         height: 1px;
-        background: #eee;
+        background: var(--color-border-light);
         margin: 1rem 0;
     }
 }

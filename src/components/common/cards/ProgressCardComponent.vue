@@ -20,17 +20,17 @@ const format_date = (date) => {
 // Color de barra de progreso según porcentaje
 const progress_color = computed(() => {
     const percentage = props.progress.overall_progress_percentage
-    if (percentage >= 0 && percentage < 20) return '#d9837b' // Rojo
-    if (percentage >= 20 && percentage < 90) return '#d4a574' // Amarillo/Naranja
-    return '#5a9e7d' // Verde
+    if (percentage >= 0 && percentage < 20) return 'var(--color-error)' // Rojo
+    if (percentage >= 20 && percentage < 90) return 'var(--color-warning)' // Amarillo/Naranja
+    return 'var(--color-success)' // Verde
 })
 
 // Ícono según tipo de formación
 const type_config = computed(() => {
     const types = {
-        'presencial': { label: 'Presencial', color: '#4CAF50' },
-        'live': { label: 'En vivo', color: '#FF5722' },
-        'online': { label: 'Online', color: '#2196F3' }
+        'presencial': { label: 'Presencial', color: 'var(--color-success)' },
+        'live': { label: 'En vivo', color: 'var(--color-error)' },
+        'online': { label: 'Online', color: 'var(--color-primary-light)' }
     }
     return types[props.progress.formation_id.type] || types.online
 })
@@ -99,13 +99,13 @@ const go_to_course = () => {
     background: var(--color-white);
     border-radius: 1rem;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-sm);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
 
     &:hover {
         transform: translateY(-8px);
-        box-shadow: 0 12px 24px rgba(107, 76, 147, 0.15);
+        box-shadow: var(--shadow-md);
 
         .course-card__image {
             transform: scale(1.05);

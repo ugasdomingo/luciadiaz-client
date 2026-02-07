@@ -33,7 +33,7 @@ const truncate = (text, max_length) => {
     flex-wrap: wrap;
     justify-content: space-between;
     color: var(--color-black);
-    background-color: var(--color-soft-alert);
+    background-color: var(--color-bg);
     cursor: pointer;
     transition: all 0.3s ease;
 

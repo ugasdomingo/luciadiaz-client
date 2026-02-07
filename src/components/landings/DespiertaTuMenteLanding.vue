@@ -14,10 +14,10 @@
                 <!-- CTAs -->
                 <div class="hero__ctas" v-if="!is_full">
                     <a :href="PAYPAL_RESERVA_URL" class="cta-btn cta-btn--primary" target="_blank">
-                        Reservar con 30€
+                        Reservar con 30$
                     </a>
                     <a :href="formation.paypal_button" class="cta-btn cta-btn--secondary" target="_blank">
-                        Pagar completo ({{ formation.price }}€)
+                        Pagar completo ({{ formation.price }}$)
                     </a>
                 </div>
 
@@ -153,13 +153,13 @@
                         <div class="pricing__options">
                             <div class="pricing-option">
                                 <span class="pricing-label">Reserva tu lugar</span>
-                                <span class="pricing-value pricing-value--accent">30€</span>
+                                <span class="pricing-value pricing-value--accent">30$</span>
                                 <span class="pricing-note">Pagas el resto el día del curso</span>
                             </div>
                             <div class="pricing-separator">o</div>
                             <div class="pricing-option">
                                 <span class="pricing-label">Pago completo</span>
-                                <span class="pricing-value">{{ formation.price }}€</span>
+                                <span class="pricing-value">{{ formation.price }}$</span>
                                 <span class="pricing-note">Aseguras tu plaza ahora</span>
                             </div>
                         </div>
@@ -168,11 +168,11 @@
                     <!-- CTAs finales -->
                     <div class="pricing__ctas" v-if="!is_full">
                         <a :href="PAYPAL_RESERVA_URL" class="cta-btn cta-btn--primary cta-btn--large" target="_blank">
-                            Reservar con 30€
+                            Reservar con 30$
                         </a>
                         <a :href="formation.paypal_button" class="cta-btn cta-btn--secondary cta-btn--large"
                             target="_blank">
-                            Pagar completo ({{ formation.price }}€)
+                            Pagar completo ({{ formation.price }}$)
                         </a>
                     </div>
 
@@ -377,11 +377,11 @@ const toggleFaq = (index) => {
 
 <style scoped lang="scss">
 // Variables de la landing
-$landing-accent: #d4a574;
-$landing-warm: #c77966;
-$landing-dark: #2d2d44;
-$gradient-hero: linear-gradient(135deg, #6b4c93 0%, #4a4a8a 100%);
-$gradient-cta: linear-gradient(135deg, #d4a574 0%, #c77966 100%);
+$landing-accent: #D4A017;
+$landing-warm: #B8860B;
+$landing-dark: #143D75;
+$gradient-hero: linear-gradient(135deg, #1E56A0 0%, #143D75 100%);
+$gradient-cta: linear-gradient(135deg, #D4A017 0%, #B8860B 100%);
 
 .landing-despierta {
     width: 100%;
@@ -409,8 +409,8 @@ $gradient-cta: linear-gradient(135deg, #d4a574 0%, #c77966 100%);
         right: 0;
         bottom: 0;
         background:
-            radial-gradient(circle at 20% 50%, rgba(212, 165, 116, 0.1) 0%, transparent 50%),
-            radial-gradient(circle at 80% 80%, rgba(199, 121, 102, 0.1) 0%, transparent 50%);
+            radial-gradient(circle at 20% 50%, rgba(212, 160, 23, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 80%, rgba(184, 134, 11, 0.1) 0%, transparent 50%);
         pointer-events: none;
     }
 
@@ -496,11 +496,11 @@ $gradient-cta: linear-gradient(135deg, #d4a574 0%, #c77966 100%);
     &--primary {
         background: $gradient-cta;
         color: var(--color-white);
-        box-shadow: 0 4px 15px rgba(212, 165, 116, 0.4);
+        box-shadow: 0 4px 15px rgba(212, 160, 23, 0.4);
 
         &:hover {
             transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(212, 165, 116, 0.6);
+            box-shadow: 0 6px 20px rgba(212, 160, 23, 0.6);
         }
     }
 
@@ -581,7 +581,7 @@ $gradient-cta: linear-gradient(135deg, #d4a574 0%, #c77966 100%);
     align-items: flex-start;
     gap: 1rem;
     padding: 1.5rem;
-    background: #f8f9fa;
+    background: var(--color-bg);
     border-radius: 0.75rem;
     transition: all 0.3s ease;
 
@@ -615,7 +615,7 @@ $gradient-cta: linear-gradient(135deg, #d4a574 0%, #c77966 100%);
 // ========== BENEFICIOS ==========
 .benefits {
     padding: 6rem 2rem;
-    background: linear-gradient(180deg, #f8f4fc 0%, var(--color-white) 100%);
+    background: linear-gradient(180deg, #f0f4f8 0%, var(--color-white) 100%);
 
     &__container {
         max-width: 1200px;
@@ -659,7 +659,7 @@ $gradient-cta: linear-gradient(135deg, #d4a574 0%, #c77966 100%);
 
     &:hover {
         transform: translateY(-5px);
-        box-shadow: 0 8px 30px rgba(107, 76, 147, 0.15);
+        box-shadow: 0 8px 30px rgba(30, 86, 160, 0.15);
     }
 
     .benefit-number {
@@ -709,7 +709,7 @@ $gradient-cta: linear-gradient(135deg, #d4a574 0%, #c77966 100%);
 }
 
 .content-block {
-    background: #f8f9fa;
+    background: var(--color-bg);
     padding: 2rem;
     border-radius: 1rem;
     border-left: 4px solid var(--color-primary);
@@ -757,7 +757,7 @@ $gradient-cta: linear-gradient(135deg, #d4a574 0%, #c77966 100%);
 // ========== FACILITATOR ==========
 .facilitator {
     padding: 6rem 2rem;
-    background: linear-gradient(180deg, var(--color-white) 0%, #f8f4fc 100%);
+    background: linear-gradient(180deg, var(--color-white) 0%, #f0f4f8 100%);
 
     &__container {
         max-width: 1000px;
@@ -855,7 +855,7 @@ $gradient-cta: linear-gradient(135deg, #d4a574 0%, #c77966 100%);
 }
 
 .logistics-card {
-    background: #f8f9fa;
+    background: var(--color-bg);
     padding: 2rem;
     border-radius: 1rem;
     text-align: center;
@@ -890,7 +890,7 @@ $gradient-cta: linear-gradient(135deg, #d4a574 0%, #c77966 100%);
     background: $gradient-hero;
     padding: 4rem;
     border-radius: 1.5rem;
-    box-shadow: 0 8px 40px rgba(107, 76, 147, 0.3);
+    box-shadow: 0 8px 40px rgba(30, 86, 160, 0.3);
 
     &__title {
         font-size: 2rem;
@@ -977,7 +977,7 @@ $gradient-cta: linear-gradient(135deg, #d4a574 0%, #c77966 100%);
 // ========== FAQ ==========
 .faq {
     padding: 6rem 2rem;
-    background: #f8f9fa;
+    background: var(--color-bg);
 
     &__container {
         max-width: 900px;
@@ -1081,8 +1081,8 @@ $gradient-cta: linear-gradient(135deg, #d4a574 0%, #c77966 100%);
         right: 0;
         bottom: 0;
         background:
-            radial-gradient(circle at 30% 40%, rgba(212, 165, 116, 0.15) 0%, transparent 50%),
-            radial-gradient(circle at 70% 70%, rgba(199, 121, 102, 0.15) 0%, transparent 50%);
+            radial-gradient(circle at 30% 40%, rgba(212, 160, 23, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 70% 70%, rgba(184, 134, 11, 0.15) 0%, transparent 50%);
         pointer-events: none;
     }
 

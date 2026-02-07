@@ -2,35 +2,79 @@
   line-height: 1.5;
   font-weight: 400;
 
-  /* --- NUEVA PALETA DE COLORES (Manual de Marca) --- */
-  --color-primary: #2A4B7C;
-  /* Azul Profundo (Confianza) */
-  --color-secondary: #B88A36;
-  /* Dorado Mostaza (Acento/Botones) */
-  --color-tertiary: #1F3A60;
-  /* Azul más oscuro */
+  /* ========== PALETA DE COLORES — Brillante 2026 ========== */
 
+  /* Azules vibrantes */
+  --color-primary: #1E56A0;
+  --color-primary-light: #2E7AD4;
+  --color-primary-dark: #143D75;
+
+  /* Dorados brillantes */
+  --color-secondary: #D4A017;
+  --color-secondary-light: #E8B930;
+  --color-secondary-dark: #B8860B;
+
+  /* Alias */
+  --color-tertiary: #143D75;
+
+  /* Textos */
   --color-text: #333333;
-  /* Gris Pizarra (Lectura) */
   --color-text-light: #F8F9FA;
   --color-text-dark: #212529;
+  --color-text-muted: #6B7280;
+  --color-text-heading: #1A202C;
   --color-black: #000000;
 
+  /* Fondos y bordes */
+  --color-white: #FFFFFF;
+  --color-bg: #F7F8FA;
+  --color-bg-card: #FFFFFF;
+  --color-border: #E2E8F0;
+  --color-border-light: #F1F5F9;
+  --color-disable: #dee2e6;
+
+  /* Alertas */
   --color-soft-alert: #d1ecf1;
   --color-approve-alert: #d4edda;
   --color-reject-alert: #f8d7da;
 
-  --color-white: #FFFFFF;
-  --color-disable: #dee2e6;
+  /* Semánticos */
+  --color-success: #10B981;
+  --color-error: #EF4444;
+  --color-warning: #F59E0B;
 
-  /* Configuraciones de renderizado */
+  /* Sombras reutilizables */
+  --shadow-sm: 0 2px 8px rgba(30, 86, 160, 0.08);
+  --shadow-md: 0 8px 24px rgba(30, 86, 160, 0.12);
+  --shadow-lg: 0 12px 32px rgba(30, 86, 160, 0.16);
+  --shadow-gold: 0 4px 12px rgba(212, 160, 23, 0.3);
+
+  /* Radios */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+
+  /* Renderizado */
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Eliminamos los @font-face locales para usar los de Google Fonts que cargan más rápido */
+/* ========== FONT ALIASES ========== */
+/* Componentes que usan 'Title' y 'Text' como font-family */
+@font-face {
+  font-family: 'Title';
+  src: local('Playfair Display');
+}
+
+@font-face {
+  font-family: 'Text';
+  src: local('Montserrat');
+}
+
+/* ========== BASE ========== */
 
 body {
   margin: 0;
@@ -41,10 +85,10 @@ body {
   color: var(--color-text);
   box-sizing: border-box;
   font-family: 'Montserrat', sans-serif;
-  /* Fuente para cuerpo */
 }
 
-/* TÍTULOS ELEGANTES */
+/* ========== TIPOGRAFÍA ========== */
+
 h1,
 h2,
 h3,
@@ -82,59 +126,58 @@ p {
 a {
   text-decoration: none;
   color: var(--color-primary);
-  /* Enlaces en azul */
   font-family: 'Montserrat', sans-serif;
   font-weight: 500;
 }
 
-/* INPUTS */
+/* ========== INPUTS ========== */
+
 input,
 textarea {
   max-width: 30rem;
   padding: 0.75rem 0.5rem;
-  border-radius: 4px;
-  /* Bordes ligeramente redondeados, más elegantes */
-  border: 1px solid #ccc;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
   outline: none;
   transition: all 0.25s;
   font-family: 'Montserrat', sans-serif;
 
   &:focus {
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 2px rgba(42, 75, 124, 0.1);
+    box-shadow: 0 0 0 3px rgba(30, 86, 160, 0.12);
   }
 }
 
-/* BOTONES DE ACCIÓN (Dorado Mostaza) */
+/* ========== BOTONES ========== */
+
+/* Dorado brillante — CTA principal */
 .action-btn {
   width: 100%;
   max-width: 30rem;
   padding: 0.75rem 1.5rem;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   border: none;
   font-size: 1rem;
   font-weight: 600;
   font-family: 'Montserrat', sans-serif;
   color: var(--color-white);
   background-color: var(--color-secondary);
-  /* Dorado */
   cursor: pointer;
   transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 
   &:hover {
-    background-color: #a67c30;
-    /* Un poco más oscuro al pasar el mouse */
+    background-color: var(--color-secondary-dark);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(184, 138, 54, 0.3);
+    box-shadow: var(--shadow-gold);
   }
 }
 
-/* BOTONES SIN FONDO (Outline Azul) */
+/* Outline azul */
 .nobg-btn {
   padding: 0.5rem 1.5rem;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--color-primary);
   font-size: 1rem;
   font-weight: 500;
@@ -150,16 +193,62 @@ textarea {
   }
 }
 
+/* Azul sólido — Para productos y compras */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.875rem 2.5rem;
+  border: none;
+  border-radius: var(--radius-md);
+  background-color: var(--color-secondary);
+  color: var(--color-white);
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: 'Montserrat', sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: var(--color-secondary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-gold);
+  }
+}
+
+/* Outline para secundario */
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 2rem;
+  border: 2px solid var(--color-primary);
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-primary);
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: 'Montserrat', sans-serif;
+  cursor: pointer;
+  transition: all 0.25s ease;
+
+  &:hover {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+  }
+}
+
 .disable-btn {
   padding: 0.5rem 1rem;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   border: none;
   background-color: var(--color-disable);
-  color: #888;
+  color: var(--color-text-muted);
   cursor: not-allowed;
 }
 
-/* Layout Classes */
+/* ========== LAYOUT ========== */
+
 .pages {
   width: 100%;
   min-height: 100vh;
@@ -177,7 +266,6 @@ textarea {
 
 #app {
   max-width: 100%;
-  /* Permitimos full width para el Hero */
   margin: 0 auto;
 }
 

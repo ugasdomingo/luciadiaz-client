@@ -108,7 +108,7 @@ const productTypeLabel = computed(() => {
 // Precio formateado
 const formattedPrice = computed(() => {
     if (props.product.price === 0) return 'Gratis'
-    return `${props.product.price}€`
+    return `${props.product.price}$`
 })
 
 // Fecha de inicio formateada
@@ -198,8 +198,8 @@ const handlePurchaseClick = () => {
     font-size: 12px;
     font-weight: 700;
     text-transform: uppercase;
-    background: #f0f0f0;
-    color: #6366f1;
+    background: var(--color-bg);
+    color: var(--color-primary);
     margin-bottom: 16px;
 }
 
@@ -208,7 +208,7 @@ const handlePurchaseClick = () => {
     font-weight: 800;
     line-height: 1.2;
     margin: 0 0 16px;
-    color: #111;
+    color: var(--color-text-heading);
 
     @media (max-width: 768px) {
         font-size: 32px;
@@ -218,7 +218,7 @@ const handlePurchaseClick = () => {
 .product-description {
     font-size: 18px;
     line-height: 1.6;
-    color: #666;
+    color: var(--color-text-muted);
     margin: 0 0 24px;
 }
 
@@ -230,7 +230,7 @@ const handlePurchaseClick = () => {
 
     .meta-item {
         font-size: 14px;
-        color: #999;
+        color: var(--color-text-muted);
     }
 }
 
@@ -249,7 +249,7 @@ const handlePurchaseClick = () => {
     .price-amount {
         font-size: 36px;
         font-weight: 800;
-        color: #111;
+        color: var(--color-text-heading);
     }
 }
 
@@ -257,17 +257,17 @@ const handlePurchaseClick = () => {
     padding: 16px 48px;
     border: none;
     border-radius: 12px;
-    background: #6366f1;
-    color: white;
+    background: var(--color-secondary);
+    color: var(--color-bg-card);
     font-size: 16px;
     font-weight: 700;
     cursor: pointer;
     transition: all 0.3s ease;
 
     &:hover {
-        background: #4f46e5;
+        background: var(--color-secondary-dark);
         transform: translateY(-2px);
-        box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
+        box-shadow: 0 8px 24px rgba(30, 86, 160, 0.2);
     }
 
     @media (max-width: 568px) {
@@ -282,7 +282,7 @@ const handlePurchaseClick = () => {
         font-size: 28px;
         font-weight: 700;
         margin: 0 0 24px;
-        color: #111;
+        color: var(--color-text-heading);
     }
 }
 
@@ -293,15 +293,15 @@ const handlePurchaseClick = () => {
 }
 
 .curriculum-item {
-    background: #f9f9f9;
+    background: var(--color-bg);
     border-radius: 12px;
     padding: 20px;
     border: 2px solid transparent;
     transition: all 0.2s ease;
 
     &--free {
-        background: white;
-        border-color: #10b981;
+        background: var(--color-bg-card);
+        border-color: var(--color-success);
     }
 
     &__header {
@@ -317,7 +317,7 @@ const handlePurchaseClick = () => {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #ddd;
+    background: var(--color-border);
     border-radius: 50%;
     font-weight: 700;
     font-size: 14px;
@@ -329,29 +329,29 @@ const handlePurchaseClick = () => {
     font-size: 16px;
     font-weight: 600;
     margin: 0;
-    color: #333;
+    color: var(--color-text);
 }
 
 .curriculum-badge {
     font-size: 12px;
     padding: 4px 12px;
     border-radius: 6px;
-    background: #10b981;
-    color: white;
+    background: var(--color-success);
+    color: var(--color-bg-card);
     font-weight: 600;
 
     &--locked {
-        background: #ddd;
-        color: #999;
+        background: var(--color-border);
+        color: var(--color-text-muted);
     }
 }
 
 .curriculum-notes {
     margin-top: 12px;
     padding-top: 12px;
-    border-top: 1px solid #eee;
+    border-top: 1px solid var(--color-border-light);
     font-size: 14px;
-    color: #666;
+    color: var(--color-text-muted);
     line-height: 1.6;
 }
 
@@ -360,7 +360,7 @@ const handlePurchaseClick = () => {
         font-size: 28px;
         font-weight: 700;
         margin: 0 0 24px;
-        color: #111;
+        color: var(--color-text-heading);
     }
 }
 
@@ -373,9 +373,9 @@ const handlePurchaseClick = () => {
 
     li {
         font-size: 16px;
-        color: #333;
+        color: var(--color-text);
         padding: 16px 20px;
-        background: #f9f9f9;
+        background: var(--color-bg);
         border-radius: 8px;
     }
 }
@@ -386,7 +386,7 @@ const handlePurchaseClick = () => {
     bottom: 0;
     left: 0;
     right: 0;
-    background: white;
+    background: var(--color-bg-card);
     padding: 16px 20px;
     box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
     z-index: 100;
@@ -400,7 +400,7 @@ const handlePurchaseClick = () => {
     &__price {
         font-size: 24px;
         font-weight: 800;
-        color: #111;
+        color: var(--color-text-heading);
     }
 
     &__button {
@@ -408,8 +408,8 @@ const handlePurchaseClick = () => {
         padding: 14px;
         border: none;
         border-radius: 10px;
-        background: #6366f1;
-        color: white;
+        background: var(--color-secondary);
+        color: var(--color-bg-card);
         font-size: 16px;
         font-weight: 700;
         cursor: pointer;

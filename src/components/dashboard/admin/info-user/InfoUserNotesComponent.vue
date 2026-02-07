@@ -153,7 +153,7 @@ const handle_submit = async () => {
                     padding: 1rem;
                     margin: 0;
                     border-radius: 1rem;
-                    box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.5);
+                    box-shadow: var(--shadow-sm);
                 }
             }
         }

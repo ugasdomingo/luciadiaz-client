@@ -51,7 +51,7 @@ section {
             display: flex;
             gap: 1rem;
             margin-bottom: 1rem;
-            box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.5);
+            box-shadow: var(--shadow-sm);
             padding: 1rem;
             border-radius: 1rem;
         }

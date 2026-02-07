@@ -53,7 +53,7 @@ use_scroll_reveal()
     &__content__card {
         border-radius: 1rem;
         background-color: var(--color-soft-alert);
-        box-shadow: 0 8px 32px rgba(147, 112, 219, 0.15);
+        box-shadow: 0 8px 32px rgba(30, 86, 160, 0.1);
         border-radius: 1rem;
         padding: 1rem;
         opacity: 0;
@@ -78,7 +78,7 @@ use_scroll_reveal()
 
         &:hover {
             transform: translateY(-8px);
-            box-shadow: 0 12px 32px rgba(147, 112, 219, 0.25);
+            box-shadow: 0 12px 32px rgba(30, 86, 160, 0.18);
 
             img {
                 transform: scale(1.1);

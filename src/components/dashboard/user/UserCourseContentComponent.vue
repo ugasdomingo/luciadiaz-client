@@ -70,12 +70,12 @@ const get_status_icon = (status) => {
 // Color según estado
 const get_status_color = (status) => {
     const colors = {
-        'completed': '#5a9e7d',
-        'almost_done': '#d4a574',
-        'in_progress': '#d4a574',
-        'not_started': '#dee2e6'
+        'completed': 'var(--color-success)',
+        'almost_done': 'var(--color-secondary)',
+        'in_progress': 'var(--color-secondary)',
+        'not_started': 'var(--color-disable)'
     }
-    return colors[status] || '#dee2e6'
+    return colors[status] || 'var(--color-disable)'
 }
 </script>
 
@@ -164,13 +164,13 @@ const get_status_color = (status) => {
     transition: all 0.3s ease;
 
     &:hover {
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        box-shadow: var(--shadow-md);
     }
 
     &__header {
         width: 100%;
         padding: 1.5rem;
-        background: #f8f9fa;
+        background: var(--color-bg);
         border: none;
         display: flex;
         align-items: center;
@@ -179,7 +179,7 @@ const get_status_color = (status) => {
         transition: all 0.3s ease;
 
         &:hover {
-            background: #e9ecef;
+            background: var(--color-border-light);
         }
     }
 
@@ -238,7 +238,7 @@ const get_status_color = (status) => {
     }
 
     &:hover:not(&--locked) {
-        background: #f8f9fa;
+        background: var(--color-bg);
         transform: translateX(5px);
     }
 
@@ -249,7 +249,7 @@ const get_status_color = (status) => {
 
     &--completed {
         .lesson__title {
-            color: #5a9e7d;
+            color: var(--color-success);
         }
     }
 

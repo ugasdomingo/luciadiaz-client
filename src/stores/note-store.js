@@ -9,16 +9,27 @@ export const useNoteStore = defineStore('note', () => {
     const auth_store = useAuthStore()
     const notes = ref([])
 
-    const get_all_pending_notes = async () => {
+    const get_all_notes = async () => {
         try {
             util_store.set_loading(true)
-            const response = await api({
-                method: 'get',
-                url: '/note/pending'
-            })
+            const response = await api.get('/note')
             notes.value = response.data.data
         } catch (err) {
-            console.log(err)
+            const msg = err.response?.data?.message || 'Error al cargar notas'
+            util_store.set_message(msg, 'error')
+        } finally {
+            util_store.set_loading(false)
+        }
+    }
+
+    const get_user_notes = async (user_id) => {
+        try {
+            util_store.set_loading(true)
+            const response = await api.get(`/note/user/${user_id}`)
+            notes.value = response.data.data
+        } catch (err) {
+            const msg = err.response?.data?.message || 'Error al cargar notas del usuario'
+            util_store.set_message(msg, 'error')
         } finally {
             util_store.set_loading(false)
         }
@@ -27,17 +38,13 @@ export const useNoteStore = defineStore('note', () => {
     const create_note = async (note) => {
         try {
             util_store.set_loading(true)
-            const response = await api({
-                method: 'post',
-                url: '/note',
-                data: note,
-                headers: {
-                    'Authorization': `Bearer ${auth_store.token}`
-                }
-            })
-            util_store.set_message(response.data.message, response.data.status)
+            const response = await api.post('/note', note)
+            util_store.set_message(response.data.message, 'success')
+            return response.data.data
         } catch (err) {
-            console.log(err)
+            const msg = err.response?.data?.message || 'Error al crear nota'
+            util_store.set_message(msg, 'error')
+            return null
         } finally {
             util_store.set_loading(false)
         }
@@ -46,17 +53,13 @@ export const useNoteStore = defineStore('note', () => {
     const update_note = async (note_id, note) => {
         try {
             util_store.set_loading(true)
-            const response = await api({
-                method: 'put',
-                url: `/note/${note_id}`,
-                data: note,
-                headers: {
-                    'Authorization': `Bearer ${auth_store.token}`
-                }
-            })
-            util_store.set_message(response.data.message, response.data.status)
+            const response = await api.put(`/note/${note_id}`, note)
+            util_store.set_message(response.data.message, 'success')
+            return response.data.data
         } catch (err) {
-            console.log(err)
+            const msg = err.response?.data?.message || 'Error al actualizar nota'
+            util_store.set_message(msg, 'error')
+            return null
         } finally {
             util_store.set_loading(false)
         }
@@ -65,16 +68,14 @@ export const useNoteStore = defineStore('note', () => {
     const delete_note = async (note_id) => {
         try {
             util_store.set_loading(true)
-            const response = await api({
-                method: 'delete',
-                url: `/note/${note_id}`,
-                headers: {
-                    'Authorization': `Bearer ${auth_store.token}`
-                }
-            })
-            util_store.set_message(response.data.message, response.data.status)
+            const response = await api.delete(`/note/${note_id}`)
+            util_store.set_message(response.data.message, 'success')
+            notes.value = notes.value.filter(n => n._id !== note_id)
+            return true
         } catch (err) {
-            console.log(err)
+            const msg = err.response?.data?.message || 'Error al eliminar nota'
+            util_store.set_message(msg, 'error')
+            return false
         } finally {
             util_store.set_loading(false)
         }
@@ -82,7 +83,8 @@ export const useNoteStore = defineStore('note', () => {
 
     return {
         notes,
-        get_all_pending_notes,
+        get_all_notes,
+        get_user_notes,
         create_note,
         update_note,
         delete_note

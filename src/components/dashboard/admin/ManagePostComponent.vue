@@ -21,7 +21,7 @@ const toggle_update_post = () => {
     show_update_post.value = !show_update_post.value
 
     if (post_store.posts.length === 0) {
-        post_store.get_all_posts_admin()
+        post_store.get_all_posts()
     }
 }
 
@@ -43,7 +43,7 @@ const handle_submit = async () => {
     form_data.append('category', category.value)
     form_data.append('tags', tags.value)
     form_data.append('post_cover', post_cover.value)
-    form_data.append('status', 'published')
+    form_data.append('status', 'draft')
 
     await post_store.create_post(form_data)
 
@@ -117,7 +117,7 @@ const handle_update = async () => {
             <div v-for="post in post_store.posts" :key="post.id">
                 <PostCardComponent :post="post" />
                 <div class="section__container__posts__actions" v-if="auth_store.user_data.user.role === 'Admin'">
-                    <button @click="post_store.change_post_status(post._id, 'published')"
+                    <button @click="post_store.update_post(post._id, { status: 'published' })"
                         class="action-btn">Publicar</button>
                     <button @click="post_store.delete_post(post._id)" class="nobg-btn">Eliminar</button>
                     <button @click="prepare_post_to_update(post)" class="action-btn">Editar</button>

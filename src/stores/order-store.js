@@ -15,12 +15,6 @@ export const useOrderStore = defineStore('order', () => {
     const all_orders = ref([]) // Para admin
     const current_order = ref(null)
 
-    // ================= CLIENTE: PROCESO DE COMPRA =================
-
-    /**
-     * Iniciar pago con PayPal
-     * @param {string} product_id 
-     */
     const init_paypal_checkout = async (product_id) => {
         try {
             util_store.set_loading(true)
@@ -40,10 +34,6 @@ export const useOrderStore = defineStore('order', () => {
         }
     }
 
-    /**
-     * Confirmar pago PayPal (se llama tras volver de PayPal)
-     * @param {string} paypal_order_id - Token que envía PayPal en la URL
-     */
     const confirm_paypal_payment = async (paypal_order_id) => {
         try {
             util_store.set_loading(true)
@@ -51,7 +41,6 @@ export const useOrderStore = defineStore('order', () => {
 
             util_store.set_message(response.data.message, 'success')
 
-            // ✨ IMPORTANTE: Refrescar user_data para actualizar purchases
             await auth_store.refresh()
 
             return true
@@ -64,18 +53,17 @@ export const useOrderStore = defineStore('order', () => {
         }
     }
 
-    /**
-     * Reportar pago manual (Transferencia/Bizum)
-     * @param {Object} order_data - { product_id, payment_proof: { public_id, secure_url } }
-     */
     const create_offline_order = async (order_data) => {
         try {
             util_store.set_loading(true)
-            const response = await api.post('/orders/offline', order_data)
+            const payload = {
+                ...order_data,
+                payment_method: 'offline'
+            }
+            const response = await api.post('/orders/offline', payload)
 
             util_store.set_message(response.data.message, 'success')
 
-            // ✨ IMPORTANTE: Refrescar user_data para actualizar purchases (aparecerá como pending)
             await auth_store.refresh()
 
             return response.data.data
@@ -88,12 +76,6 @@ export const useOrderStore = defineStore('order', () => {
         }
     }
 
-    // ================= ADMIN: GESTIÓN DE ÓRDENES =================
-
-    /**
-     * Obtener todas las órdenes (Admin)
-     * @param {Object} filters - { payment_status, payment_method, user_id, from_date, to_date }
-     */
     const fetch_all_orders = async (filters = {}) => {
         try {
             util_store.set_loading(true)
@@ -114,9 +96,6 @@ export const useOrderStore = defineStore('order', () => {
         }
     }
 
-    /**
-     * Obtener órdenes pendientes de validación (Admin)
-     */
     const fetch_pending_orders = async () => {
         try {
             util_store.set_loading(true)
@@ -133,9 +112,6 @@ export const useOrderStore = defineStore('order', () => {
         }
     }
 
-    /**
-     * Aprobar orden offline (Admin)
-     */
     const approve_offline_order = async (order_id) => {
         try {
             util_store.set_loading(true)
@@ -143,10 +119,8 @@ export const useOrderStore = defineStore('order', () => {
 
             util_store.set_message(response.data.message, 'success')
 
-            // Actualizar lista local (remover de pendientes)
             pending_orders.value = pending_orders.value.filter(o => o._id !== order_id)
 
-            // Si existe en all_orders, actualizarlo
             const index = all_orders.value.findIndex(o => o._id === order_id)
             if (index !== -1) {
                 all_orders.value[index].payment_status = 'completed'
@@ -162,9 +136,6 @@ export const useOrderStore = defineStore('order', () => {
         }
     }
 
-    /**
-     * Rechazar orden offline (Admin)
-     */
     const reject_offline_order = async (order_id) => {
         try {
             util_store.set_loading(true)
@@ -172,8 +143,12 @@ export const useOrderStore = defineStore('order', () => {
 
             util_store.set_message(response.data.message, 'success')
 
-            // Remover de pendientes
             pending_orders.value = pending_orders.value.filter(o => o._id !== order_id)
+
+            const index = all_orders.value.findIndex(o => o._id === order_id)
+            if (index !== -1) {
+                all_orders.value[index].payment_status = 'failed'
+            }
 
             return true
         } catch (error) {

@@ -1,5 +1,5 @@
 <template>
-    <RouterLink :to="`/blog/${post.slug}`" class="post-card">
+    <RouterLink :to="`/blog/${post._id}`" class="post-card">
         <div class="post-card__image-wrapper">
             <img :src="post.post_cover.secure_url" :alt="post.title" class="post-card__image">
             <div class="post-card__overlay">
@@ -47,14 +47,14 @@ const get_excerpt = (html) => {
     background: var(--color-white);
     border-radius: 1rem;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--shadow-sm);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
     animation: fade-in 0.6s ease-out var(--delay, 0s) both;
 
     &:hover {
         transform: translateY(-8px);
-        box-shadow: 0 12px 24px rgba(107, 76, 147, 0.15);
+        box-shadow: var(--shadow-md);
 
         .post-card__image {
             transform: scale(1.05);
@@ -84,8 +84,8 @@ const get_excerpt = (html) => {
         position: absolute;
         inset: 0;
         background: linear-gradient(to top,
-                rgba(107, 76, 147, 0.9) 0%,
-                rgba(107, 76, 147, 0.4) 50%,
+                rgba(30, 86, 160, 0.85) 0%,
+                rgba(30, 86, 160, 0.4) 50%,
                 transparent 100%);
         opacity: 0;
         transition: opacity 0.4s ease;

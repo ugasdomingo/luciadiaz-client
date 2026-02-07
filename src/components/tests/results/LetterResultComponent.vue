@@ -62,7 +62,7 @@ const reasons = ref(props.letter_results.reasons)
         padding: 1rem;
         border-radius: 1rem;
         border: 1px dotted var(--color-text);
-        box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.5);
+        box-shadow: var(--shadow-sm);
         box-sizing: border-box;
         margin: 0 auto;
 

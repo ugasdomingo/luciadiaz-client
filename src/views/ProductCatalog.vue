@@ -206,7 +206,7 @@ onMounted(() => {
 <style scoped lang="scss">
 .product-catalog {
     min-height: 80vh;
-    background: #f9f9f9;
+    background: var(--color-bg);
     padding: 40px 0;
 
     @media (max-width: 768px) {
@@ -237,7 +237,7 @@ onMounted(() => {
     font-size: 42px;
     font-weight: 800;
     margin: 0 0 16px;
-    color: #111;
+    color: var(--color-text-heading);
 
     @media (max-width: 768px) {
         font-size: 32px;
@@ -246,7 +246,7 @@ onMounted(() => {
 
 .catalog-subtitle {
     font-size: 18px;
-    color: #666;
+    color: var(--color-text-muted);
     margin: 0;
     max-width: 600px;
     margin: 0 auto;
@@ -286,18 +286,18 @@ onMounted(() => {
     width: 100%;
     padding: 14px;
     margin-bottom: 24px;
-    border: 2px solid #ddd;
+    border: 2px solid var(--color-border);
     border-radius: 10px;
-    background: white;
+    background: var(--color-bg-card);
     font-size: 16px;
     font-weight: 600;
-    color: #333;
+    color: var(--color-text);
     cursor: pointer;
     transition: all 0.2s ease;
 
     &:hover {
-        border-color: #6366f1;
-        color: #6366f1;
+        border-color: var(--color-primary);
+        color: var(--color-primary);
     }
 
     @media (max-width: 1024px) {
@@ -325,29 +325,29 @@ onMounted(() => {
         font-size: 24px;
         font-weight: 700;
         margin: 0 0 12px;
-        color: #333;
+        color: var(--color-text);
     }
 
     p {
         font-size: 16px;
-        color: #666;
+        color: var(--color-text-muted);
         margin: 0 0 32px;
     }
 
     .btn-clear {
         padding: 12px 32px;
-        border: 2px solid #6366f1;
+        border: 2px solid var(--color-primary);
         border-radius: 10px;
-        background: white;
-        color: #6366f1;
+        background: var(--color-bg-card);
+        color: var(--color-primary);
         font-size: 16px;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.2s ease;
 
         &:hover {
-            background: #6366f1;
-            color: white;
+            background: var(--color-primary);
+            color: var(--color-bg-card);
         }
     }
 }
@@ -367,7 +367,7 @@ onMounted(() => {
 .catalog-count {
     text-align: center;
     font-size: 14px;
-    color: #999;
+    color: var(--color-text-muted);
     padding: 20px;
 }
 
@@ -390,7 +390,7 @@ onMounted(() => {
         left: 0;
         right: 0;
         max-height: 85vh;
-        background: white;
+        background: var(--color-bg-card);
         border-radius: 24px 24px 0 0;
         padding: 24px;
         overflow-y: auto;
@@ -407,7 +407,7 @@ onMounted(() => {
             font-size: 20px;
             font-weight: 700;
             margin: 0;
-            color: #111;
+            color: var(--color-text-heading);
         }
 
         .btn-close {
@@ -417,14 +417,14 @@ onMounted(() => {
             align-items: center;
             justify-content: center;
             border: none;
-            background: #f5f5f5;
+            background: var(--color-bg);
             border-radius: 50%;
             font-size: 20px;
             cursor: pointer;
-            color: #666;
+            color: var(--color-text-muted);
 
             &:hover {
-                background: #eee;
+                background: var(--color-border-light);
             }
         }
     }
@@ -435,14 +435,14 @@ onMounted(() => {
         margin-top: 24px;
         border: none;
         border-radius: 10px;
-        background: #6366f1;
-        color: white;
+        background: var(--color-primary);
+        color: var(--color-bg-card);
         font-size: 16px;
         font-weight: 700;
         cursor: pointer;
 
         &:hover {
-            background: #4f46e5;
+            background: var(--color-primary-dark);
         }
     }
 }

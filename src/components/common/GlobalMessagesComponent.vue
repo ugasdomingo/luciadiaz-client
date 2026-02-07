@@ -61,7 +61,7 @@ onMounted(() => {
     border-radius: 0.5rem;
     margin: 0;
     text-align: center;
-    box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-sm);
     animation: slide-in 0.25s ease-in-out;
     opacity: 1;
     transition: all 0.5s;

@@ -112,7 +112,7 @@ const common_store = useCommonStore()
         width: fit-content;
         padding: 0.5rem 1rem;
         border-radius: 1rem;
-        box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.4);
+        box-shadow: var(--shadow-sm);
         cursor: pointer;
         opacity: 0;
         transform: translateY(30px);
@@ -124,7 +124,7 @@ const common_store = useCommonStore()
         }
 
         &:hover {
-            box-shadow: 0 6px 20px rgba(107, 76, 147, 0.3);
+            box-shadow: 0 6px 20px rgba(30, 86, 160, 0.3);
             transform: translateY(-3px);
         }
     }

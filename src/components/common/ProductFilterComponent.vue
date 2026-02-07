@@ -117,10 +117,10 @@ watch(() => props.filters, (newFilters) => {
 
 <style scoped lang="scss">
 .product-filters {
-    background: white;
+    background: var(--color-bg-card);
     padding: 24px;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--shadow-sm);
 
     @media (max-width: 768px) {
         padding: 16px;
@@ -131,7 +131,7 @@ watch(() => props.filters, (newFilters) => {
     font-size: 18px;
     font-weight: 700;
     margin: 0 0 20px;
-    color: #111;
+    color: var(--color-text-heading);
 }
 
 .filter-group {
@@ -146,7 +146,7 @@ watch(() => props.filters, (newFilters) => {
     display: block;
     font-size: 14px;
     font-weight: 600;
-    color: #333;
+    color: var(--color-text);
     margin-bottom: 8px;
 }
 
@@ -154,15 +154,15 @@ watch(() => props.filters, (newFilters) => {
 .filter-input {
     width: 100%;
     padding: 10px 12px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--color-border);
     border-radius: 8px;
     font-size: 14px;
-    background: white;
+    background: var(--color-bg-card);
     transition: border-color 0.2s ease;
 
     &:focus {
         outline: none;
-        border-color: #6366f1;
+        border-color: var(--color-primary);
     }
 }
 
@@ -172,7 +172,7 @@ watch(() => props.filters, (newFilters) => {
 
 .filter-input {
     &::placeholder {
-        color: #999;
+        color: var(--color-text-muted);
     }
 }
 
@@ -180,19 +180,19 @@ watch(() => props.filters, (newFilters) => {
     width: 100%;
     padding: 10px;
     margin-top: 20px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--color-border);
     border-radius: 8px;
-    background: white;
-    color: #666;
+    background: var(--color-bg-card);
+    color: var(--color-text-muted);
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
 
     &:hover {
-        background: #f5f5f5;
-        border-color: #999;
-        color: #333;
+        background: var(--color-bg);
+        border-color: var(--color-text-muted);
+        color: var(--color-text);
     }
 }
 </style>

@@ -12,19 +12,13 @@ export const useTestStore = defineStore('test', () => {
     const create_test_result = async (test_name, results) => {
         try {
             util_store.set_loading(true)
-            const response = await api({
-                method: 'post',
-                url: '/test_result',
-                data: { test_name, results },
-                headers: {
-                    'Authorization': `Bearer ${auth_store.token}`
-                }
-            })
-            util_store.set_message(response.data.message, response.data.status)
+            const response = await api.post('/test_result', { test_name, results })
+            util_store.set_message(response.data.message, 'success')
             await auth_store.refresh()
             router.push('/mi-espacio')
         } catch (err) {
-            console.log(err)
+            const msg = err.response?.data?.message || 'Error al guardar resultado'
+            util_store.set_message(msg, 'error')
         } finally {
             util_store.set_loading(false)
         }

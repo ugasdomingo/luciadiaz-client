@@ -90,7 +90,7 @@ const show_others = ref(false)
         gap: 0;
         padding: 1rem;
         border-radius: 1rem;
-        box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.5);
+        box-shadow: var(--shadow-sm);
         box-sizing: border-box;
 
         p {
@@ -101,7 +101,7 @@ const show_others = ref(false)
     .total-results {
         padding: 1rem;
         border-radius: 1rem;
-        box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.5);
+        box-shadow: var(--shadow-sm);
         box-sizing: border-box;
 
         h3 {
@@ -132,7 +132,7 @@ const show_others = ref(false)
             gap: 0;
             padding: 1rem;
             border-radius: 1rem;
-            box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.5);
+            box-shadow: var(--shadow-sm);
             box-sizing: border-box;
 
             p {

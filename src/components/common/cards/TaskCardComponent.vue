@@ -85,23 +85,23 @@ const handleComplete = async () => {
     border-radius: 12px;
     padding: 1.5rem;
     margin-bottom: 1rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--shadow-sm);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border-left: 4px solid var(--color-primary);
     gap: 1rem;
 
     &:hover {
         transform: translateY(-4px);
-        box-shadow: 0 8px 16px rgba(107, 76, 147, 0.12);
+        box-shadow: var(--shadow-md);
     }
 
     &.status-completed {
-        border-left-color: #4CAF50;
+        border-left-color: var(--color-success);
         opacity: 0.85;
     }
 
     &.status-cancelled {
-        border-left-color: #9E9E9E;
+        border-left-color: var(--color-text-muted);
         opacity: 0.7;
     }
 
@@ -127,18 +127,18 @@ const handleComplete = async () => {
         font-family: 'Text', sans-serif;
 
         &.status-pending {
-            background: rgba(255, 152, 0, 0.15);
-            color: #F57C00;
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--color-warning);
         }
 
         &.status-completed {
-            background: rgba(76, 175, 80, 0.15);
-            color: #388E3C;
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--color-success);
         }
 
         &.status-cancelled {
-            background: rgba(158, 158, 158, 0.15);
-            color: #616161;
+            background: rgba(107, 114, 128, 0.15);
+            color: var(--color-text-muted);
         }
     }
 
@@ -187,11 +187,11 @@ const handleComplete = async () => {
         font-family: 'Text', sans-serif;
         cursor: pointer;
         transition: all 0.3s ease;
-        box-shadow: 0 4px 12px rgba(107, 76, 147, 0.2);
+        box-shadow: 0 4px 12px rgba(30, 86, 160, 0.2);
 
         &:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(107, 76, 147, 0.3);
+            box-shadow: var(--shadow-gold);
         }
 
         &:active {

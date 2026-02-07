@@ -83,7 +83,7 @@ const scroll_progress = ref(0)
 const copied = ref(false)
 
 onBeforeMount(() => {
-    post_store.get_post_by_slug(route.params.post_slug)
+    post_store.get_post_by_id(route.params.post_id)
 })
 
 onMounted(() => {
@@ -151,10 +151,10 @@ const copy_link = async () => {
         top: 0;
         left: 0;
         height: 6px;
-        background: linear-gradient(90deg, var(--color-primary), var(--color-tertiary));
+        background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
         z-index: 1000;
         transition: width 0.1s ease;
-        box-shadow: 0 2px 4px rgba(107, 76, 147, 0.3);
+        box-shadow: 0 2px 4px rgba(30, 86, 160, 0.3);
     }
 
     &__breadcrumbs {
@@ -426,7 +426,7 @@ const copy_link = async () => {
 
         &.link {
             background: var(--color-secondary);
-            color: white;
+            color: var(--color-bg-card);
 
             &:hover {
                 background: var(--color-primary);

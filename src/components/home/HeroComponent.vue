@@ -56,7 +56,7 @@
         width: 100%;
         height: 100%;
         /* Degradado azul característico de la nueva marca */
-        background: linear-gradient(180deg, rgba(42, 75, 124, 0.3) 0%, rgba(42, 75, 124, 0.85) 60%, rgba(42, 75, 124, 1) 100%);
+        background: linear-gradient(180deg, rgba(30, 86, 160, 0.3) 0%, rgba(30, 86, 160, 0.85) 60%, rgba(30, 86, 160, 1) 100%);
     }
 
     &__content {

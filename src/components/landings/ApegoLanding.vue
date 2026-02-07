@@ -416,13 +416,13 @@ const toggleFaq = (index) => {
 
 <style scoped lang="scss">
 // Variables de colores
-$apego-primary: #7b5d9e;
-$apego-secondary: #9b7db8;
-$apego-accent: #b89ecc;
-$apego-warm: #a88ab8;
-$apego-dark: #2d2d44;
-$gradient-hero: linear-gradient(135deg, #7b5d9e 0%, #5d4a7a 100%);
-$gradient-cta: linear-gradient(135deg, #7db899 0%, #5a9e7d 100%);
+$apego-primary: #1E56A0;
+$apego-secondary: #2E7AD4;
+$apego-accent: #D4A017;
+$apego-warm: #E8B930;
+$apego-dark: #143D75;
+$gradient-hero: linear-gradient(135deg, #1E56A0 0%, #143D75 100%);
+$gradient-cta: linear-gradient(135deg, #D4A017 0%, #B8860B 100%);
 
 .landing-apego {
     width: 100%;
@@ -450,8 +450,8 @@ $gradient-cta: linear-gradient(135deg, #7db899 0%, #5a9e7d 100%);
         right: 0;
         bottom: 0;
         background:
-            radial-gradient(circle at 20% 50%, rgba(155, 125, 184, 0.15) 0%, transparent 50%),
-            radial-gradient(circle at 80% 80%, rgba(168, 138, 184, 0.15) 0%, transparent 50%);
+            radial-gradient(circle at 20% 50%, rgba(30, 86, 160, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 80% 80%, rgba(46, 122, 212, 0.15) 0%, transparent 50%);
         pointer-events: none;
     }
 
@@ -518,11 +518,11 @@ $gradient-cta: linear-gradient(135deg, #7db899 0%, #5a9e7d 100%);
     &--primary {
         background: $gradient-cta;
         color: var(--color-white);
-        box-shadow: 0 4px 15px rgba(125, 184, 153, 0.4);
+        box-shadow: 0 4px 15px rgba(212, 160, 23, 0.4);
 
         &:hover {
             transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(125, 184, 153, 0.6);
+            box-shadow: 0 6px 20px rgba(212, 160, 23, 0.6);
         }
     }
 
@@ -605,7 +605,7 @@ $gradient-cta: linear-gradient(135deg, #7db899 0%, #5a9e7d 100%);
     align-items: flex-start;
     gap: 1rem;
     padding: 1.5rem;
-    background: #f8f9fa;
+    background: var(--color-bg);
     border-radius: 0.75rem;
     transition: all 0.3s ease;
 
@@ -639,7 +639,7 @@ $gradient-cta: linear-gradient(135deg, #7db899 0%, #5a9e7d 100%);
 // ========== CONTENIDO ==========
 .content {
     padding: 6rem 2rem;
-    background: linear-gradient(180deg, #f8f4fc 0%, var(--color-white) 100%);
+    background: linear-gradient(180deg, #f0f4f8 0%, var(--color-white) 100%);
 
     &__container {
         max-width: 1000px;
@@ -724,7 +724,7 @@ $gradient-cta: linear-gradient(135deg, #7db899 0%, #5a9e7d 100%);
 
 .pattern-item {
     padding: 1rem;
-    background: #f8f9fa;
+    background: var(--color-bg);
     border-radius: 0.5rem;
 
     strong {
@@ -772,7 +772,7 @@ $gradient-cta: linear-gradient(135deg, #7db899 0%, #5a9e7d 100%);
 }
 
 .include-card {
-    background: #f8f9fa;
+    background: var(--color-bg);
     padding: 2rem;
     border-radius: 1rem;
     text-align: center;
@@ -806,7 +806,7 @@ $gradient-cta: linear-gradient(135deg, #7db899 0%, #5a9e7d 100%);
 // ========== PARA QUIÉN ES ==========
 .target {
     padding: 6rem 2rem;
-    background: linear-gradient(180deg, var(--color-white) 0%, #f8f4fc 100%);
+    background: linear-gradient(180deg, var(--color-white) 0%, #f0f4f8 100%);
 
     &__container {
         max-width: 1100px;
@@ -857,12 +857,12 @@ $gradient-cta: linear-gradient(135deg, #7db899 0%, #5a9e7d 100%);
     }
 
     &--yes .target-icon {
-        background: #5a9e7d;
+        background: var(--color-success);
         color: var(--color-white);
     }
 
     &--no .target-icon {
-        background: #d9837b;
+        background: var(--color-error);
         color: var(--color-white);
     }
 
@@ -952,7 +952,7 @@ $gradient-cta: linear-gradient(135deg, #7db899 0%, #5a9e7d 100%);
 // ========== CÓMO FUNCIONA ==========
 .process {
     padding: 6rem 2rem;
-    background: linear-gradient(180deg, #f8f4fc 0%, var(--color-white) 100%);
+    background: linear-gradient(180deg, #f0f4f8 0%, var(--color-white) 100%);
 
     &__container {
         max-width: 1000px;
@@ -1021,7 +1021,7 @@ $gradient-cta: linear-gradient(135deg, #7db899 0%, #5a9e7d 100%);
 // ========== FAQ ==========
 .faq {
     padding: 6rem 2rem;
-    background: #f8f9fa;
+    background: var(--color-bg);
 
     &__container {
         max-width: 900px;
@@ -1125,8 +1125,8 @@ $gradient-cta: linear-gradient(135deg, #7db899 0%, #5a9e7d 100%);
         right: 0;
         bottom: 0;
         background:
-            radial-gradient(circle at 30% 40%, rgba(155, 125, 184, 0.15) 0%, transparent 50%),
-            radial-gradient(circle at 70% 70%, rgba(168, 138, 184, 0.15) 0%, transparent 50%);
+            radial-gradient(circle at 30% 40%, rgba(30, 86, 160, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 70% 70%, rgba(46, 122, 212, 0.15) 0%, transparent 50%);
         pointer-events: none;
     }
 

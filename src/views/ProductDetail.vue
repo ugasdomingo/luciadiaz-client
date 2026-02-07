@@ -107,12 +107,12 @@ onMounted(() => {
         font-size: 32px;
         font-weight: 800;
         margin: 0 0 16px;
-        color: #111;
+        color: var(--color-text-heading);
     }
 
     p {
         font-size: 18px;
-        color: #666;
+        color: var(--color-text-muted);
         margin: 0 0 32px;
     }
 
@@ -120,15 +120,15 @@ onMounted(() => {
         display: inline-block;
         padding: 14px 32px;
         border-radius: 10px;
-        background: #6366f1;
-        color: white;
+        background: var(--color-primary);
+        color: var(--color-bg-card);
         font-size: 16px;
         font-weight: 600;
         text-decoration: none;
         transition: all 0.2s ease;
 
         &:hover {
-            background: #4f46e5;
+            background: var(--color-primary-dark);
             transform: translateY(-2px);
         }
     }

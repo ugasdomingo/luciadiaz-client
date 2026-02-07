@@ -20,11 +20,11 @@
                     <div class="price-summary">
                         <div class="price-row">
                             <span>Subtotal:</span>
-                            <span class="price-value">{{ product.price }}€</span>
+                            <span class="price-value">{{ product.price }}$</span>
                         </div>
                         <div class="price-row price-row--total">
                             <span>Total:</span>
-                            <span class="price-value">{{ product.price }}€</span>
+                            <span class="price-value">{{ product.price }}$</span>
                         </div>
                     </div>
                 </section>
@@ -233,7 +233,7 @@ onMounted(() => {
 <style scoped lang="scss">
 .checkout {
     min-height: 80vh;
-    background: #f9f9f9;
+    background: var(--color-bg);
     padding: 40px 20px;
 
     @media (max-width: 768px) {
@@ -258,7 +258,7 @@ onMounted(() => {
 }
 
 .checkout-summary {
-    background: white;
+    background: var(--color-bg-card);
     padding: 32px;
     border-radius: 16px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
@@ -273,7 +273,7 @@ onMounted(() => {
     font-size: 28px;
     font-weight: 800;
     margin: 0 0 24px;
-    color: #111;
+    color: var(--color-text-heading);
 }
 
 .product-summary {
@@ -291,18 +291,18 @@ onMounted(() => {
     font-size: 20px;
     font-weight: 700;
     margin: 0 0 8px;
-    color: #333;
+    color: var(--color-text);
 }
 
 .product-description {
     font-size: 14px;
-    color: #666;
+    color: var(--color-text-muted);
     line-height: 1.6;
     margin: 0;
 }
 
 .price-summary {
-    border-top: 2px solid #eee;
+    border-top: 2px solid var(--color-border-light);
     padding-top: 20px;
 }
 
@@ -312,12 +312,12 @@ onMounted(() => {
     align-items: center;
     margin-bottom: 12px;
     font-size: 16px;
-    color: #666;
+    color: var(--color-text-muted);
 
     &--total {
         font-size: 24px;
         font-weight: 800;
-        color: #111;
+        color: var(--color-text-heading);
         margin-bottom: 0;
     }
 }
@@ -327,7 +327,7 @@ onMounted(() => {
 }
 
 .checkout-payment {
-    background: white;
+    background: var(--color-bg-card);
     padding: 32px;
     border-radius: 16px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
@@ -340,7 +340,7 @@ onMounted(() => {
         font-size: 24px;
         font-weight: 700;
         margin: 0 0 24px;
-        color: #111;
+        color: var(--color-text-heading);
     }
 }
 
@@ -352,19 +352,19 @@ onMounted(() => {
 }
 
 .payment-method {
-    border: 2px solid #ddd;
+    border: 2px solid var(--color-border);
     border-radius: 12px;
     padding: 20px;
     cursor: pointer;
     transition: all 0.2s ease;
 
     &:hover {
-        border-color: #6366f1;
+        border-color: var(--color-primary);
     }
 
     &--selected {
-        border-color: #6366f1;
-        background: #f5f5ff;
+        border-color: var(--color-primary);
+        background: var(--color-border-light);
     }
 
     input[type="radio"] {
@@ -389,12 +389,12 @@ onMounted(() => {
         font-size: 16px;
         font-weight: 700;
         margin: 0 0 4px;
-        color: #333;
+        color: var(--color-text);
     }
 
     p {
         font-size: 14px;
-        color: #666;
+        color: var(--color-text-muted);
         margin: 0;
     }
 }
@@ -404,7 +404,7 @@ onMounted(() => {
 }
 
 .bank-info {
-    background: #f9f9f9;
+    background: var(--color-bg);
     padding: 20px;
     border-radius: 12px;
     margin-bottom: 20px;
@@ -413,7 +413,7 @@ onMounted(() => {
         font-size: 16px;
         font-weight: 700;
         margin: 0 0 16px;
-        color: #333;
+        color: var(--color-text);
     }
 }
 
@@ -429,11 +429,11 @@ onMounted(() => {
     font-size: 14px;
 
     strong {
-        color: #333;
+        color: var(--color-text);
     }
 
     span {
-        color: #666;
+        color: var(--color-text-muted);
     }
 }
 
@@ -441,13 +441,13 @@ onMounted(() => {
     input[type="file"] {
         width: 100%;
         padding: 12px;
-        border: 2px dashed #ddd;
+        border: 2px dashed var(--color-border);
         border-radius: 8px;
         cursor: pointer;
         font-size: 14px;
 
         &:hover {
-            border-color: #6366f1;
+            border-color: var(--color-primary);
         }
     }
 }
@@ -456,7 +456,7 @@ onMounted(() => {
     display: block;
     font-size: 14px;
     font-weight: 600;
-    color: #333;
+    color: var(--color-text);
     margin-bottom: 8px;
 }
 
@@ -488,7 +488,7 @@ onMounted(() => {
         font-size: 16px;
 
         &:hover {
-            background: white;
+            background: var(--color-bg-card);
         }
     }
 }
@@ -498,8 +498,8 @@ onMounted(() => {
     padding: 16px;
     border: none;
     border-radius: 12px;
-    background: #6366f1;
-    color: white;
+    background: var(--color-primary);
+    color: var(--color-bg-card);
     font-size: 18px;
     font-weight: 700;
     cursor: pointer;
@@ -507,25 +507,25 @@ onMounted(() => {
     margin-bottom: 16px;
 
     &:hover:not(.btn-pay--disabled) {
-        background: #4f46e5;
+        background: var(--color-primary-dark);
         transform: translateY(-2px);
     }
 
     &--disabled {
-        background: #ddd;
-        color: #999;
+        background: var(--color-border);
+        color: var(--color-text-muted);
         cursor: not-allowed;
     }
 }
 
 .checkout-note {
     font-size: 13px;
-    color: #999;
+    color: var(--color-text-muted);
     text-align: center;
     margin: 0;
 
     a {
-        color: #6366f1;
+        color: var(--color-primary);
         text-decoration: none;
 
         &:hover {
@@ -537,22 +537,22 @@ onMounted(() => {
 .checkout-error {
     text-align: center;
     padding: 80px 20px;
-    background: white;
+    background: var(--color-bg-card);
     border-radius: 16px;
 
     h2 {
         font-size: 28px;
         font-weight: 700;
         margin: 0 0 24px;
-        color: #333;
+        color: var(--color-text);
     }
 
     .btn-back {
         display: inline-block;
         padding: 14px 32px;
         border-radius: 10px;
-        background: #6366f1;
-        color: white;
+        background: var(--color-primary);
+        color: var(--color-bg-card);
         text-decoration: none;
         font-weight: 600;
     }

@@ -52,7 +52,7 @@ const handle_submit = async () => {
     flex-direction: column;
     gap: 1rem;
     margin: 0 auto;
-    box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.8);
+    box-shadow: var(--shadow-sm);
     padding: 1rem;
     border-radius: 0.5rem;
     box-sizing: border-box;
@@ -84,7 +84,7 @@ const handle_submit = async () => {
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
-            box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.8);
+            box-shadow: var(--shadow-sm);
             padding: 1rem;
             border-radius: 0.5rem;
             box-sizing: border-box;

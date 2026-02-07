@@ -102,8 +102,10 @@ onMounted(() => {
 }
 
 .header__bg {
-    background-color: color-mix(in srgb, var(--color-white) 80%, transparent);
-
+    background-color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: var(--shadow-sm);
 }
 
 @media screen and (max-width: 720px) {

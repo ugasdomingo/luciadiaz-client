@@ -10,7 +10,7 @@ defineProps({
         <section class="content-overlay">
             <div class="content-overlay__title">
                 <h3>{{ therapy.title }}</h3>
-                <p class="price">€{{ therapy.precio }}</p>
+                <p class="price">${{ therapy.precio }}</p>
             </div>
             <p>{{ therapy.description }}</p>
             <a class="action-btn" :href="therapy.link" target="_blank">Reservar</a>

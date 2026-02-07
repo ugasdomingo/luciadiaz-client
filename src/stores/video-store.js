@@ -8,74 +8,63 @@ export const useVideoStore = defineStore('video', () => {
     const util_store = useUtilStore()
     const auth_store = useAuthStore()
     const videos = ref([])
-    const video = ref({})
+    const video = ref(null)
 
     const get_all_videos = async (display) => {
         try {
             util_store.set_loading(true)
-            const response = await api({
-                method: 'get',
-                url: `/video/${display}`
-            })
+            const response = await api.get(`/video/${display}`)
             videos.value = response.data.data
-            console.log(response.data.data)
         } catch (err) {
-            console.log(err)
+            const msg = err.response?.data?.message || 'Error al cargar videos'
+            util_store.set_message(msg, 'error')
         } finally {
             util_store.set_loading(false)
         }
     }
 
-    const get_video_by_id = async (id) => {
+    const get_video_by_id = async (video_id) => {
         try {
             util_store.set_loading(true)
-            const response = await api({
-                method: 'get',
-                url: `/video/${id}`
-            })
+            const response = await api.get(`/video/video/${video_id}`)
             video.value = response.data.data
         } catch (err) {
-            console.log(err)
+            const msg = err.response?.data?.message || 'Video no encontrado'
+            util_store.set_message(msg, 'error')
         } finally {
             util_store.set_loading(false)
         }
     }
 
-    const create_video = async (video) => {
+    const create_video = async (video_data) => {
         try {
             util_store.set_loading(true)
-            const response = await api({
-                method: 'post',
-                url: '/video',
-                data: video,
-                headers: {
-                    'Authorization': `Bearer ${auth_store.token}`
-                }
+            const response = await api.post('/video', video_data, {
+                headers: { 'Content-Type': 'multipart/form-data' }
             })
-            videos.value = response.data.data
-            util_store.set_message(response.data.message, response.data.status)
+            util_store.set_message(response.data.message, 'success')
+            return response.data.data
         } catch (err) {
-            console.log(err)
+            const msg = err.response?.data?.message || 'Error al crear video'
+            util_store.set_message(msg, 'error')
+            return null
         } finally {
             util_store.set_loading(false)
         }
     }
 
-    const update_video = async (video_id, video) => {
+    const update_video = async (video_id, video_data) => {
         try {
             util_store.set_loading(true)
-            const response = await api({
-                method: 'put',
-                url: `/video/${video_id}`,
-                data: video,
-                headers: {
-                    'Authorization': `Bearer ${auth_store.token}`
-                }
+            const response = await api.put(`/video/${video_id}`, video_data, {
+                headers: { 'Content-Type': 'multipart/form-data' }
             })
-            videos.value = response.data.data
-            util_store.set_message(response.data.message, response.data.status)
+            util_store.set_message(response.data.message, 'success')
+            return response.data.data
         } catch (err) {
-            console.log(err)
+            const msg = err.response?.data?.message || 'Error al actualizar video'
+            util_store.set_message(msg, 'error')
+            return null
         } finally {
             util_store.set_loading(false)
         }
@@ -84,17 +73,14 @@ export const useVideoStore = defineStore('video', () => {
     const delete_video = async (video_id) => {
         try {
             util_store.set_loading(true)
-            const response = await api({
-                method: 'delete',
-                url: `/video/${video_id}`,
-                headers: {
-                    'Authorization': `Bearer ${auth_store.token}`
-                }
-            })
-            videos.value = response.data.data
-            util_store.set_message(response.data.message, response.data.status)
+            const response = await api.delete(`/video/${video_id}`)
+            util_store.set_message(response.data.message, 'success')
+            videos.value = videos.value.filter(v => v._id !== video_id)
+            return true
         } catch (err) {
-            console.log(err)
+            const msg = err.response?.data?.message || 'Error al eliminar video'
+            util_store.set_message(msg, 'error')
+            return false
         } finally {
             util_store.set_loading(false)
         }

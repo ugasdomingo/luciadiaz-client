@@ -1,47 +1,18 @@
 <script setup>
-import { onBeforeMount, computed, ref } from 'vue'
-import { useLikeStore } from '../../../stores/like-store.js'
+import { ref } from 'vue'
 
-const like_store = useLikeStore()
-const likes = computed(() => like_store.likes)
-const show_get_all_likes = ref(false)
+const show_section = ref(false)
 
-onBeforeMount(() => {
-    like_store.get_all_likes()
-})
-
-const toggle_get_all_likes = () => {
-    show_get_all_likes.value = !show_get_all_likes.value
+const toggle_section = () => {
+    show_section.value = !show_section.value
 }
 </script>
 
 <template>
     <section class="section__container">
-        <h2>Ver Likes <span @click="toggle_get_all_likes">{{ show_get_all_likes ? '-' : '+' }}</span></h2>
-        <div v-if="show_get_all_likes" class="section__container__content">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Nombre</th>
-                        <th>Apellido</th>
-                        <th>Correo</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="like in likes" :key="like.id">
-                        <td>{{ like.id }}</td>
-                        <td>{{ like.name }}</td>
-                        <td>{{ like.last_name }}</td>
-                        <td>{{ like.email }}</td>
-                        <td>
-                            <button @click="toggle_update_like">Editar</button>
-                            <button @click="like_store.delete_like(like.id)">Eliminar</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+        <h2>Likes <span @click="toggle_section">{{ show_section ? '-' : '+' }}</span></h2>
+        <div v-if="show_section" class="section__container__content">
+            <p>Los likes se gestionan de forma individual en cada post o video.</p>
         </div>
     </section>
 </template>
@@ -67,6 +38,11 @@ const toggle_get_all_likes = () => {
         &:hover {
             color: var(--color-primary);
         }
+    }
+
+    p {
+        padding: 0 0.5rem 1rem;
+        color: var(--color-text-dark);
     }
 }
 </style>

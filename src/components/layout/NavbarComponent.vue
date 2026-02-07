@@ -51,7 +51,7 @@ nav {
     top: 4.25rem;
     right: 2rem;
     z-index: 100;
-    background: linear-gradient(to bottom, var(--color-tertiary), var(--color-secondary));
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
     border-radius: 1rem;
 
     ul {
@@ -83,7 +83,7 @@ nav {
 
                 &:hover {
                     scale: 1.15;
-                    color: var(--color-approve-alert);
+                    color: var(--color-secondary-light);
                 }
             }
         }

@@ -17,56 +17,25 @@ export const useAuthStore = defineStore('auth', () => {
 
     // ================= COMPUTED =================
 
-    /**
-     * Usuario actual (datos básicos)
-     */
     const current_user = computed(() => user_data.value?.user || null)
-
-    /**
-     * Verificar si el usuario es admin
-     */
-    const is_admin = computed(() => current_user.value?.role === 'admin')
-
-    /**
-     * Verificar si el usuario es paciente
-     */
+    const is_admin = computed(() => current_user.value?.role === 'Admin')
     const is_patient = computed(() => current_user.value?.role === 'patient')
-
-    /**
-     * Progreso de cursos del usuario
-     */
     const user_progress = computed(() => user_data.value?.progress || [])
 
-    /**
-     * ✨ NUEVO: Historial de compras del usuario
-     * Formato: [{ product_id, title, type, payment_status, order_date }]
-     */
     const purchases = computed(() => user_data.value?.purchases || [])
 
-    /**
-     * ✨ NUEVO: Solo compras completadas
-     */
     const completed_purchases = computed(() =>
         purchases.value.filter(p => p.payment_status === 'completed')
     )
 
-    /**
-     * ✨ NUEVO: Solo órdenes pendientes
-     */
     const pending_purchases = computed(() =>
         purchases.value.filter(p => p.payment_status === 'pending')
     )
 
-    /**
-     * ✨ NUEVO: Helper para verificar si compró un producto específico
-     */
     const has_purchased = (product_id) => {
         return completed_purchases.value.some(p => p.product_id === product_id)
     }
 
-    /**
-     * ✨ NUEVO: Helper para verificar si tiene orden pendiente de un producto
-     */
     const has_pending_order = (product_id) => {
         return pending_purchases.value.some(p => p.product_id === product_id)
     }
@@ -86,7 +55,7 @@ export const useAuthStore = defineStore('auth', () => {
 
             const response = await api.post('/auth/login', credentials)
 
-            util_store.set_message(response.data.message, response.status)
+            util_store.set_message(response.data.message, 'success')
 
             if (response.status === 200) {
                 router.push('/verify-login')
@@ -109,7 +78,7 @@ export const useAuthStore = defineStore('auth', () => {
             util_store.set_loading(true)
             const response = await api.post('/auth/register', userData)
 
-            util_store.set_message(response.data.message, response.data.status || 'success')
+            util_store.set_message(response.data.message, 'success')
             router.push('/go-to-email')
 
         } catch (error) {
@@ -127,7 +96,6 @@ export const useAuthStore = defineStore('auth', () => {
         try {
             util_store.set_loading(true)
 
-            console.log(login_token, email)
             const response = await api.post('/auth/verify-login', { login_token, email })
 
             _set_session(response.data.data)
@@ -267,26 +235,21 @@ export const useAuthStore = defineStore('auth', () => {
     // ================= HELPERS INTERNOS =================
 
     /**
-     * ✨ OPTIMIZADO: Guarda la sesión en el estado y localStorage
-     * data = { user_data, token, refresh_token }
-     * 
-     * user_data ahora contiene:
-     * - user: { name, email, role, ... }
-     * - progress: [{ product_id, completed_lessons, percentage }]
-     * - purchases: [{ product_id, title, type, payment_status, order_date }] ← NUEVO
-     * - patient_histories, therapy_notes, tasks, test_results, likes
+     * Guarda la sesión en el estado y localStorage
+     * API devuelve: { access_token, refresh_token, ...user_data }
      */
     const _set_session = (data) => {
         if (!data) return
 
-        user_data.value = data.user_data
-        token.value = data.token
+        const { access_token, refresh_token, ...rest } = data
 
-        // Configurar Authorization header
-        api.defaults.headers.common['Authorization'] = `Bearer ${data.token}`
+        user_data.value = rest.user_data || rest
+        token.value = access_token
 
-        if (data.refresh_token) {
-            localStorage.setItem('refresh_token', data.refresh_token)
+        api.defaults.headers.common['Authorization'] = `Bearer ${access_token}`
+
+        if (refresh_token) {
+            localStorage.setItem('refresh_token', refresh_token)
         }
     }
 

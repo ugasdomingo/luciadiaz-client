@@ -190,7 +190,7 @@ onMounted(() => {
             padding: 0.5rem 1rem;
             margin: 0 0 0 1rem;
             border-radius: 1rem;
-            box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.4);
+            box-shadow: var(--shadow-sm);
             box-sizing: border-box;
         }
     }

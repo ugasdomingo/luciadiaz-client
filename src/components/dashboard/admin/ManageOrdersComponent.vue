@@ -279,8 +279,8 @@ const getProductImage = (product) => {
 }
 
 const formatPrice = (price) => {
-    if (!price) return '0€'
-    return `${price}€`
+    if (!price) return '0$'
+    return `${price}$`
 }
 
 const formatDate = (date) => {
@@ -303,7 +303,7 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .manage-orders {
-    background: var(--color-background);
+    background: var(--color-bg);
     min-height: 100vh;
     padding: 40px 20px;
 }
@@ -356,7 +356,7 @@ onMounted(() => {
     border-radius: 16px;
     padding: 80px 40px;
     text-align: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--shadow-sm);
 
     .empty-icon {
         font-size: 64px;
@@ -388,7 +388,7 @@ onMounted(() => {
     background: var(--color-white);
     border-radius: 16px;
     padding: 32px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--shadow-sm);
 
     @media (max-width: 768px) {
         padding: 20px;
@@ -434,8 +434,8 @@ onMounted(() => {
     font-weight: 600;
 
     &--pending {
-        background: #fef3c7;
-        color: #92400e;
+        background: rgba(245, 158, 11, 0.12);
+        color: var(--color-warning);
     }
 }
 
@@ -448,7 +448,7 @@ onMounted(() => {
 }
 
 .order-section {
-    background: var(--color-background);
+    background: var(--color-bg);
     border-radius: 12px;
     padding: 20px;
 }
@@ -605,14 +605,14 @@ onMounted(() => {
 
 .no-proof {
     padding: 20px;
-    background: #fee2e2;
+    background: rgba(239, 68, 68, 0.08);
     border-radius: 8px;
     text-align: center;
 
     p {
         margin: 0;
         font-size: 14px;
-        color: #991b1b;
+        color: var(--color-error);
         font-weight: 600;
     }
 }
@@ -648,7 +648,7 @@ onMounted(() => {
 
 .btn-approve {
     background: var(--color-approve-alert);
-    color: #065f46;
+    color: var(--color-success);
 
     &:hover:not(:disabled) {
         opacity: 0.8;
@@ -714,7 +714,7 @@ onMounted(() => {
     width: 36px;
     height: 36px;
     border: none;
-    background: var(--color-background);
+    background: var(--color-bg);
     border-radius: 50%;
     font-size: 20px;
     cursor: pointer;
@@ -750,16 +750,16 @@ onMounted(() => {
 
 .info-text {
     padding: 12px;
-    background: #dbeafe;
+    background: rgba(30, 86, 160, 0.08);
     border-radius: 8px;
     margin-top: 16px;
 }
 
 .warning-text {
     padding: 12px;
-    background: #fee2e2;
+    background: rgba(239, 68, 68, 0.08);
     border-radius: 8px;
-    color: #991b1b;
+    color: var(--color-error);
     margin-top: 16px;
 }
 

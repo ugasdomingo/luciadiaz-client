@@ -11,14 +11,9 @@ export const useProgressStore = defineStore('progress', () => {
     // State
     const current_progress = ref(null)
 
-    /**
-     * Obtener progreso de un producto específico
-     * @param {String} product_id 
-     */
     const get_progress = async (product_id) => {
         try {
             util_store.set_loading(true)
-            // Backend espera /progress/:product_id
             const response = await api.get(`/progress/${product_id}`)
             current_progress.value = response.data.data
             return response.data.data
@@ -30,13 +25,9 @@ export const useProgressStore = defineStore('progress', () => {
         }
     }
 
-    /**
-     * Registrar acceso (Last Accessed)
-     */
     const register_access = async (product_id) => {
         try {
-            await api.patch(`/progress/${product_id}/access`)
-            // Actualizamos localmente si es necesario
+            await api.post(`/progress/access/${product_id}`)
             if (current_progress.value && current_progress.value.product_id === product_id) {
                 current_progress.value.last_accessed = new Date()
             }
@@ -45,14 +36,9 @@ export const useProgressStore = defineStore('progress', () => {
         }
     }
 
-    /**
-     * Marcar unidad/módulo como completado
-     * @param {String} product_id 
-     * @param {String} item_id (ID de la clase/lección)
-     */
-    const mark_as_completed = async (product_id, item_id) => {
+    const mark_as_completed = async (product_id, lesson_id) => {
         try {
-            const response = await api.patch(`/progress/${product_id}/complete`, { item_id })
+            const response = await api.put(`/progress/video/${product_id}`, { lesson_id })
 
             // Actualizamos el estado local con la respuesta del servidor (nuevo porcentaje)
             current_progress.value = response.data.data

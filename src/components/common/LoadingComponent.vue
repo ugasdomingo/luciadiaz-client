@@ -58,7 +58,7 @@ watch(() => props.isVisible, (newValue) => {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(245, 240, 255, 0.85);
+    background: rgba(247, 248, 250, 0.88);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
 }
@@ -71,9 +71,9 @@ watch(() => props.isVisible, (newValue) => {
     gap: 1.5rem;
     padding: 2rem;
     background: rgba(255, 255, 255, 0.9);
-    border-radius: 20px;
-    box-shadow: 0 8px 32px rgba(147, 112, 219, 0.15);
-    border: 1px solid rgba(221, 160, 221, 0.2);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--color-border-light);
 }
 
 .spinner {
@@ -92,12 +92,12 @@ watch(() => props.isVisible, (newValue) => {
 }
 
 .spinner-ring:nth-child(1) {
-    border-top-color: #DDA0DD;
+    border-top-color: var(--color-primary);
     animation-delay: 0s;
 }
 
 .spinner-ring:nth-child(2) {
-    border-right-color: #E6E6FA;
+    border-right-color: var(--color-primary-light);
     animation-delay: -0.5s;
     width: 80%;
     height: 80%;
@@ -106,7 +106,7 @@ watch(() => props.isVisible, (newValue) => {
 }
 
 .spinner-ring:nth-child(3) {
-    border-bottom-color: #F0E6FF;
+    border-bottom-color: var(--color-secondary);
     animation-delay: -1s;
     width: 60%;
     height: 60%;
@@ -123,7 +123,7 @@ watch(() => props.isVisible, (newValue) => {
 .dot {
     width: 8px;
     height: 8px;
-    background: #DDA0DD;
+    background: var(--color-secondary);
     border-radius: 50%;
     animation: bounce 1.4s ease-in-out infinite both;
     font-size: 0;

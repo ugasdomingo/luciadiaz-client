@@ -21,7 +21,7 @@ const post_store = usePostStore()
 
 onBeforeMount(async () => {
     if (post_store.posts.length === 0) {
-        await post_store.get_all_posts('0')
+        await post_store.get_all_posts()
     }
 })
 </script>

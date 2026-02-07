@@ -22,7 +22,7 @@
 
                 <div class="info-item">
                     <span class="info-label">Precio:</span>
-                    <span class="info-value">{{ product.price }}€</span>
+                    <span class="info-value">{{ product.price }}$</span>
                 </div>
             </div>
 
@@ -101,7 +101,7 @@ const goToProducts = () => {
     background: white;
     padding: 60px 40px;
     border-radius: 16px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--shadow-md);
     text-align: center;
 
     @media (max-width: 568px) {
@@ -151,7 +151,7 @@ const goToProducts = () => {
 }
 
 .pending-info {
-    background: #f9f9f9;
+    background: var(--color-bg);
     border-radius: 12px;
     padding: 24px;
     margin-bottom: 40px;
@@ -182,7 +182,7 @@ const goToProducts = () => {
     font-weight: 600;
 
     &--pending {
-        color: #f59e0b;
+        color: var(--color-warning);
     }
 }
 
@@ -224,7 +224,7 @@ const goToProducts = () => {
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #6366f1;
+            background: var(--color-primary);
             color: white;
             border-radius: 50%;
             font-weight: 700;
@@ -275,21 +275,21 @@ const goToProducts = () => {
 }
 
 .btn-primary {
-    background: #6366f1;
+    background: var(--color-primary);
     color: white;
 
     &:hover {
-        background: #4f46e5;
+        background: var(--color-primary-dark);
     }
 }
 
 .btn-secondary {
     background: white;
-    color: #6366f1;
-    border: 2px solid #6366f1;
+    color: var(--color-primary);
+    border: 2px solid var(--color-primary);
 
     &:hover {
-        background: #f5f5ff;
+        background: var(--color-bg);
     }
 }
 

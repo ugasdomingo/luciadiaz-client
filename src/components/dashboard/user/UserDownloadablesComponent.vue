@@ -145,7 +145,7 @@ const get_file_icon = (file_type) => {
     &:hover {
         background: var(--color-secondary);
         transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(107, 76, 147, 0.3);
+        box-shadow: var(--shadow-gold);
     }
 }
 
@@ -164,7 +164,7 @@ const get_file_icon = (file_type) => {
     &:hover {
         border-color: var(--color-primary);
         transform: translateY(-4px);
-        box-shadow: 0 8px 20px rgba(107, 76, 147, 0.15);
+        box-shadow: var(--shadow-md);
 
         .download-btn {
             background: var(--color-primary);
@@ -209,7 +209,7 @@ const get_file_icon = (file_type) => {
         .meta-tag,
         .meta-size {
             padding: 0.25rem 0.75rem;
-            background: #e9ecef;
+            background: var(--color-border-light);
             color: var(--color-text-dark);
             border-radius: 0.5rem;
             font-family: 'Text';

@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
 import { api } from '../service/axios'
-import { ref } from 'vue'
 import { useUtilStore } from './util-store'
 import { useAuthStore } from './auth-store'
 
@@ -11,41 +10,33 @@ export const useTaskStore = defineStore('task', () => {
     const create_task = async (task, user_id, observations = 'No hay observaciones') => {
         try {
             util_store.set_loading(true)
-
-            const response = await api({
-                method: 'post',
-                url: '/task/user',
-                headers: {
-                    'Authorization': `Bearer ${auth_store.token}`
-                },
-                data: {
-                    task,
-                    user_id,
-                    observations
-                }
+            const response = await api.post('/task/user', {
+                task,
+                user_id,
+                observations,
+                status: 'pending'
             })
-            util_store.set_message(response.data.message, response.data.status)
+            util_store.set_message(response.data.message, 'success')
+            return response.data.data
         } catch (err) {
-            console.log(err)
+            const msg = err.response?.data?.message || 'Error al crear tarea'
+            util_store.set_message(msg, 'error')
+            return null
         } finally {
             util_store.set_loading(false)
         }
     }
 
-    const update_task = async (task_id, task) => {
+    const update_task = async (task_id, task_data) => {
         try {
             util_store.set_loading(true)
-            const response = await api({
-                method: 'put',
-                url: `/task/${task_id}`,
-                headers: {
-                    'Authorization': `Bearer ${auth_store.token}`
-                },
-                data: task
-            })
-            util_store.set_message(response.data.message, response.data.status)
+            const response = await api.put(`/task/${task_id}`, task_data)
+            util_store.set_message(response.data.message, 'success')
+            return response.data.data
         } catch (err) {
-            console.log(err)
+            const msg = err.response?.data?.message || 'Error al actualizar tarea'
+            util_store.set_message(msg, 'error')
+            return null
         } finally {
             util_store.set_loading(false)
         }
@@ -54,16 +45,13 @@ export const useTaskStore = defineStore('task', () => {
     const delete_task = async (task_id) => {
         try {
             util_store.set_loading(true)
-            const response = await api({
-                method: 'delete',
-                url: `/task/${task_id}`,
-                headers: {
-                    'Authorization': `Bearer ${auth_store.token}`
-                }
-            })
-            util_store.set_message(response.data.message, response.data.status)
+            const response = await api.delete(`/task/${task_id}`)
+            util_store.set_message(response.data.message, 'success')
+            return true
         } catch (err) {
-            console.log(err)
+            const msg = err.response?.data?.message || 'Error al eliminar tarea'
+            util_store.set_message(msg, 'error')
+            return false
         } finally {
             util_store.set_loading(false)
         }
@@ -72,16 +60,13 @@ export const useTaskStore = defineStore('task', () => {
     const complete_task = async (task_id) => {
         try {
             util_store.set_loading(true)
-            const response = await api({
-                method: 'put',
-                url: `/task/complete/${task_id}`,
-                headers: {
-                    'Authorization': `Bearer ${auth_store.token}`
-                }
-            })
-            util_store.set_message(response.data.message, response.data.status)
+            const response = await api.put(`/task/complete/${task_id}`)
+            util_store.set_message(response.data.message, 'success')
+            return response.data.data
         } catch (err) {
-            console.log(err)
+            const msg = err.response?.data?.message || 'Error al completar tarea'
+            util_store.set_message(msg, 'error')
+            return null
         } finally {
             util_store.set_loading(false)
         }

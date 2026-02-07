@@ -57,12 +57,12 @@ const common_store = useCommonStore()
         align-self: center;
         padding: 0.5rem 1rem;
         border-radius: 1rem;
-        box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.4);
+        box-shadow: var(--shadow-sm);
         cursor: pointer;
         transition: all 0.25s;
 
         &:hover {
-            box-shadow: 0 0 1rem rgba(0, 0, 0, 0.9);
+            box-shadow: var(--shadow-md);
             scale: 1.1;
         }
     }

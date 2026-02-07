@@ -5,91 +5,40 @@ import { useUtilStore } from './util-store'
 
 export const useLikeStore = defineStore('like', () => {
     const util_store = useUtilStore()
-    const likes = ref([])
-    const like = ref({})
+    const liked_by_user = ref(false)
+    const like_count = ref(0)
 
-    const create_like_user = async (like) => {
+    const toggle_like = async (item_type, item_id) => {
         try {
             util_store.set_loading(true)
-            const response = await api({
-                method: 'post',
-                url: '/like',
-                data: like
-            })
-            util_store.set_message(response.data.message, response.data.status)
+            const response = await api.post('/like', { item_type, item_id })
+            util_store.set_message(response.data.message, 'success')
+            return response.data.data
         } catch (err) {
-            console.log(err)
+            const msg = err.response?.data?.message || 'Error al procesar like'
+            util_store.set_message(msg, 'error')
+            return null
         } finally {
             util_store.set_loading(false)
         }
     }
 
-    const create_like_visitor = async (like) => {
+    const get_likes_count = async (item_id) => {
         try {
-            util_store.set_loading(true)
-            const response = await api({
-                method: 'post',
-                url: '/like/visitor',
-                data: like
-            })
-            util_store.set_message(response.data.message, response.data.status)
+            const response = await api.get(`/like/${item_id}`)
+            like_count.value = response.data.data?.count || 0
+            liked_by_user.value = response.data.data?.liked_by_user || false
+            return response.data.data
         } catch (err) {
-            console.log(err)
-        } finally {
-            util_store.set_loading(false)
-        }
-    }
-
-    const delete_like_user = async (like_id) => {
-        try {
-            util_store.set_loading(true)
-            const response = await api({
-                method: 'delete',
-                url: `/like/${like_id}`
-            })
-            util_store.set_message(response.data.message, response.data.status)
-        } catch (err) {
-            console.log(err)
-        } finally {
-            util_store.set_loading(false)
-        }
-    }
-
-    const delete_like_visitor = async (like_id) => {
-        try {
-            util_store.set_loading(true)
-            const response = await api({
-                method: 'delete',
-                url: `/like/visitor/${like_id}`
-            })
-            util_store.set_message(response.data.message, response.data.status)
-        } catch (err) {
-            console.log(err)
-        } finally {
-            util_store.set_loading(false)
-        }
-    }
-
-    const get_all_likes = async () => {
-        try {
-            util_store.set_loading(true)
-            const response = await api({
-                method: 'get',
-                url: '/like'
-            })
-            likes.value = response.data.data
-        } catch (err) {
-            console.log(err)
-        } finally {
-            util_store.set_loading(false)
+            console.error('Error al obtener likes:', err)
+            return null
         }
     }
 
     return {
-        create_like_user,
-        create_like_visitor,
-        delete_like_user,
-        delete_like_visitor,
-        get_all_likes
+        liked_by_user,
+        like_count,
+        toggle_like,
+        get_likes_count
     }
 })
