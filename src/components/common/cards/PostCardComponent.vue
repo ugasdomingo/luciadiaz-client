@@ -2,9 +2,6 @@
     <RouterLink :to="`/blog/${post._id}`" class="post-card">
         <div class="post-card__image-wrapper">
             <img :src="post.post_cover.secure_url" :alt="post.title" class="post-card__image">
-            <div class="post-card__overlay">
-                <span class="post-card__read-more">Leer artículo</span>
-            </div>
         </div>
 
         <div class="post-card__content">
@@ -16,6 +13,8 @@
             <h3 class="post-card__title">{{ post.title }}</h3>
 
             <p class="post-card__excerpt" v-html="get_excerpt(post.content)"></p>
+
+            <span class="post-card__cta">Leer artículo →</span>
         </div>
     </RouterLink>
 </template>
@@ -45,70 +44,54 @@ const get_excerpt = (html) => {
     display: flex;
     flex-direction: column;
     background: var(--color-white);
-    border-radius: 1rem;
+    border-radius: var(--radius-md);
     overflow: hidden;
-    box-shadow: var(--shadow-sm);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid var(--color-border-light);
+    transition: all 0.3s ease;
     cursor: pointer;
-    animation: fade-in 0.6s ease-out var(--delay, 0s) both;
+    opacity: 0;
+    transform: translateY(20px);
+    transition-delay: var(--delay, 0s);
+
+    &.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
 
     &:hover {
-        transform: translateY(-8px);
-        box-shadow: var(--shadow-md);
+        transform: translateY(-4px);
+        border-color: var(--color-border);
+        box-shadow: var(--shadow-sm);
 
         .post-card__image {
-            transform: scale(1.05);
+            transform: scale(1.04);
         }
 
-        .post-card__overlay {
-            opacity: 1;
+        .post-card__cta {
+            color: var(--color-secondary);
         }
     }
 
     &__image-wrapper {
         position: relative;
         width: 100%;
-        height: 240px;
+        height: 220px;
         overflow: hidden;
-        background: var(--color-disable);
+        background: var(--color-bg);
     }
 
     &__image {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    &__overlay {
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(to top,
-                rgba(30, 86, 160, 0.85) 0%,
-                rgba(30, 86, 160, 0.4) 50%,
-                transparent 100%);
-        opacity: 0;
-        transition: opacity 0.4s ease;
-        display: flex;
-        align-items: flex-end;
-        justify-content: center;
-        padding-bottom: 2rem;
-    }
-
-    &__read-more {
-        color: var(--color-white);
-        font-family: 'Text';
-        font-size: 0.95rem;
-        font-weight: 500;
-        letter-spacing: 0.5px;
-        text-transform: uppercase;
+        transition: transform 0.4s ease;
     }
 
     &__content {
         padding: 1.5rem;
         display: flex;
         flex-direction: column;
-        gap: 0.75rem;
+        gap: 0.625rem;
         flex: 1;
     }
 
@@ -117,34 +100,33 @@ const get_excerpt = (html) => {
         align-items: center;
         justify-content: space-between;
         gap: 0.75rem;
-        font-size: 0.85rem;
     }
 
     &__category {
-        padding: 0.25rem 0.75rem;
-        background: var(--color-soft-alert);
-        color: var(--color-secondary);
-        border-radius: 2rem;
+        padding: 0.2rem 0.625rem;
+        background: rgba(30, 86, 160, 0.06);
+        color: var(--color-primary);
+        border-radius: var(--radius-full);
         font-weight: 500;
-        font-family: 'Text';
-        font-size: 0.8rem;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.75rem;
         text-transform: capitalize;
+        letter-spacing: 0.02em;
     }
 
     &__date {
-        color: var(--color-text-dark);
-        font-family: 'Text';
-        font-size: 0.8rem;
+        color: var(--color-text-muted);
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.75rem;
     }
 
     &__title {
         margin: 0;
-        font-size: 1.25rem;
+        font-size: 1.15rem;
         line-height: 1.4;
-        color: var(--color-black);
-        font-family: 'Title';
+        color: var(--color-text-heading);
+        font-family: 'Playfair Display', serif;
         font-weight: 600;
-        transition: color 0.3s ease;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
@@ -153,33 +135,32 @@ const get_excerpt = (html) => {
 
     &__excerpt {
         margin: 0;
-        font-size: 0.95rem;
+        font-size: 0.9rem;
         line-height: 1.6;
-        color: var(--color-text-dark);
-        font-family: 'Text';
+        color: var(--color-text-muted);
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 300;
         display: -webkit-box;
         -webkit-line-clamp: 3;
         -webkit-box-orient: vertical;
         overflow: hidden;
     }
-}
 
-@keyframes fade-in {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
+    &__cta {
+        margin-top: auto;
+        padding-top: 0.5rem;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--color-primary);
+        font-family: 'Montserrat', sans-serif;
+        transition: color 0.25s ease;
     }
 }
 
 @media screen and (max-width: 768px) {
     .post-card {
         &__image-wrapper {
-            height: 200px;
+            height: 180px;
         }
 
         &__content {
@@ -187,11 +168,11 @@ const get_excerpt = (html) => {
         }
 
         &__title {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
         }
 
         &__excerpt {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
     }
 }

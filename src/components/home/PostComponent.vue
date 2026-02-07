@@ -9,11 +9,17 @@ const common_store = useCommonStore()
 
 <template>
     <section class="post">
-        <h2 data-scroll-reveal>Últimas publicaciones</h2>
-        <div class="post__content">
-            <PostCardComponent v-for="post in common_store.posts" :key="post.id" :post="post" />
+        <div class="post__intro" data-scroll-reveal>
+            <h2>Últimas publicaciones</h2>
+            <p>Reflexiones y herramientas para entenderte mejor cada día</p>
         </div>
-        <RouterLink to="/blog" class="action">Ver todas las publicaciones</RouterLink>
+        <div class="post__content">
+            <PostCardComponent v-for="(post, index) in common_store.posts" :key="post.id" :post="post"
+                data-scroll-reveal :style="{ '--delay': `${0.2 + index * 0.12}s` }" />
+        </div>
+        <RouterLink to="/blog" class="post__link" data-scroll-reveal>
+            Ver todas las publicaciones →
+        </RouterLink>
     </section>
 </template>
 
@@ -21,60 +27,87 @@ const common_store = useCommonStore()
 <style scoped lang="scss">
 .post {
     width: 100%;
-    min-height: 70vh;
-    margin: 0;
-    padding: 4rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 6rem 4rem 8rem;
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    align-items: center;
+    gap: 2.5rem;
     box-sizing: border-box;
-    position: relative;
-    overflow-y: hidden;
 
-    h2 {
+    &__intro {
         text-align: center;
-        margin-bottom: 4rem;
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(20px);
         transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 
         &.is-visible {
             opacity: 1;
             transform: translateY(0);
         }
+
+        h2 {
+            margin-bottom: 0.75rem;
+        }
+
+        p {
+            color: var(--color-text-muted);
+            font-size: 1.05rem;
+            max-width: 400px;
+            margin: 0 auto;
+        }
     }
 
     &__content {
         width: 100%;
-        display: flex;
-        justify-content: space-around;
-        gap: 3rem;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
         box-sizing: border-box;
     }
 
-    .action {
-        width: fit-content;
-        align-self: center;
-        padding: 0.5rem 1rem;
-        border-radius: 1rem;
-        box-shadow: var(--shadow-sm);
-        cursor: pointer;
-        transition: all 0.25s;
+    &__link {
+        display: inline-block;
+        padding: 0.75rem 1.75rem;
+        color: var(--color-primary);
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.95rem;
+        font-weight: 500;
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-sm);
+        transition: all 0.3s ease;
+        opacity: 0;
+        transform: translateY(20px);
+
+        &.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
         &:hover {
-            box-shadow: var(--shadow-md);
-            scale: 1.1;
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-sm);
+            transform: translateY(-2px);
+        }
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .post {
+        &__content {
+            grid-template-columns: repeat(2, 1fr);
         }
     }
 }
 
 @media screen and (max-width: 720px) {
     .post {
-        padding: 1rem;
+        padding: 4rem 1.25rem;
 
         &__content {
-            flex-direction: column;
-            gap: 1rem;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
         }
     }
 }

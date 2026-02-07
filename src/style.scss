@@ -43,11 +43,11 @@
   --color-error: #EF4444;
   --color-warning: #F59E0B;
 
-  /* Sombras reutilizables */
-  --shadow-sm: 0 2px 8px rgba(30, 86, 160, 0.08);
-  --shadow-md: 0 8px 24px rgba(30, 86, 160, 0.12);
-  --shadow-lg: 0 12px 32px rgba(30, 86, 160, 0.16);
-  --shadow-gold: 0 4px 12px rgba(212, 160, 23, 0.3);
+  /* Sombras reutilizables — sutiles, no protagonistas */
+  --shadow-sm: 0 1px 4px rgba(30, 86, 160, 0.06), 0 2px 8px rgba(30, 86, 160, 0.04);
+  --shadow-md: 0 4px 12px rgba(30, 86, 160, 0.08), 0 8px 24px rgba(30, 86, 160, 0.04);
+  --shadow-lg: 0 8px 20px rgba(30, 86, 160, 0.1), 0 12px 32px rgba(30, 86, 160, 0.06);
+  --shadow-gold: 0 4px 12px rgba(212, 160, 23, 0.2);
 
   /* Radios */
   --radius-sm: 8px;
@@ -96,6 +96,7 @@ h4 {
   font-family: 'Playfair Display', serif;
   font-weight: 700;
   line-height: 1.2;
+  letter-spacing: -0.01em;
   color: var(--color-primary);
   margin-bottom: 1rem;
 }
@@ -150,22 +151,21 @@ textarea {
 
 /* ========== BOTONES ========== */
 
-/* Dorado brillante — CTA principal */
+/* Dorado — CTA principal */
 .action-btn {
   width: 100%;
   max-width: 30rem;
   padding: 0.75rem 1.5rem;
   border-radius: var(--radius-sm);
   border: none;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 600;
   font-family: 'Montserrat', sans-serif;
   color: var(--color-white);
   background-color: var(--color-secondary);
   cursor: pointer;
   transition: all 0.3s ease;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.02em;
 
   &:hover {
     background-color: var(--color-secondary-dark);

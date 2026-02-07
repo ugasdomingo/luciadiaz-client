@@ -1,6 +1,6 @@
 <script setup>
 import { useCommonStore } from '../../stores/common-store'
-import ProductCardComponent from '../common/cards/ProductCardComponent.vue' // ✅ CAMBIO
+import ProductCardComponent from '../common/cards/ProductCardComponent.vue'
 import { use_scroll_reveal } from '../../composables/use-scroll-reveal.js'
 
 use_scroll_reveal()
@@ -9,15 +9,16 @@ const common_store = useCommonStore()
 
 <template>
     <section class="formation">
-        <div class="formation__decoratio__top__left" data-scroll-reveal></div>
-        <div class="formation__decoratio__bottom__right" data-scroll-reveal></div>
-        <h2 data-scroll-reveal>Próximas formaciones y talleres vivenciales</h2>
+        <div class="formation__intro" data-scroll-reveal>
+            <h2>Próximas formaciones y talleres vivenciales</h2>
+            <p>Experiencias diseñadas para acompañarte en tu proceso de crecimiento</p>
+        </div>
         <div class="formation__content">
             <ProductCardComponent v-for="(product, index) in common_store.products" :key="product._id"
-                :product="product" data-scroll-reveal :style="{ '--delay': `${0.6 + index * 0.15}s` }" />
+                :product="product" data-scroll-reveal :style="{ '--delay': `${0.2 + index * 0.15}s` }" />
         </div>
-        <RouterLink to="/formaciones" class="action" data-scroll-reveal>
-            Ver todas las formaciones
+        <RouterLink to="/formaciones" class="formation__link" data-scroll-reveal>
+            Ver todas las formaciones →
         </RouterLink>
     </section>
 </template>
@@ -26,97 +27,58 @@ const common_store = useCommonStore()
 <style scoped lang="scss">
 .formation {
     width: 100%;
-    min-height: 70vh;
-    height: fit-content;
-    margin: 0;
-    padding: 4rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 6rem 4rem 8rem;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 2rem;
+    gap: 2.5rem;
     box-sizing: border-box;
-    position: relative;
 
-    h2 {
+    &__intro {
+        text-align: center;
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(20px);
         transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 
         &.is-visible {
             opacity: 1;
             transform: translateY(0);
         }
-    }
 
-    &__decoratio__top__left {
-        width: 40%;
-        height: 0.25rem;
-        background-color: var(--color-primary);
-        position: absolute;
-        top: 0;
-        left: 0;
-        opacity: 0;
-        transform: scaleX(0);
-        transform-origin: left;
-        transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-
-        &.is-visible {
-            opacity: 0.5;
-            transform: scaleX(1);
+        h2 {
+            margin-bottom: 0.75rem;
         }
-    }
 
-    &__decoratio__bottom__right {
-        width: 40%;
-        height: 0.25rem;
-        background-color: var(--color-primary);
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        opacity: 0;
-        transform: scaleX(0);
-        transform-origin: right;
-        transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-
-        &.is-visible {
-            opacity: 0.5;
-            transform: scaleX(1);
+        p {
+            color: var(--color-text-muted);
+            font-size: 1.05rem;
+            max-width: 480px;
+            margin: 0 auto;
         }
     }
 
     &__content {
         width: 100%;
-        height: fit-content;
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 3rem;
-        max-width: 1200px;
-        margin: 0 auto;
+        gap: 2rem;
         box-sizing: border-box;
-
-        .formation__content__card {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-            transition-delay: var(--delay, 0s);
-
-            &.is-visible {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
     }
 
-    .action {
-        width: fit-content;
-        padding: 0.5rem 1rem;
-        border-radius: 1rem;
-        box-shadow: var(--shadow-sm);
-        cursor: pointer;
-        opacity: 0;
-        transform: translateY(30px);
+    &__link {
+        display: inline-block;
+        padding: 0.75rem 1.75rem;
+        color: var(--color-primary);
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.95rem;
+        font-weight: 500;
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-sm);
         transition: all 0.3s ease;
+        opacity: 0;
+        transform: translateY(20px);
 
         &.is-visible {
             opacity: 1;
@@ -124,20 +86,20 @@ const common_store = useCommonStore()
         }
 
         &:hover {
-            box-shadow: 0 6px 20px rgba(30, 86, 160, 0.3);
-            transform: translateY(-3px);
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-sm);
+            transform: translateY(-2px);
         }
     }
 }
 
 @media screen and (max-width: 720px) {
     .formation {
-        height: fit-content;
-        padding: 2rem 1rem;
+        padding: 4rem 1.25rem;
 
         &__content {
             grid-template-columns: 1fr;
-            gap: 1rem;
+            gap: 1.5rem;
         }
     }
 }
