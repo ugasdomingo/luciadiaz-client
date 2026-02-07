@@ -241,7 +241,7 @@ export const useAuthStore = defineStore('auth', () => {
     const _set_session = (data) => {
         if (!data) return
 
-        const { access_token, refresh_token, ...rest } = data
+        const { token: access_token, refresh_token, ...rest } = data
 
         user_data.value = rest.user_data || rest
         token.value = access_token
