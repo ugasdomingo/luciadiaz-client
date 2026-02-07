@@ -27,6 +27,7 @@ export const useOrderStore = defineStore('order', () => {
                 util_store.set_message('Error al conectar con PayPal', 'error')
             }
         } catch (error) {
+            console.error('PayPal init error:', error)
             const msg = error.response?.data?.message || 'Error al iniciar pago'
             util_store.set_message(msg, 'error')
         } finally {
