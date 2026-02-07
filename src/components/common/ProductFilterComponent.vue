@@ -5,7 +5,8 @@
         <!-- Filtro por tipo -->
         <div class="filter-group">
             <label class="filter-label">Tipo</label>
-            <select v-model="localFilters.type" @change="emitFilters" class="filter-select">
+            <select :value="product_store.filters.type" @change="product_store.set_filter('type', $event.target.value)"
+                class="filter-select">
                 <option value="">Todos</option>
                 <option value="course">Formaciones</option>
                 <option value="ebook">Guías</option>
@@ -15,11 +16,12 @@
         </div>
 
         <!-- Filtro por categoría -->
-        <div class="filter-group" v-if="categories.length > 0">
+        <div class="filter-group" v-if="product_store.categories.length > 0">
             <label class="filter-label">Categoría</label>
-            <select v-model="localFilters.category" @change="emitFilters" class="filter-select">
+            <select :value="product_store.filters.category"
+                @change="product_store.set_filter('category', $event.target.value)" class="filter-select">
                 <option value="">Todas</option>
-                <option v-for="cat in categories" :key="cat" :value="cat">
+                <option v-for="cat in product_store.categories" :key="cat" :value="cat">
                     {{ cat }}
                 </option>
             </select>
@@ -28,14 +30,15 @@
         <!-- Búsqueda por texto -->
         <div class="filter-group">
             <label class="filter-label">Buscar</label>
-            <input v-model="localFilters.search" @input="debouncedEmit" type="text" placeholder="Buscar por título..."
-                class="filter-input">
+            <input :value="product_store.filters.search" @input="handleSearch($event.target.value)" type="text"
+                placeholder="Buscar por título..." class="filter-input">
         </div>
 
         <!-- Ordenar por -->
         <div class="filter-group">
             <label class="filter-label">Ordenar por</label>
-            <select v-model="localFilters.sort" @change="emitFilters" class="filter-select">
+            <select :value="product_store.filters.sort" @change="product_store.set_filter('sort', $event.target.value)"
+                class="filter-select">
                 <option value="date_asc">Próximas primero</option>
                 <option value="date_desc">Más recientes</option>
                 <option value="price_asc">Precio: menor a mayor</option>
@@ -45,97 +48,50 @@
         </div>
 
         <!-- Botón para limpiar filtros -->
-        <button v-if="hasActiveFilters" @click="clearFilters" class="filter-clear">
+        <button v-if="hasActiveFilters" @click="product_store.clear_filters()" class="filter-clear">
             Limpiar filtros
         </button>
     </aside>
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { computed } from 'vue'
+import { useProductStore } from '../../stores/product-store'
 
-const props = defineProps({
-    filters: {
-        type: Object,
-        default: () => ({})
-    },
-    categories: {
-        type: Array,
-        default: () => []
-    }
-})
+const product_store = useProductStore()
 
-const emit = defineEmits(['update:filters'])
-
-// Estado local de filtros
-const localFilters = ref({
-    type: props.filters.type || '',
-    category: props.filters.category || '',
-    search: props.filters.search || '',
-    sort: props.filters.sort || 'date_asc'
-})
-
-// Verificar si hay filtros activos
 const hasActiveFilters = computed(() => {
-    return localFilters.value.type ||
-        localFilters.value.category ||
-        localFilters.value.search
+    return product_store.filters.type ||
+        product_store.filters.category ||
+        product_store.filters.search
 })
 
-// Emitir cambios
-const emitFilters = () => {
-    emit('update:filters', { ...localFilters.value })
-}
-
-// Debounce para la búsqueda (esperar 500ms después de que el usuario deje de escribir)
+// Debounce para la búsqueda
 let searchTimeout = null
-const debouncedEmit = () => {
+const handleSearch = (value) => {
     clearTimeout(searchTimeout)
     searchTimeout = setTimeout(() => {
-        emitFilters()
-    }, 500)
+        product_store.set_filter('search', value)
+    }, 300)
 }
-
-// Limpiar todos los filtros
-const clearFilters = () => {
-    localFilters.value = {
-        type: '',
-        category: '',
-        search: '',
-        sort: 'date_asc'
-    }
-    emitFilters()
-}
-
-// Sincronizar con props si cambian desde el padre
-watch(() => props.filters, (newFilters) => {
-    if (newFilters) {
-        localFilters.value = { ...newFilters }
-    }
-}, { deep: true })
 </script>
 
 <style scoped lang="scss">
 .product-filters {
-    background: var(--color-bg-card);
-    padding: 24px;
-    border-radius: 12px;
-    box-shadow: var(--shadow-sm);
-
-    @media (max-width: 768px) {
-        padding: 16px;
-    }
+    background: var(--color-white);
+    padding: 1.5rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border-light);
 }
 
 .filters__title {
-    font-size: 18px;
-    font-weight: 700;
-    margin: 0 0 20px;
+    font-size: 1.1rem;
+    margin: 0 0 1.25rem;
     color: var(--color-text-heading);
 }
 
 .filter-group {
-    margin-bottom: 20px;
+    margin-bottom: 1.25rem;
 
     &:last-of-type {
         margin-bottom: 0;
@@ -144,21 +100,24 @@ watch(() => props.filters, (newFilters) => {
 
 .filter-label {
     display: block;
-    font-size: 14px;
+    font-size: 0.85rem;
     font-weight: 600;
+    font-family: 'Montserrat', sans-serif;
     color: var(--color-text);
-    margin-bottom: 8px;
+    margin-bottom: 0.5rem;
 }
 
 .filter-select,
 .filter-input {
     width: 100%;
-    padding: 10px 12px;
+    padding: 0.625rem 0.75rem;
     border: 1px solid var(--color-border);
-    border-radius: 8px;
-    font-size: 14px;
-    background: var(--color-bg-card);
-    transition: border-color 0.2s ease;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    font-family: 'Montserrat', sans-serif;
+    background: var(--color-white);
+    transition: border-color 0.25s ease;
+    box-sizing: border-box;
 
     &:focus {
         outline: none;
@@ -178,21 +137,21 @@ watch(() => props.filters, (newFilters) => {
 
 .filter-clear {
     width: 100%;
-    padding: 10px;
-    margin-top: 20px;
+    padding: 0.625rem;
+    margin-top: 1.25rem;
     border: 1px solid var(--color-border);
-    border-radius: 8px;
-    background: var(--color-bg-card);
+    border-radius: var(--radius-sm);
+    background: transparent;
     color: var(--color-text-muted);
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 0.85rem;
+    font-weight: 500;
+    font-family: 'Montserrat', sans-serif;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.25s ease;
 
     &:hover {
-        background: var(--color-bg);
-        border-color: var(--color-text-muted);
-        color: var(--color-text);
+        border-color: var(--color-primary);
+        color: var(--color-primary);
     }
 }
 </style>

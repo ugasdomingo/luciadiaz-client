@@ -1,13 +1,97 @@
 import { defineStore } from 'pinia'
 import { api } from '../service/axios'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useUtilStore } from './util-store'
 import { useAuthStore } from './auth-store'
 
 export const useProductStore = defineStore('product', () => {
     const util_store = useUtilStore()
-    const products = ref([])
+
+    // ========== STATE ==========
+    const all_products = ref([])
     const product = ref(null)
+
+    // Filtros aplicados localmente
+    const filters = ref({
+        type: '',
+        category: '',
+        search: '',
+        sort: 'date_asc'
+    })
+
+    // ========== COMPUTED ==========
+
+    // Productos filtrados — resultado de aplicar los filtros sobre all_products
+    const show_products = computed(() => {
+        let result = [...all_products.value]
+
+        // Filtro por tipo
+        if (filters.value.type) {
+            result = result.filter(p => p.type === filters.value.type)
+        }
+
+        // Filtro por categoría
+        if (filters.value.category) {
+            result = result.filter(p => p.category === filters.value.category)
+        }
+
+        // Filtro por búsqueda de texto
+        if (filters.value.search) {
+            const term = filters.value.search.toLowerCase()
+            result = result.filter(p =>
+                p.title?.toLowerCase().includes(term) ||
+                p.description?.toLowerCase().includes(term)
+            )
+        }
+
+        // Ordenar
+        switch (filters.value.sort) {
+            case 'date_asc':
+                result.sort((a, b) => {
+                    const dateA = a.start_date ? new Date(a.start_date) : new Date(a.createdAt)
+                    const dateB = b.start_date ? new Date(b.start_date) : new Date(b.createdAt)
+                    return dateA - dateB
+                })
+                break
+            case 'date_desc':
+                result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                break
+            case 'price_asc':
+                result.sort((a, b) => a.price - b.price)
+                break
+            case 'price_desc':
+                result.sort((a, b) => b.price - a.price)
+                break
+            case 'title_asc':
+                result.sort((a, b) => a.title.localeCompare(b.title))
+                break
+        }
+
+        return result
+    })
+
+    // Categorías únicas extraídas de TODOS los productos (no de los filtrados)
+    const categories = computed(() => {
+        const cats = all_products.value.map(p => p.category).filter(Boolean)
+        return [...new Set(cats)]
+    })
+
+    // ========== ACCIONES DE FILTRO ==========
+
+    const set_filter = (key, value) => {
+        filters.value[key] = value
+    }
+
+    const clear_filters = () => {
+        filters.value = {
+            type: '',
+            category: '',
+            search: '',
+            sort: 'date_asc'
+        }
+    }
+
+    // ========== VALIDACIÓN DE ACCESO ==========
 
     const has_access = (slug) => {
         const auth_store = useAuthStore()
@@ -26,23 +110,14 @@ export const useProductStore = defineStore('product', () => {
         return purchases.some(p => p.slug === slug && p.payment_status === 'pending')
     }
 
-    const fetch_products = async (filters = {}, page = 1, limit = 20) => {
+    // ========== ACCIONES API ==========
+
+    // Carga TODOS los productos del backend (sin filtros, con paginación alta)
+    const fetch_products = async () => {
         try {
             util_store.set_loading(true)
-
-            // Limpiar filtros vacíos para no enviar type=&category=& al backend
-            const cleanFilters = Object.fromEntries(
-                Object.entries(filters).filter(([_, v]) => v !== '' && v != null)
-            )
-
-            const queryParams = new URLSearchParams({
-                ...cleanFilters,
-                page: String(page),
-                limit: String(limit)
-            }).toString()
-
-            const response = await api.get(`/products?${queryParams}`)
-            products.value = response.data.data
+            const response = await api.get('/products?page=1&limit=100')
+            all_products.value = response.data.data
             return response.data
         } catch (error) {
             console.error('Error al obtener productos:', error)
@@ -71,7 +146,6 @@ export const useProductStore = defineStore('product', () => {
     const fetch_all_products_admin = async (filters = {}, page = 1, limit = 50) => {
         try {
             util_store.set_loading(true)
-            const auth_store = useAuthStore()
 
             const queryParams = new URLSearchParams({
                 ...filters,
@@ -80,7 +154,7 @@ export const useProductStore = defineStore('product', () => {
             }).toString()
 
             const response = await api.get(`/products?${queryParams}`)
-            products.value = response.data.data
+            all_products.value = response.data.data
             return response.data
         } catch (error) {
             console.error('Error al obtener productos (admin):', error)
@@ -155,8 +229,17 @@ export const useProductStore = defineStore('product', () => {
 
     return {
         // State
-        products,
+        all_products,
         product,
+        filters,
+
+        // Computed
+        show_products,
+        categories,
+
+        // Filtros
+        set_filter,
+        clear_filters,
 
         // Validación de acceso
         has_access,

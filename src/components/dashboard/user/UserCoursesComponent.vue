@@ -16,8 +16,9 @@ onMounted(async () => {
 
     // Si no tiene cursos, cargamos sugerencias
     if (!auth_store.user_data.progress || auth_store.user_data.progress.length === 0) {
-        // Pedimos solo cursos
-        await product_store.fetch_products({ type: 'course', limit: 3 })
+        if (product_store.all_products.length === 0) {
+            await product_store.fetch_products()
+        }
     }
 })
 
@@ -37,8 +38,9 @@ const sorted_courses = computed(() => {
 
 // Sugerencia para CTA (el primer curso disponible en la tienda)
 const suggested_course = computed(() => {
-    if (!product_store.products.length) return null
-    return product_store.products[0]
+    const courses = product_store.all_products.filter(p => p.type === 'course')
+    if (!courses.length) return null
+    return courses[0]
 })
 
 const user_name = computed(() => auth_store.user_data?.user?.name?.split(' ')[0] || 'Hola')

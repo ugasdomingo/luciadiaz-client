@@ -25,17 +25,25 @@ const routes = [
         name: 'BlogOne',
         component: () => import('../views/BlogOne.vue')
     },
+    // Catálogo de productos (ruta fija, filtros en el store)
     {
-        path: '/:productType',
+        path: '/productos',
         name: 'ProductCatalog',
         component: () => import('../views/ProductCatalog.vue')
     },
-
-    // Detalle de producto
     {
         path: '/productos/:slug',
         name: 'ProductDetail',
         component: () => import('../views/ProductDetail.vue')
+    },
+    // Alias: /formaciones y /guias redirigen a /productos
+    {
+        path: '/formaciones',
+        redirect: '/productos'
+    },
+    {
+        path: '/guias',
+        redirect: '/productos'
     },
 
     // Checkout

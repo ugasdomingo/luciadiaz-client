@@ -1,49 +1,50 @@
 <template>
-    <div class="product-catalog">
-        <div class="catalog-container">
-            <!-- Header -->
-            <header class="catalog-header">
-                <h1 class="catalog-title">{{ pageTitle }}</h1>
-                <p class="catalog-subtitle">{{ pageSubtitle }}</p>
-            </header>
+    <div class="product-catalog pages">
+        <!-- Header -->
+        <header class="catalog-header">
+            <h1>Todos los Productos</h1>
+            <p>Explora toda nuestra oferta de contenidos</p>
+        </header>
 
-            <div class="catalog-layout">
-                <!-- Sidebar con filtros (Desktop) -->
-                <aside class="catalog-sidebar">
-                    <ProductFilters :filters="filters" :categories="categories" @update:filters="handleFiltersChange" />
-                </aside>
+        <div class="catalog-layout">
+            <!-- Sidebar con filtros (Desktop) -->
+            <aside class="catalog-sidebar">
+                <ProductFilters />
+            </aside>
 
-                <!-- Contenido principal -->
-                <main class="catalog-main">
-                    <!-- Botón de filtros móvil -->
-                    <button class="filters-toggle" @click="showMobileFilters = true">
-                        🔍 Filtros
+            <!-- Contenido principal -->
+            <main class="catalog-main">
+                <!-- Botón de filtros móvil -->
+                <button class="filters-toggle" @click="showMobileFilters = true">
+                    Filtros
+                </button>
+
+                <!-- Loading -->
+                <div v-if="loading" class="catalog-loading">
+                    <LoadingComponent />
+                </div>
+
+                <!-- Sin resultados -->
+                <div v-else-if="product_store.show_products.length === 0" class="catalog-empty">
+                    <h3>No se encontraron productos</h3>
+                    <p>Intenta ajustar los filtros o busca otro término</p>
+                    <button @click="product_store.clear_filters()" class="btn-clear">
+                        Limpiar filtros
                     </button>
+                </div>
 
-                    <!-- Resultados -->
-                    <div v-if="loading" class="catalog-loading">
-                        <LoadingComponent />
-                    </div>
+                <!-- Grid de productos -->
+                <div v-else class="catalog-grid">
+                    <ProductCard v-for="product in product_store.show_products" :key="product._id"
+                        :product="product" />
+                </div>
 
-                    <div v-else-if="filteredProducts.length === 0" class="catalog-empty">
-                        <div class="empty-icon">🔍</div>
-                        <h3>No se encontraron productos</h3>
-                        <p>Intenta ajustar los filtros o busca otro término</p>
-                        <button @click="clearFilters" class="btn-clear">
-                            Limpiar filtros
-                        </button>
-                    </div>
-
-                    <div v-else class="catalog-grid">
-                        <ProductCard v-for="product in sortedProducts" :key="product._id" :product="product" />
-                    </div>
-
-                    <!-- Contador de resultados -->
-                    <div v-if="filteredProducts.length > 0" class="catalog-count">
-                        Mostrando {{ filteredProducts.length }} producto{{ filteredProducts.length !== 1 ? 's' : '' }}
-                    </div>
-                </main>
-            </div>
+                <!-- Contador -->
+                <div v-if="product_store.show_products.length > 0" class="catalog-count">
+                    Mostrando {{ product_store.show_products.length }} de {{ product_store.all_products.length }}
+                    producto{{ product_store.all_products.length !== 1 ? 's' : '' }}
+                </div>
+            </main>
         </div>
 
         <!-- Modal de filtros móvil -->
@@ -55,7 +56,7 @@
                         <h2>Filtros</h2>
                         <button @click="showMobileFilters = false" class="btn-close">✕</button>
                     </div>
-                    <ProductFilters :filters="filters" :categories="categories" @update:filters="handleFiltersChange" />
+                    <ProductFilters />
                     <button @click="showMobileFilters = false" class="filters-modal__apply">
                         Aplicar filtros
                     </button>
@@ -66,234 +67,88 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { ref, onMounted } from 'vue'
 import { useProductStore } from '../stores/product-store'
 import ProductCard from '../components/common/cards/ProductCardComponent.vue'
 import ProductFilters from '../components/common/ProductFilterComponent.vue'
 import LoadingComponent from '../components/common/LoadingComponent.vue'
 
-const route = useRoute()
 const product_store = useProductStore()
-
-// State
 const loading = ref(false)
 const showMobileFilters = ref(false)
-const filters = ref({
-    type: '',
-    category: '',
-    search: '',
-    sort: 'date_asc'
-})
 
-// Mapeo de rutas a tipos de producto
-const routeTypeMap = {
-    'formaciones': 'course',
-    'guias': 'ebook',
-    'productos': '' // Todos
-}
-
-// Títulos y subtítulos según ruta
-const pageTitle = computed(() => {
-    const titles = {
-        'formaciones': 'Formaciones Online',
-        'guias': 'Guías Digitales',
-        'productos': 'Todos los Productos'
+onMounted(async () => {
+    if (product_store.all_products.length === 0) {
+        loading.value = true
+        await product_store.fetch_products()
+        loading.value = false
     }
-    return titles[route.params.productType] || 'Productos'
-})
-
-const pageSubtitle = computed(() => {
-    const subtitles = {
-        'formaciones': 'Cursos y programas para tu desarrollo personal y profesional',
-        'guias': 'Recursos descargables para aplicar desde hoy',
-        'productos': 'Explora toda nuestra oferta de contenidos'
-    }
-    return subtitles[route.params.productType] || ''
-})
-
-// Cargar productos
-const loadProducts = async () => {
-    loading.value = true
-
-    // Aplicar filtro de tipo según la ruta
-    const routeType = routeTypeMap[route.params.productType]
-    const queryFilters = { ...filters.value }
-
-    if (routeType) {
-        queryFilters.type = routeType
-    }
-
-    await product_store.fetch_products(queryFilters)
-    loading.value = false
-}
-
-// Productos filtrados
-const filteredProducts = computed(() => {
-    return product_store.products || []
-})
-
-// Productos ordenados
-const sortedProducts = computed(() => {
-    const products = [...filteredProducts.value]
-
-    switch (filters.value.sort) {
-        case 'date_asc':
-            // Próximas formaciones primero (por start_date)
-            return products.sort((a, b) => {
-                const dateA = a.start_date ? new Date(a.start_date) : new Date(a.createdAt)
-                const dateB = b.start_date ? new Date(b.start_date) : new Date(b.createdAt)
-                return dateA - dateB
-            })
-
-        case 'date_desc':
-            return products.sort((a, b) => {
-                const dateA = new Date(a.createdAt)
-                const dateB = new Date(b.createdAt)
-                return dateB - dateA
-            })
-
-        case 'price_asc':
-            return products.sort((a, b) => a.price - b.price)
-
-        case 'price_desc':
-            return products.sort((a, b) => b.price - a.price)
-
-        case 'title_asc':
-            return products.sort((a, b) => a.title.localeCompare(b.title))
-
-        default:
-            return products
-    }
-})
-
-// Categorías únicas (extraídas de los productos)
-const categories = computed(() => {
-    const cats = filteredProducts.value
-        .map(p => p.category)
-        .filter(Boolean)
-    return [...new Set(cats)]
-})
-
-// Manejar cambio de filtros
-const handleFiltersChange = async (newFilters) => {
-    filters.value = { ...newFilters }
-    await loadProducts()
-}
-
-// Limpiar filtros
-const clearFilters = () => {
-    filters.value = {
-        type: '',
-        category: '',
-        search: '',
-        sort: 'date_asc'
-    }
-    loadProducts()
-}
-
-// Watch cambios de ruta
-watch(() => route.params.productType, () => {
-    loadProducts()
-})
-
-// Cargar al montar
-onMounted(() => {
-    loadProducts()
 })
 </script>
 
 <style scoped lang="scss">
 .product-catalog {
     min-height: 80vh;
-    background: var(--color-bg);
-    padding: 40px 0;
-
-    @media (max-width: 768px) {
-        padding: 20px 0;
-    }
-}
-
-.catalog-container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 20px;
-
-    @media (max-width: 768px) {
-        padding: 0 16px;
-    }
+    padding-top: 6rem;
 }
 
 .catalog-header {
     text-align: center;
-    margin-bottom: 60px;
+    margin-bottom: 3.5rem;
 
-    @media (max-width: 768px) {
-        margin-bottom: 32px;
+    h1 {
+        margin-bottom: 0.75rem;
     }
-}
 
-.catalog-title {
-    font-size: 42px;
-    font-weight: 800;
-    margin: 0 0 16px;
-    color: var(--color-text-heading);
-
-    @media (max-width: 768px) {
-        font-size: 32px;
-    }
-}
-
-.catalog-subtitle {
-    font-size: 18px;
-    color: var(--color-text-muted);
-    margin: 0;
-    max-width: 600px;
-    margin: 0 auto;
-
-    @media (max-width: 768px) {
-        font-size: 16px;
+    p {
+        font-size: 1.05rem;
+        color: var(--color-text-muted);
+        max-width: 500px;
+        margin: 0 auto;
     }
 }
 
 .catalog-layout {
     display: grid;
-    grid-template-columns: 280px 1fr;
-    gap: 40px;
+    grid-template-columns: 260px 1fr;
+    gap: 2.5rem;
     align-items: start;
+    max-width: 1200px;
+    margin: 0 auto;
 
     @media (max-width: 1024px) {
         grid-template-columns: 1fr;
-        gap: 24px;
+        gap: 1.5rem;
     }
 }
 
 .catalog-sidebar {
     position: sticky;
-    top: 100px;
+    top: 6rem;
 
     @media (max-width: 1024px) {
-        display: none; // Ocultar en móvil, usar modal
+        display: none;
     }
 }
 
 .catalog-main {
-    min-height: 500px;
+    min-height: 400px;
 }
 
 .filters-toggle {
     display: none;
     width: 100%;
-    padding: 14px;
-    margin-bottom: 24px;
-    border: 2px solid var(--color-border);
-    border-radius: 10px;
-    background: var(--color-bg-card);
-    font-size: 16px;
-    font-weight: 600;
+    padding: 0.75rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-white);
+    font-size: 0.95rem;
+    font-weight: 500;
+    font-family: 'Montserrat', sans-serif;
     color: var(--color-text);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.25s ease;
 
     &:hover {
         border-color: var(--color-primary);
@@ -309,66 +164,61 @@ onMounted(() => {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 400px;
+    min-height: 300px;
 }
 
 .catalog-empty {
     text-align: center;
-    padding: 80px 20px;
-
-    .empty-icon {
-        font-size: 64px;
-        margin-bottom: 20px;
-    }
+    padding: 4rem 1rem;
 
     h3 {
-        font-size: 24px;
-        font-weight: 700;
-        margin: 0 0 12px;
+        font-size: 1.25rem;
+        margin: 0 0 0.75rem;
         color: var(--color-text);
     }
 
     p {
-        font-size: 16px;
+        font-size: 0.95rem;
         color: var(--color-text-muted);
-        margin: 0 0 32px;
+        margin: 0 0 2rem;
     }
 
     .btn-clear {
-        padding: 12px 32px;
-        border: 2px solid var(--color-primary);
-        border-radius: 10px;
-        background: var(--color-bg-card);
+        padding: 0.75rem 2rem;
+        border: 1px solid var(--color-primary);
+        border-radius: var(--radius-sm);
+        background: transparent;
         color: var(--color-primary);
-        font-size: 16px;
-        font-weight: 600;
+        font-size: 0.95rem;
+        font-weight: 500;
+        font-family: 'Montserrat', sans-serif;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all 0.25s ease;
 
         &:hover {
             background: var(--color-primary);
-            color: var(--color-bg-card);
+            color: var(--color-white);
         }
     }
 }
 
 .catalog-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 24px;
-    margin-bottom: 32px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
 
     @media (max-width: 768px) {
         grid-template-columns: 1fr;
-        gap: 16px;
+        gap: 1rem;
     }
 }
 
 .catalog-count {
     text-align: center;
-    font-size: 14px;
+    font-size: 0.85rem;
     color: var(--color-text-muted);
-    padding: 20px;
+    padding: 1.5rem;
 }
 
 // Modal de filtros móvil
@@ -380,7 +230,7 @@ onMounted(() => {
     &__overlay {
         position: absolute;
         inset: 0;
-        background: rgba(0, 0, 0, 0.5);
+        background: rgba(0, 0, 0, 0.4);
         backdrop-filter: blur(4px);
     }
 
@@ -390,9 +240,9 @@ onMounted(() => {
         left: 0;
         right: 0;
         max-height: 85vh;
-        background: var(--color-bg-card);
-        border-radius: 24px 24px 0 0;
-        padding: 24px;
+        background: var(--color-white);
+        border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+        padding: 1.5rem;
         overflow-y: auto;
         animation: slideUp 0.3s ease;
     }
@@ -401,25 +251,23 @@ onMounted(() => {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 24px;
+        margin-bottom: 1.5rem;
 
         h2 {
-            font-size: 20px;
-            font-weight: 700;
+            font-size: 1.25rem;
             margin: 0;
-            color: var(--color-text-heading);
         }
 
         .btn-close {
-            width: 32px;
-            height: 32px;
+            width: 2rem;
+            height: 2rem;
             display: flex;
             align-items: center;
             justify-content: center;
             border: none;
             background: var(--color-bg);
             border-radius: 50%;
-            font-size: 20px;
+            font-size: 1.1rem;
             cursor: pointer;
             color: var(--color-text-muted);
 
@@ -431,15 +279,17 @@ onMounted(() => {
 
     &__apply {
         width: 100%;
-        padding: 14px;
-        margin-top: 24px;
+        padding: 0.875rem;
+        margin-top: 1.5rem;
         border: none;
-        border-radius: 10px;
+        border-radius: var(--radius-sm);
         background: var(--color-primary);
-        color: var(--color-bg-card);
-        font-size: 16px;
-        font-weight: 700;
+        color: var(--color-white);
+        font-size: 0.95rem;
+        font-weight: 600;
+        font-family: 'Montserrat', sans-serif;
         cursor: pointer;
+        transition: background 0.25s ease;
 
         &:hover {
             background: var(--color-primary-dark);
