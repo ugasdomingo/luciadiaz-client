@@ -47,15 +47,15 @@
                             </div>
                         </label>
 
-                        <!-- Pago Offline (Bizum/Transferencia) -->
+                        <!-- Pago Offline (Transferencia / Zelle / Pago Móvil) -->
                         <label class="payment-method"
                             :class="{ 'payment-method--selected': selectedMethod === 'offline' }">
                             <input type="radio" name="payment" value="offline" v-model="selectedMethod">
                             <div class="method-content">
                                 <div class="method-icon">🏦</div>
                                 <div class="method-info">
-                                    <h3>Bizum / Transferencia</h3>
-                                    <p>Pago manual con validación en 24-48h</p>
+                                    <h3>Transferencia / Pago directo</h3>
+                                    <p>Zelle, Pago Móvil, Transferencia bancaria — validación en 24-48h</p>
                                 </div>
                             </div>
                         </label>
@@ -65,20 +65,18 @@
                     <div v-if="selectedMethod === 'offline'" class="offline-form">
                         <div class="bank-info">
                             <h3>Datos para el pago</h3>
-                            <div class="bank-details">
-                                <div class="bank-item">
-                                    <strong>Bizum:</strong>
-                                    <span>+34 XXX XXX XXX</span>
-                                </div>
-                                <div class="bank-item">
-                                    <strong>Titular:</strong>
-                                    <span>Lucía Díaz</span>
-                                </div>
-                                <div class="bank-item">
-                                    <strong>Concepto:</strong>
-                                    <span>{{ product.title }}</span>
-                                </div>
-                            </div>
+                            <p class="bank-info__description">
+                                Consulta los datos de pago según tu país o región.
+                                Una vez realizado, adjunta tu comprobante aquí abajo.
+                            </p>
+                            <button class="btn-view-methods" @click="showPaymentModal = true">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                                    <rect x="2" y="3" width="20" height="18" rx="3" stroke="currentColor"
+                                        stroke-width="2" />
+                                    <path d="M2 9h20" stroke="currentColor" stroke-width="2" />
+                                </svg>
+                                Ver métodos de pago disponibles
+                            </button>
                         </div>
 
                         <div class="proof-upload">
@@ -93,6 +91,10 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Modal métodos de pago -->
+                    <PaymentMethodsModal :show="showPaymentModal" :product-title="product?.title || ''"
+                        @close="showPaymentModal = false" />
 
                     <!-- Botón de pagar -->
                     <button @click="handlePayment" :disabled="!canProceed" class="btn-pay"
@@ -124,6 +126,7 @@ import { useProductStore } from '../stores/product-store'
 import { useOrderStore } from '../stores/order-store'
 import { useUtilStore } from '../stores/util-store'
 import LoadingComponent from '../components/common/LoadingComponent.vue'
+import PaymentMethodsModal from '../components/common/PaymentMethodsModal.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -137,6 +140,7 @@ const product = ref(null)
 const selectedMethod = ref('paypal')
 const uploadedProof = ref(null)
 const fileInput = ref(null)
+const showPaymentModal = ref(false)
 
 // Computed
 const truncatedDescription = computed(() => {
@@ -412,28 +416,37 @@ onMounted(() => {
     h3 {
         font-size: 16px;
         font-weight: 700;
-        margin: 0 0 16px;
-        color: var(--color-text);
-    }
-}
-
-.bank-details {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.bank-item {
-    display: flex;
-    justify-content: space-between;
-    font-size: 14px;
-
-    strong {
+        margin: 0 0 8px;
         color: var(--color-text);
     }
 
-    span {
+    &__description {
+        font-size: 14px;
         color: var(--color-text-muted);
+        line-height: 1.5;
+        margin: 0 0 16px;
+    }
+}
+
+.btn-view-methods {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 14px 20px;
+    border: 2px solid var(--color-primary);
+    border-radius: var(--radius-md);
+    background: transparent;
+    color: var(--color-primary);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background: var(--color-primary);
+        color: white;
     }
 }
 
