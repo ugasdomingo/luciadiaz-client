@@ -147,15 +147,24 @@ export const useProductStore = defineStore('product', () => {
         try {
             util_store.set_loading(true)
 
+            // Limpiar filtros vacíos
+            const cleanFilters = {}
+            Object.entries(filters).forEach(([key, value]) => {
+                if (value !== '' && value !== undefined && value !== null) {
+                    cleanFilters[key] = value
+                }
+            })
+
             const queryParams = new URLSearchParams({
-                ...filters,
+                ...cleanFilters,
                 page: String(page),
                 limit: String(limit)
             }).toString()
 
             const response = await api.get(`/products?${queryParams}`)
-            all_products.value = response.data.data
-            return response.data
+            const products = response.data.data || []
+            all_products.value = products
+            return products
         } catch (error) {
             console.error('Error al obtener productos (admin):', error)
             util_store.set_message('Error al cargar productos', 'error')

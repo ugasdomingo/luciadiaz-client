@@ -103,8 +103,6 @@
                         <button @click="closeModal" class="modal-close">✕</button>
                     </div>
 
-                    {{ formData }}
-
                     <form @submit.prevent="handleSubmit" class="product-form">
                         <!-- Título -->
                         <div class="form-group">
