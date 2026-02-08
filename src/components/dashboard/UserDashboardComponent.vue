@@ -41,10 +41,7 @@
         <section class="dashboard-content">
             <UserCoursesComponent v-if="current_view === 'courses'" />
 
-            <div v-else-if="current_view === 'orders'">
-                <h2>Historial de Pedidos</h2>
-                <p>Próximamente verás aquí tus facturas y pedidos.</p>
-            </div>
+            <UserOrdersComponent v-else-if="current_view === 'orders'" />
 
             <UserTaskComponent v-else-if="current_view === 'tasks'" />
 
@@ -58,6 +55,7 @@
 import { ref, computed } from 'vue'
 import { useAuthStore } from '../../stores/auth-store.js'
 import UserCoursesComponent from './user/UserCoursesComponent.vue'
+import UserOrdersComponent from './user/UserOrdersComponent.vue'
 import UserMedicalHistoryComponent from './user/UserMedicalHistoryComponent.vue'
 import UserTaskComponent from './user/UserTaskComponent.vue'
 

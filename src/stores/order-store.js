@@ -13,6 +13,7 @@ export const useOrderStore = defineStore('order', () => {
     // State
     const pending_orders = ref([]) // Para admin
     const all_orders = ref([]) // Para admin
+    const my_orders = ref([]) // Para usuario
     const current_order = ref(null)
 
     const init_paypal_checkout = async (product_id) => {
@@ -72,6 +73,44 @@ export const useOrderStore = defineStore('order', () => {
             const msg = error.response?.data?.message || 'Error al reportar pago'
             util_store.set_message(msg, 'error')
             return null
+        } finally {
+            util_store.set_loading(false)
+        }
+    }
+
+    const fetch_my_orders = async () => {
+        try {
+            util_store.set_loading(true)
+            const response = await api.get('/orders/my-orders')
+            my_orders.value = response.data.data
+            return response.data.data
+        } catch (error) {
+            console.error('Error al obtener mis órdenes:', error)
+            util_store.set_message('Error al cargar tus pedidos', 'error')
+            return []
+        } finally {
+            util_store.set_loading(false)
+        }
+    }
+
+    const update_payment_proof = async (order_id, payment_proof) => {
+        try {
+            util_store.set_loading(true)
+            const response = await api.patch(`/orders/${order_id}/update-proof`, { payment_proof })
+
+            util_store.set_message(response.data.message, 'success')
+
+            // Actualizar en my_orders local
+            const index = my_orders.value.findIndex(o => o._id === order_id)
+            if (index !== -1) {
+                my_orders.value[index].payment_proof = payment_proof
+            }
+
+            return true
+        } catch (error) {
+            const msg = error.response?.data?.message || 'Error al actualizar comprobante'
+            util_store.set_message(msg, 'error')
+            return false
         } finally {
             util_store.set_loading(false)
         }
@@ -165,12 +204,15 @@ export const useOrderStore = defineStore('order', () => {
         // State
         pending_orders,
         all_orders,
+        my_orders,
         current_order,
 
         // Actions - Cliente
         init_paypal_checkout,
         confirm_paypal_payment,
         create_offline_order,
+        fetch_my_orders,
+        update_payment_proof,
 
         // Actions - Admin
         fetch_all_orders,

@@ -44,6 +44,38 @@
                 </ol>
             </div>
 
+            <!-- Sección para reenviar comprobante -->
+            <div class="reupload-section">
+                <button v-if="!showReupload" class="btn-reupload-toggle" @click="showReupload = true">
+                    ¿Necesitas enviar otro comprobante?
+                </button>
+
+                <div v-if="showReupload" class="reupload-form">
+                    <h3>Reenviar comprobante</h3>
+                    <p>Si tu comprobante anterior no se ve bien o enviaste el archivo incorrecto, puedes subir uno nuevo.</p>
+
+                    <div class="proof-upload">
+                        <label for="new-proof" class="upload-label">
+                            Nuevo comprobante de pago
+                        </label>
+                        <input type="file" id="new-proof" accept="image/*" @change="handleFileUpload"
+                            ref="fileInput">
+
+                        <div v-if="newProof" class="proof-preview">
+                            <img :src="newProof.preview" alt="Comprobante">
+                            <button @click="removeProof" class="btn-remove">✕</button>
+                        </div>
+                    </div>
+
+                    <div class="reupload-actions">
+                        <button class="btn-cancel" @click="cancelReupload">Cancelar</button>
+                        <button class="btn-send" :disabled="!newProof || sending" @click="submitNewProof">
+                            {{ sending ? 'Enviando...' : 'Enviar comprobante' }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <div class="pending-actions">
                 <button @click="goToDashboard" class="btn-secondary">
                     Ir a mi espacio
@@ -62,7 +94,11 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useOrderStore } from '../../stores/order-store'
+import { useAuthStore } from '../../stores/auth-store'
+import { useUtilStore } from '../../stores/util-store'
 
 const props = defineProps({
     product: {
@@ -72,6 +108,82 @@ const props = defineProps({
 })
 
 const router = useRouter()
+const order_store = useOrderStore()
+const auth_store = useAuthStore()
+const util_store = useUtilStore()
+
+const showReupload = ref(false)
+const newProof = ref(null)
+const fileInput = ref(null)
+const sending = ref(false)
+
+const handleFileUpload = (event) => {
+    const file = event.target.files[0]
+    if (!file) return
+
+    if (file.size > 5 * 1024 * 1024) {
+        util_store.set_message('El archivo no debe superar 5MB', 'error')
+        return
+    }
+
+    const reader = new FileReader()
+    reader.onload = (e) => {
+        newProof.value = {
+            file: file,
+            preview: e.target.result,
+            base64: e.target.result
+        }
+    }
+    reader.readAsDataURL(file)
+}
+
+const removeProof = () => {
+    newProof.value = null
+    if (fileInput.value) fileInput.value.value = ''
+}
+
+const cancelReupload = () => {
+    showReupload.value = false
+    removeProof()
+}
+
+const submitNewProof = async () => {
+    if (!newProof.value) return
+
+    sending.value = true
+
+    // Cargar órdenes si no las tenemos
+    if (order_store.my_orders.length === 0) {
+        await order_store.fetch_my_orders()
+    }
+
+    // Buscar la orden pendiente para este producto
+    const order = order_store.my_orders.find(o =>
+        o.payment_status === 'pending' &&
+        o.products.some(p =>
+            p.product_id?.slug === props.product.slug ||
+            p.product_id?._id === props.product._id
+        )
+    )
+
+    if (!order) {
+        util_store.set_message('No se encontró la orden pendiente', 'error')
+        sending.value = false
+        return
+    }
+
+    const success = await order_store.update_payment_proof(order._id, {
+        public_id: 'proof_' + Date.now(),
+        secure_url: newProof.value.base64
+    })
+
+    if (success) {
+        showReupload.value = false
+        removeProof()
+    }
+
+    sending.value = false
+}
 
 const goToDashboard = () => {
     router.push('/mi-espacio')
@@ -131,7 +243,7 @@ const goToProducts = () => {
     font-size: 32px;
     font-weight: 800;
     margin: 0 0 16px;
-    color: #111;
+    color: var(--color-text-heading);
 
     @media (max-width: 568px) {
         font-size: 26px;
@@ -141,11 +253,11 @@ const goToProducts = () => {
 .pending-message {
     font-size: 18px;
     line-height: 1.6;
-    color: #666;
+    color: var(--color-text-muted);
     margin: 0 0 40px;
 
     strong {
-        color: #333;
+        color: var(--color-text);
         font-weight: 600;
     }
 }
@@ -163,7 +275,7 @@ const goToProducts = () => {
     justify-content: space-between;
     align-items: center;
     padding: 12px 0;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--color-border-light);
 
     &:last-child {
         border-bottom: none;
@@ -172,13 +284,13 @@ const goToProducts = () => {
 
 .info-label {
     font-size: 14px;
-    color: #999;
+    color: var(--color-text-muted);
     font-weight: 600;
 }
 
 .info-value {
     font-size: 16px;
-    color: #333;
+    color: var(--color-text);
     font-weight: 600;
 
     &--pending {
@@ -194,7 +306,7 @@ const goToProducts = () => {
         font-size: 20px;
         font-weight: 700;
         margin: 0 0 20px;
-        color: #111;
+        color: var(--color-text-heading);
     }
 
     ol {
@@ -235,19 +347,161 @@ const goToProducts = () => {
             display: block;
             font-size: 16px;
             font-weight: 700;
-            color: #333;
+            color: var(--color-text);
             margin-bottom: 4px;
         }
 
         span {
             display: block;
             font-size: 14px;
-            color: #666;
+            color: var(--color-text-muted);
             line-height: 1.5;
         }
     }
 }
 
+/* ── Reupload Section ── */
+.reupload-section {
+    margin-bottom: 32px;
+}
+
+.btn-reupload-toggle {
+    background: none;
+    border: none;
+    color: var(--color-primary);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+
+    &:hover {
+        color: var(--color-primary-dark);
+    }
+}
+
+.reupload-form {
+    background: var(--color-bg);
+    border-radius: 12px;
+    padding: 24px;
+    text-align: left;
+
+    h3 {
+        font-size: 16px;
+        font-weight: 700;
+        margin: 0 0 8px;
+        color: var(--color-text-heading);
+    }
+
+    > p {
+        font-size: 14px;
+        color: var(--color-text-muted);
+        line-height: 1.5;
+        margin: 0 0 16px;
+    }
+}
+
+.proof-upload {
+    margin-bottom: 16px;
+
+    input[type="file"] {
+        width: 100%;
+        padding: 12px;
+        border: 2px dashed var(--color-border);
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+
+        &:hover {
+            border-color: var(--color-primary);
+        }
+    }
+}
+
+.upload-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: 8px;
+}
+
+.proof-preview {
+    position: relative;
+    margin-top: 12px;
+    border-radius: 8px;
+    overflow: hidden;
+
+    img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    .btn-remove {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 16px;
+
+        &:hover {
+            background: white;
+        }
+    }
+}
+
+.reupload-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.btn-cancel {
+    padding: 10px 20px;
+    border: 1px solid var(--color-border);
+    background: white;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    cursor: pointer;
+
+    &:hover {
+        background: var(--color-border-light);
+    }
+}
+
+.btn-send {
+    padding: 10px 20px;
+    border: none;
+    background: var(--color-primary);
+    color: white;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+        background: var(--color-primary-dark);
+    }
+
+    &:disabled {
+        background: var(--color-border);
+        color: var(--color-text-muted);
+        cursor: not-allowed;
+    }
+}
+
+/* ── Actions ── */
 .pending-actions {
     display: flex;
     gap: 16px;
@@ -295,7 +549,7 @@ const goToProducts = () => {
 
 .pending-note {
     font-size: 14px;
-    color: #999;
+    color: var(--color-text-muted);
     margin: 0;
 }
 </style>
