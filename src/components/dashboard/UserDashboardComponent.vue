@@ -45,8 +45,7 @@
 
             <UserTaskComponent v-else-if="current_view === 'tasks'" />
 
-            <UserMedicalHistoryComponent v-else-if="current_view === 'medical'"
-                :history_number_to_show="auth_store.user_data?.history?.length || 0" />
+            <UserMedicalHistoryComponent v-else-if="current_view === 'medical'" />
         </section>
     </div>
 </template>

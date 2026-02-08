@@ -39,8 +39,13 @@ export const useHistoryStore = defineStore('history', () => {
         try {
             util_store.set_loading(true)
             const response = await api.post('/history', { title, answers })
+            const new_history = response.data.data
+            // Actualizar el historial local en auth_store para que el componente avance al siguiente formulario
+            if (new_history && auth_store.user_data?.history) {
+                auth_store.user_data.history.push(new_history)
+            }
             util_store.set_message(response.data.message, 'success')
-            return response.data.data
+            return new_history
         } catch (err) {
             const msg = err.response?.data?.message || 'Error al crear historial'
             util_store.set_message(msg, 'error')

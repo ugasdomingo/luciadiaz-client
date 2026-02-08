@@ -8,7 +8,7 @@ export const useAdminStore = defineStore('admin', () => {
     const auth_store = useAuthStore()
     const util_store = useUtilStore()
 
-    const users = ref(null)
+    const users = ref([])
     const user = ref(null)
     const pagination = ref(null)
 
@@ -16,8 +16,9 @@ export const useAdminStore = defineStore('admin', () => {
         try {
             util_store.set_loading(true)
             const response = await api.get(`/user?page=${page}&limit=${limit}`)
-            users.value = response.data.data
-            pagination.value = response.data.pagination || null
+            const result = response.data.data
+            users.value = result?.data || result || []
+            pagination.value = result?.pagination || null
         } catch (err) {
             const msg = err.response?.data?.message || 'Error al cargar usuarios'
             util_store.set_message(msg, 'error')

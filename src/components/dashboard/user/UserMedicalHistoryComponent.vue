@@ -1,41 +1,48 @@
 <script setup>
-import { ref, reactive, defineProps, onMounted } from 'vue'
+import { ref, reactive, computed, watch, onMounted } from 'vue'
 import { useAuthStore } from '../../../stores/auth-store.js'
 import { useHistoryStore } from '../../../stores/history-store.js'
 import { medical_history_questions } from '../../../static/questions/medical-history-questions.js'
 
-const props = defineProps({
-    history_number_to_show: {
-        type: Number,
-        required: true
-    }
-})
 const auth_store = useAuthStore()
 const history_store = useHistoryStore()
-const answers = ref(
-    medical_history_questions[props.history_number_to_show].questions.map((pregunta) => ({
-        question: pregunta.question,
-        type: pregunta.type,
-        answer: ''
-    }))
-)
+
+const current_index = computed(() => auth_store.user_data?.history?.length || 0)
+const current_questions = computed(() => medical_history_questions[current_index.value] || null)
+
+const answers = ref([])
 const show_completed = ref(false)
 const expanded_items = reactive({})
 
-const submit_history = async () => {
-    await history_store.create_history(medical_history_questions[props.history_number_to_show].title, answers.value)
-    location.reload()
+const load_questions = () => {
+    if (current_questions.value) {
+        answers.value = current_questions.value.questions.map((pregunta) => ({
+            question: pregunta.question,
+            type: pregunta.type,
+            answer: ''
+        }))
+    }
 }
+
+watch(current_index, () => {
+    load_questions()
+})
+
+const submit_history = async () => {
+    if (!current_questions.value) return
+    await history_store.create_history(current_questions.value.title, answers.value)
+}
+
 const toggle_completed = () => {
     show_completed.value = !show_completed.value
 }
 const toggle_answers = (history_id) => {
     expanded_items[history_id] = !expanded_items[history_id]
 }
+
 onMounted(() => {
-    if (props.history_number_to_show < 13) {
-        show_completed.value = false
-    } else {
+    load_questions()
+    if (current_index.value >= 13) {
         show_completed.value = true
     }
 })
@@ -44,12 +51,11 @@ onMounted(() => {
 
 <template>
     <section class="medical-history__container">
-        <h2>{{ auth_store.user_data.history.length < 13 ? 'Historial Médico Pendiente' : 'Historial Médico Completado'
-        }}</h2>
-                <div class="medical-history__container__header" v-if="auth_store.user_data.history.length < 13">
+        <h2>{{ current_index >= 13 ? 'Historial Médico Completado' : 'Historial Médico Pendiente' }}</h2>
+                <div class="medical-history__container__header" v-if="current_index < 13">
                     <p>
                         Haz completado el
-                        <span>{{ (Math.round(auth_store.user_data.history.length / 13 * 100)) }}%</span>
+                        <span>{{ (Math.round(current_index / 13 * 100)) }}%</span>
                         de tu historial médico
                     </p>
                     <button class="nobg-btn" @click="toggle_completed">{{ show_completed ? 'Seguir llenando' :
@@ -57,7 +63,6 @@ onMounted(() => {
 
                 </div>
                 <div class="medical-history__container__completed" v-if="show_completed">
-                    <!-- TODO: que las respuesta de cada articulo se pligue y despliegue al pulsar el history.title -->
                     <article v-for="history in auth_store.user_data.history" :key="history._id" class="history-item">
                         <h4 @click="toggle_answers(history._id)" class="history-title"
                             :class="{ 'active': expanded_items[history._id] }">
@@ -76,14 +81,15 @@ onMounted(() => {
                         </transition>
                     </article>
                 </div>
-                <form @submit.prevent="submit_history" class="medical-history__container__form" v-else>
-                    <h4>{{ medical_history_questions[props.history_number_to_show].title }}</h4>
+                <form v-if="current_questions && !show_completed" @submit.prevent="submit_history" class="medical-history__container__form">
+                    <h4>{{ current_questions.title }}</h4>
                     <div v-for="(answer, index) in answers" :key="index">
                         <label :for="answer.question">{{ answer.question }}</label>
                         <input :type="answer.type" :id="answer.question" v-model="answer.answer">
                     </div>
                     <button type="submit" class="action-btn">
-                        {{ props.history_number_to_show < 13 ? 'Guardar y seguir' : 'Guardar y finalizar' }} </button>
+                        {{ current_index < 12 ? 'Guardar y seguir' : 'Guardar y finalizar' }}
+                    </button>
                 </form>
     </section>
 </template>

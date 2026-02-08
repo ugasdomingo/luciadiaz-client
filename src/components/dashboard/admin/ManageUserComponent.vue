@@ -17,7 +17,10 @@ onMounted(async () => {
 })
 
 watch(text_filter, () => {
-    users_to_show.value = admin_store.users.filter(user => user.name.toLowerCase().includes(text_filter.value.toLowerCase()))
+    const filter = text_filter.value.toLowerCase()
+    users_to_show.value = admin_store.users.filter(user =>
+        (user.name || '').toLowerCase().includes(filter)
+    )
 })
 
 </script>
