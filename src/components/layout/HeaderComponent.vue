@@ -38,7 +38,7 @@ onMounted(() => {
             <img src="/public/logo-notextbg.png" alt="logo lucia">
         </RouterLink>
         <section class="header__menu">
-            <RouterLink to="/terapias" class="action-btn">{{ screen_size < 768 ? 'Agendar'
+            <RouterLink to="/terapias" class="action-btn" v-if="!util_store.is_home">{{ screen_size < 768 ? 'Agendar'
                 : 'Agendar consulta terapeutica' }}</RouterLink>
                     <button @click="auth_store.logout()" v-if="auth_store.token" class="nobg-btn">Cerrar sesión</button>
                     <img src="/public/icon/icon-hamburguer-menu.svg" alt="menu" class="header__menu__icon"

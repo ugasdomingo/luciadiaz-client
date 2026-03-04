@@ -49,14 +49,6 @@ const get_excerpt = (html) => {
     border: 1px solid var(--color-border-light);
     transition: all 0.3s ease;
     cursor: pointer;
-    opacity: 0;
-    transform: translateY(20px);
-    transition-delay: var(--delay, 0s);
-
-    &.is-visible {
-        opacity: 1;
-        transform: translateY(0);
-    }
 
     &:hover {
         transform: translateY(-4px);

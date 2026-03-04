@@ -1,54 +1,26 @@
 <template>
     <article class="product-card">
         <RouterLink :to="`/productos/${product.slug}`" class="product-card__link">
-            <!-- Imagen del producto -->
             <div class="product-card__image">
                 <img :src="coverImage" :alt="product.title" @error="handleImageError">
 
-                <!-- Badge de tipo de producto -->
                 <span class="product-card__badge" :class="`badge--${product.type}`">
                     {{ productTypeLabel }}
                 </span>
 
-                <!-- Badge si ya lo compró -->
                 <span v-if="isPurchased" class="product-card__purchased">
                     ✓ Comprado
                 </span>
 
-                <!-- Badge si tiene orden pendiente -->
                 <span v-else-if="isPending" class="product-card__pending">
                     ⏳ Pendiente
                 </span>
             </div>
 
-            <!-- Contenido -->
-            <div class="product-card__content">
-                <h3 class="product-card__title">{{ product.title }}</h3>
-
-                <p class="product-card__description">
-                    {{ truncatedDescription }}
-                </p>
-
-                <!-- Categoría y fecha de inicio (si aplica) -->
-                <div class="product-card__meta">
-                    <span v-if="product.category" class="meta-category">
-                        📂 {{ product.category }}
-                    </span>
-                    <span v-if="product.start_date" class="meta-date">
-                        📅 {{ formattedStartDate }}
-                    </span>
-                </div>
-
-                <!-- Footer con precio y CTA -->
-                <div class="product-card__footer">
-                    <span class="product-card__price">
-                        {{ formattedPrice }}
-                    </span>
-
-                    <span class="product-card__cta">
-                        {{ ctaText }} →
-                    </span>
-                </div>
+            <div class="product-card__price-banner">
+                <span class="product-card__price">
+                    {{ formattedPrice }}
+                </span>
             </div>
         </RouterLink>
     </article>
@@ -74,7 +46,6 @@ const imageError = ref(false)
 const coverImage = computed(() => {
     if (imageError.value) return '/placeholder-product.jpg'
 
-    // Soporte para diferentes formatos de cover_image
     if (typeof props.product.cover_image === 'string') {
         return props.product.cover_image
     }
@@ -98,27 +69,10 @@ const productTypeLabel = computed(() => {
     return types[props.product.type] || props.product.type
 })
 
-// Descripción truncada (máx 120 caracteres)
-const truncatedDescription = computed(() => {
-    if (!props.product.description) return ''
-    if (props.product.description.length <= 120) return props.product.description
-    return props.product.description.substring(0, 120) + '...'
-})
-
 // Precio formateado
 const formattedPrice = computed(() => {
     if (props.product.price === 0) return 'Gratis'
     return `${props.product.price}$`
-})
-
-// Fecha de inicio formateada (para cursos con fecha)
-const formattedStartDate = computed(() => {
-    if (!props.product.start_date) return ''
-    const date = new Date(props.product.start_date)
-    return date.toLocaleDateString('es-ES', {
-        day: 'numeric',
-        month: 'short'
-    })
 })
 
 // Verificar si el usuario compró este producto
@@ -132,24 +86,19 @@ const isPending = computed(() => {
     if (!auth_store.user_data) return false
     return product_store.has_pending_order(props.product.slug)
 })
-
-// Texto del botón CTA
-const ctaText = computed(() => {
-    if (isPurchased.value) return 'Acceder'
-    if (isPending.value) return 'Pendiente'
-    if (props.product.price === 0) return 'Ver gratis'
-    return 'Ver más'
-})
 </script>
 
 <style scoped lang="scss">
 .product-card {
+    max-width: 300px;
     background: var(--color-white);
-    border-radius: 16px;
+    border-radius: 1rem;
     overflow: hidden;
     box-shadow: var(--shadow-sm);
     transition: all 0.3s ease;
     font-family: 'Montserrat', sans-serif;
+    display: flex;
+    flex-direction: column;
 
     &:hover {
         transform: translateY(-4px);
@@ -159,13 +108,15 @@ const ctaText = computed(() => {
     &__link {
         text-decoration: none;
         color: inherit;
-        display: block;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
     }
 
     &__image {
         position: relative;
         width: 100%;
-        aspect-ratio: 16 / 9;
+        aspect-ratio: 3/4;
         overflow: hidden;
         background: var(--color-text-light);
 
@@ -242,74 +193,28 @@ const ctaText = computed(() => {
         backdrop-filter: blur(4px);
     }
 
-    &__content {
-        padding: 20px;
+    &__price-banner {
+        padding: 16px;
         display: flex;
-        flex-direction: column;
-        gap: 12px;
-    }
-
-    &__title {
-        font-size: 20px;
-        font-weight: 700;
-        line-height: 1.3;
-        margin: 0;
-        color: var(--color-primary);
-        font-family: 'Playfair Display', serif;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-
-    &__description {
-        font-size: 14px;
-        line-height: 1.5;
-        color: var(--color-text);
-        margin: 0;
-        font-weight: 300;
-    }
-
-    &__meta {
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-        font-size: 13px;
-        color: var(--color-text);
-        opacity: 0.7;
-
-        .meta-category,
-        .meta-date {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-    }
-
-    &__footer {
-        display: flex;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
-        padding-top: 8px;
-        border-top: 1px solid var(--color-disable);
-        margin-top: auto;
+        background: var(--color-white);
+        /* Opcional: una línea sutil que separa la imagen del banner */
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        flex-grow: 1;
+        /* Para que empuje el banner al final si las cards tienen alturas fijas */
     }
 
     &__price {
         font-size: 24px;
         font-weight: 800;
         color: var(--color-secondary);
-    }
-
-    &__cta {
-        font-size: 14px;
-        font-weight: 700;
-        color: var(--color-primary);
+        margin: 0;
         transition: transform 0.2s ease;
 
+        /* Efecto opcional: un leve zoom al precio al hacer hover en la card */
         .product-card:hover & {
-            transform: translateX(4px);
-            color: var(--color-secondary);
+            transform: scale(1.05);
         }
     }
 }
@@ -317,12 +222,8 @@ const ctaText = computed(() => {
 // Responsive
 @media (max-width: 568px) {
     .product-card {
-        &__content {
-            padding: 16px;
-        }
-
-        &__title {
-            font-size: 18px;
+        &__price-banner {
+            padding: 12px;
         }
 
         &__price {

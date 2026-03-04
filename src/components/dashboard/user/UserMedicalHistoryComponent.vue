@@ -31,6 +31,8 @@ watch(current_index, () => {
 const submit_history = async () => {
     if (!current_questions.value) return
     await history_store.create_history(current_questions.value.title, answers.value)
+    await auth_store.refresh()
+    window.scrollTo(0, 0)
 }
 
 const toggle_completed = () => {
@@ -52,45 +54,45 @@ onMounted(() => {
 <template>
     <section class="medical-history__container">
         <h2>{{ current_index >= 13 ? 'Historial Médico Completado' : 'Historial Médico Pendiente' }}</h2>
-                <div class="medical-history__container__header" v-if="current_index < 13">
-                    <p>
-                        Haz completado el
-                        <span>{{ (Math.round(current_index / 13 * 100)) }}%</span>
-                        de tu historial médico
-                    </p>
-                    <button class="nobg-btn" @click="toggle_completed">{{ show_completed ? 'Seguir llenando' :
-                        'Ver historial' }}</button>
+        <div class="medical-history__container__header" v-if="current_index < 13">
+            <p>
+                Haz completado el
+                <span>{{ (Math.round(current_index / 13 * 100)) }}%</span>
+                de tu historial médico
+            </p>
+            <button class="nobg-btn" @click="toggle_completed">{{ show_completed ? 'Seguir llenando' :
+                'Ver historial' }}</button>
 
-                </div>
-                <div class="medical-history__container__completed" v-if="show_completed">
-                    <article v-for="history in auth_store.user_data.history" :key="history._id" class="history-item">
-                        <h4 @click="toggle_answers(history._id)" class="history-title"
-                            :class="{ 'active': expanded_items[history._id] }">
-                            {{ history.title }}
-                            <span class="arrow" :class="{ 'rotated': expanded_items[history._id] }">
-                                <img src="/icon/icon-plus.svg" alt="plus icon">
-                            </span>
-                        </h4>
-                        <transition name="accordion" @enter="enter" @after-enter="afterEnter" @leave="leave"
-                            @after-leave="afterLeave">
-                            <div class="answer-container" v-show="expanded_items[history._id]">
-                                <div v-for="(answer, index) in history.answers" :key="index" class="answer-item">
-                                    <p>{{ answer.question }}: <strong>{{ answer.answer }}</strong></p>
-                                </div>
-                            </div>
-                        </transition>
-                    </article>
-                </div>
-                <form v-if="current_questions && !show_completed" @submit.prevent="submit_history" class="medical-history__container__form">
-                    <h4>{{ current_questions.title }}</h4>
-                    <div v-for="(answer, index) in answers" :key="index">
-                        <label :for="answer.question">{{ answer.question }}</label>
-                        <input :type="answer.type" :id="answer.question" v-model="answer.answer">
+        </div>
+        <div class="medical-history__container__completed" v-if="show_completed">
+            <article v-for="history in auth_store.user_data.history" :key="history._id" class="history-item">
+                <h4 @click="toggle_answers(history._id)" class="history-title"
+                    :class="{ 'active': expanded_items[history._id] }">
+                    {{ history.title }}
+                    <span class="arrow" :class="{ 'rotated': expanded_items[history._id] }">
+                        <img src="/icon/icon-plus.svg" alt="plus icon">
+                    </span>
+                </h4>
+                <transition name="accordion" @enter="enter" @after-enter="afterEnter" @leave="leave"
+                    @after-leave="afterLeave">
+                    <div class="answer-container" v-show="expanded_items[history._id]">
+                        <div v-for="(answer, index) in history.answers" :key="index" class="answer-item">
+                            <p>{{ answer.question }}: <strong>{{ answer.answer }}</strong></p>
+                        </div>
                     </div>
-                    <button type="submit" class="action-btn">
-                        {{ current_index < 12 ? 'Guardar y seguir' : 'Guardar y finalizar' }}
-                    </button>
-                </form>
+                </transition>
+            </article>
+        </div>
+        <form v-if="current_questions && !show_completed" @submit.prevent="submit_history"
+            class="medical-history__container__form">
+            <h4>{{ current_questions.title }}</h4>
+            <div v-for="(answer, index) in answers" :key="index">
+                <label :for="answer.question">{{ answer.question }}</label>
+                <input :type="answer.type" :id="answer.question" v-model="answer.answer">
+            </div>
+            <button type="submit" class="action-btn">
+                {{ current_index < 12 ? 'Guardar y seguir' : 'Guardar y finalizar' }} </button>
+        </form>
     </section>
 </template>
 

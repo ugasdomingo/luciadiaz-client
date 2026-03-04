@@ -123,8 +123,16 @@ const router = createRouter({
 // Navigation Guard
 router.beforeEach(async (to, from, next) => {
     const auth_store = useAuthStore()
+    const util_store = useUtilStore()
     const requires_auth = to.matched.some(record => record.meta.requires_auth)
     const has_refresh_token = localStorage.getItem('refresh_token') // Antes era 'login'
+
+    //Known if it is home
+    if (to.name === 'Home') {
+        util_store.is_home = true
+    } else {
+        util_store.is_home = false
+    }
 
     // Si ya tenemos token en memoria, pasamos
     if (auth_store.token) {

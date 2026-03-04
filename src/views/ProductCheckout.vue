@@ -30,7 +30,7 @@
                 </section>
 
                 <!-- Métodos de pago -->
-                <section class="checkout-payment">
+                <section class="checkout-payment" v-if="!is_product_free">
                     <h2>Método de pago</h2>
 
                     <div class="payment-methods">
@@ -107,6 +107,12 @@
                         <RouterLink to="/terminos">términos y condiciones</RouterLink>
                     </p>
                 </section>
+                <section class="checkout-payment" v-else>
+                    <button @click="handleFreePayment" :disabled="!canProceed" class="btn-pay"
+                        :class="{ 'btn-pay--disabled': !canProceed }">
+                        Inscribirme gratis
+                    </button>
+                </section>
             </div>
 
             <div v-else class="checkout-error">
@@ -141,6 +147,9 @@ const selectedMethod = ref('paypal')
 const uploadedProof = ref(null)
 const fileInput = ref(null)
 const showPaymentModal = ref(false)
+const is_product_free = computed(() => {
+    return product.value?.price === 0
+})
 
 // Computed
 const truncatedDescription = computed(() => {
@@ -202,6 +211,13 @@ const removeProof = () => {
 }
 
 // Procesar pago
+const handleFreePayment = async () => {
+    const success = await order_store.create_offline_order({ product_id: product.value._id })
+    if (success) {
+        router.push(`/productos/${product.value.slug}`)
+    }
+}
+
 const handlePayment = async () => {
     if (!canProceed.value) return
 

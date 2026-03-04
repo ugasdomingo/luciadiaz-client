@@ -4,7 +4,16 @@ import { useAuthStore } from '../../../stores/auth-store.js'
 import TaskCardComponent from '../../common/cards/TaskCardComponent.vue'
 
 const auth_store = useAuthStore()
-const all_tasks = computed(() => auth_store.user_data.therapy_tasks)
+const all_tasks = computed(() => {
+    const tasks = auth_store.user_data.therapy_tasks || []
+    return [...tasks].sort((a, b) => {
+        const isCompletedA = a.status === 'completed'
+        const isCompletedB = b.status === 'completed'
+        if (isCompletedA && !isCompletedB) return 1
+        if (!isCompletedA && isCompletedB) return -1
+        return 0
+    })
+})
 
 </script>
 

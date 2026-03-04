@@ -32,12 +32,12 @@ const type_config = computed(() => {
         'live': { label: 'En vivo', color: 'var(--color-error)' },
         'online': { label: 'Online', color: 'var(--color-primary-light)' }
     }
-    return types[props.progress.formation_id.type] || types.online
+    return types[props.progress.product_id.type] || types.online
 })
 
 // Ir al dashboard del curso
 const go_to_course = () => {
-    router.push(`/formaciones/${props.progress.formation_id.slug}/dashboard`)
+    router.push(`/productos/${props.progress.product_id.slug}`)
 }
 </script>
 
@@ -45,7 +45,7 @@ const go_to_course = () => {
     <article class="course-card" @click="go_to_course">
         <!-- Imagen -->
         <div class="course-card__image-wrapper">
-            <img :src="progress.formation_id.formation_cover.secure_url" :alt="progress.formation_id.title"
+            <img :src="progress.product_id.cover_image.secure_url" :alt="progress.product_id.title"
                 class="course-card__image">
 
             <!-- Badge de tipo -->
@@ -61,17 +61,17 @@ const go_to_course = () => {
 
         <!-- Contenido -->
         <div class="course-card__content">
-            <h3 class="course-card__title">{{ progress.formation_id.title }}</h3>
+            <h3 class="course-card__title">{{ progress.product_id.title }}</h3>
 
             <!-- Barra de progreso -->
             <div class="course-card__progress">
                 <div class="progress-info">
                     <span class="progress-label">Tu progreso</span>
-                    <span class="progress-percentage">{{ progress.overall_progress_percentage }}%</span>
+                    <span class="progress-percentage">{{ progress.percentage }}%</span>
                 </div>
                 <div class="progress-bar">
                     <div class="progress-bar__fill" :style="{
-                        width: `${progress.overall_progress_percentage}%`,
+                        width: `${progress.percentage}%`,
                         backgroundColor: progress_color
                     }"></div>
                 </div>
@@ -86,7 +86,7 @@ const go_to_course = () => {
 
             <!-- CTA -->
             <button class="course-card__cta">
-                {{ progress.overall_progress_percentage === 100 ? 'Revisar curso' : 'Continuar aprendiendo' }}
+                {{ progress.percentage === 100 ? 'Revisar curso' : 'Continuar aprendiendo' }}
             </button>
         </div>
     </article>
@@ -98,7 +98,6 @@ const go_to_course = () => {
     grid-template-columns: 1fr;
     background: var(--color-white);
     border-radius: 1rem;
-    overflow: hidden;
     box-shadow: var(--shadow-sm);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;

@@ -2,6 +2,7 @@
 import HeaderComponent from './components/layout/HeaderComponent.vue'
 import LoadingComponent from './components/common/LoadingComponent.vue'
 import GlobalMessagesComponent from './components/common/GlobalMessagesComponent.vue'
+import FooterComponent from './components/layout/FooterComponent.vue'
 import { useUtilStore } from './stores/util-store'
 
 const util_store = useUtilStore()
@@ -12,8 +13,7 @@ const util_store = useUtilStore()
   <LoadingComponent :isVisible="util_store.loading" />
   <GlobalMessagesComponent v-if="util_store.show_message" />
   <router-view />
+  <FooterComponent />
 </template>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>

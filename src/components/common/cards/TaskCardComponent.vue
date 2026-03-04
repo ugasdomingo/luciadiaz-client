@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useTaskStore } from '../../../stores/task-store'
+import { useAuthStore } from '../../../stores/auth-store'
 
 const props = defineProps({
     task: {
@@ -13,6 +14,7 @@ const props = defineProps({
     }
 })
 
+const auth_store = useAuthStore()
 const task_store = useTaskStore()
 
 const statusColor = computed(() => {
@@ -52,6 +54,7 @@ const formattedDate = computed(() => {
 const handleComplete = async () => {
     if (props.task.status === 'completed') return
     await task_store.complete_task(props.task._id)
+    await auth_store.refresh()
 }
 </script>
 

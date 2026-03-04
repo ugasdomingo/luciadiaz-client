@@ -3,6 +3,7 @@ import { ref } from 'vue'
 
 export const useUtilStore = defineStore('utils', () => {
     //Generals
+    const is_home = ref(true)
 
     //Whatsapp link:
     const whatsapp_link = ref('https://wa.me/34604822385')
@@ -63,6 +64,7 @@ export const useUtilStore = defineStore('utils', () => {
 
 
     return {
+        is_home,
         whatsapp_link,
         show_navbar,
         toggle_navbar,

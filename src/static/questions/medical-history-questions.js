@@ -28,7 +28,7 @@ export const medical_history_questions = [
         ]
     },
     {
-        title: 'Informacióm Matrimonial',
+        title: 'Información Matrimonial',
         questions: [
             { question: 'Nombre de la pareja', type: 'text' },
             { question: 'Edad de la pareja', type: 'text' },

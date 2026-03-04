@@ -24,14 +24,14 @@ onMounted(async () => {
 
 // Ordenar cursos: en progreso primero, completados después
 const sorted_courses = computed(() => {
-    if (!auth_store.user_data?.progress) return { in_progress: [], completed: [] }
+    if (!auth_store.user_data?.progress) return { in_progress: [], completed: [], algo: 'Algo' }
 
     const in_progress = auth_store.user_data.progress
-        .filter(p => p.overall_progress_percentage < 100)
+        .filter(p => p.percentage < 100)
         .sort((a, b) => new Date(b.last_accessed) - new Date(a.last_accessed)) // Más recientes primero
 
     const completed = auth_store.user_data.progress
-        .filter(p => p.overall_progress_percentage === 100)
+        .filter(p => p.percentage === 100)
 
     return { in_progress, completed }
 })
@@ -50,7 +50,7 @@ const user_name = computed(() => auth_store.user_data?.user?.name?.split(' ')[0]
     <section class="user-courses">
         <h2 class="section-title">Mis Aprendizajes</h2>
 
-        <div v-if="!auth_store.user_data.progress || auth_store.user_data.progress.length === 0" class="empty-state">
+        <div v-if="!auth_store.user_data.progress" class="empty-state">
             <div class="empty-content">
                 <span class="icon">🌱</span>
                 <h3>Tu camino empieza hoy</h3>

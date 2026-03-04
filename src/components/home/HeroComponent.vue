@@ -1,15 +1,15 @@
 <template>
     <section class="hero">
-        <div class="hero__background">
-            <img src="/public/img/fondo-lucia-cafe.webp" alt="Consulta Lucia Diaz" />
+        <div class="hero__image">
+            <img src="/public/img/nuevo-fondo.jpg" alt="Consulta Lucia Diaz" />
             <div class="hero__veil"></div>
         </div>
 
         <div class="hero__content">
-            <p class="hero__greeting">Bienvenida a tu espacio</p>
-            <h2>¿Por qué amar me genera tanta ansiedad?</h2>
-            <p class="hero__body">Descubre cómo construir relaciones seguras desde el entendimiento y la calma. He
-                preparado este espacio para ti.</p>
+            <p class="hero__greeting">Bienvenida(o) a tu espacio</p>
+            <h2>¿Ya tienes tu café?</h2>
+            <p class="hero__body">Busca tu bebida favorita y acompañame a sumergirnos en lo marivillosa y poderosa que
+                es tu mente.</p>
 
             <RouterLink to="/terapias" class="hero__cta">
                 Agendar sesión
@@ -28,14 +28,16 @@
     width: 100%;
     height: 100vh;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     position: relative;
+    gap: 0;
     overflow: hidden;
     text-align: center;
 
-    &__background {
-        position: absolute;
+    &__image {
+        width: 50%;
+        height: 100%;
         inset: 0;
         z-index: 0;
 
@@ -43,7 +45,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            object-position: center 20%;
+            object-position: center 25%;
         }
     }
 
@@ -51,13 +53,11 @@
     &__veil {
         position: absolute;
         inset: 0;
-        background: linear-gradient(
-            180deg,
-            rgba(255, 255, 255, 0.15) 0%,
-            rgba(255, 255, 255, 0.4) 40%,
-            rgba(255, 255, 255, 0.75) 75%,
-            rgba(255, 255, 255, 0.95) 100%
-        );
+        background: linear-gradient(180deg,
+                rgba(255, 255, 255, 0.0) 0%,
+                rgba(255, 255, 255, 0.0) 40%,
+                rgba(255, 255, 255, 0.2) 75%,
+                rgba(255, 255, 255, 0.3) 100%);
     }
 
     // Transición suave al siguiente bloque
@@ -74,11 +74,12 @@
     &__content {
         position: relative;
         z-index: 1;
-        max-width: 680px;
-        padding: 0 2rem;
-        margin-top: 4rem;
+        max-width: 50%;
+        padding: 0 4rem;
+        margin-top: 0;
         display: flex;
         flex-direction: column;
+        justify-content: flex-start;
         align-items: center;
         gap: 0;
     }

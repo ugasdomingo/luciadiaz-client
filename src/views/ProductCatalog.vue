@@ -7,7 +7,7 @@
         </header>
 
         <div class="catalog-layout">
-            <!-- Sidebar con filtros (Desktop) -->
+            <!-- Sidebar con filtros (Desktop)-->
             <aside class="catalog-sidebar">
                 <ProductFilters />
             </aside>
@@ -35,8 +35,7 @@
 
                 <!-- Grid de productos -->
                 <div v-else class="catalog-grid">
-                    <ProductCard v-for="product in product_store.show_products" :key="product._id"
-                        :product="product" />
+                    <ProductCard v-for="product in product_store.show_products" :key="product._id" :product="product" />
                 </div>
 
                 <!-- Contador -->
@@ -94,10 +93,11 @@ onMounted(async () => {
 
 .catalog-header {
     text-align: center;
-    margin-bottom: 3.5rem;
+    margin-bottom: 2.5rem;
 
     h1 {
-        margin-bottom: 0.75rem;
+        margin: 0;
+        padding: 0;
     }
 
     p {
@@ -109,11 +109,11 @@ onMounted(async () => {
 }
 
 .catalog-layout {
-    display: grid;
-    grid-template-columns: 260px 1fr;
-    gap: 2.5rem;
-    align-items: start;
     max-width: 1200px;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    position: relative;
     margin: 0 auto;
 
     @media (max-width: 1024px) {
@@ -123,8 +123,11 @@ onMounted(async () => {
 }
 
 .catalog-sidebar {
-    position: sticky;
-    top: 6rem;
+    width: 25%;
+    position: absolute;
+    z-index: 100;
+    left: 0;
+    top: 0;
 
     @media (max-width: 1024px) {
         display: none;
@@ -132,6 +135,7 @@ onMounted(async () => {
 }
 
 .catalog-main {
+    width: 70%;
     min-height: 400px;
 }
 

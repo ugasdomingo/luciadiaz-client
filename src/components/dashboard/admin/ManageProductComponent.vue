@@ -21,6 +21,7 @@
                 <option value="active">Activos</option>
                 <option value="draft">Borradores</option>
                 <option value="archived">Archivados</option>
+                <option value="coming_soon">Próximamente</option>
                 <option value="">Todos los estados</option>
             </select>
 
@@ -160,6 +161,7 @@
                                     <option value="active">Activo</option>
                                     <option value="draft">Borrador</option>
                                     <option value="archived">Archivado</option>
+                                    <option value="coming_soon">Próximamente</option>
                                 </select>
                             </div>
                         </div>
@@ -302,7 +304,7 @@ const imageFile = ref(null)
 // Filtros
 const filters = ref({
     type: '',
-    status: 'active',
+    status: 'coming_soon',
     search: ''
 })
 

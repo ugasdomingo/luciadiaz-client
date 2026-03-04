@@ -32,6 +32,7 @@ const content = ref('')
 const category = ref('')
 const tags = ref('')
 const post_cover = ref()
+const status = ref('draft')
 
 
 //Handdle_submit
@@ -43,7 +44,7 @@ const handle_submit = async () => {
     form_data.append('category', category.value)
     form_data.append('tags', tags.value)
     form_data.append('post_cover', post_cover.value)
-    form_data.append('status', 'draft')
+    form_data.append('status', status.value)
 
     await post_store.create_post(form_data)
 
@@ -52,6 +53,7 @@ const handle_submit = async () => {
     content.value = ''
     category.value = ''
     tags.value = ''
+    status.value = 'draft'
     post_cover.value = null
 }
 
@@ -84,6 +86,7 @@ const handle_update = async () => {
     form_data.append('category', category.value)
     form_data.append('tags', tags.value)
     form_data.append('post_cover', post_cover.value)
+    form_data.append('status', status.value)
 
     await post_store.update_post(post_to_update.value._id, form_data)
 
@@ -92,6 +95,7 @@ const handle_update = async () => {
     content.value = ''
     category.value = ''
     tags.value = ''
+    status.value = 'draft'
     post_cover.value = null
     post_to_update.value = null
     toggle_update_post()
@@ -109,8 +113,12 @@ const handle_update = async () => {
             <input type="text" placeholder="Categoria" v-model="category" required>
             <input type="text" placeholder="Tags" v-model="tags" required>
             <input type="file" accept="image/*" @change="handle_file_change" required>
+            <select v-model="status">
+                <option value="draft">Borrador</option>
+                <option value="published">Publicado</option>
+            </select>
             <button type="submit" class="action-btn">Crear Post</button>
-            <button type="button" class="nobg-btn" @click="handle_update">Guardar</button>
+            <button type="button" class="nobg-btn" @click="handle_update">Actualizar Post</button>
         </form>
         <h2 @click="toggle_update_post">Actualizar Post <span>{{ show_update_post ? '-' : '+' }}</span></h2>
         <section v-if="show_update_post" class="section__container__posts">
