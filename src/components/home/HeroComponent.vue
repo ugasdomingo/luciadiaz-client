@@ -96,7 +96,7 @@
     }
 
     &__content h2 {
-        font-size: 3.25rem;
+        font-size: clamp(1.75rem, 3.5vw, 3.25rem);
         color: var(--color-primary-dark);
         margin-bottom: 1.5rem;
         line-height: 1.15;
@@ -135,7 +135,7 @@
     }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 900px) {
     .hero {
         height: auto;
         min-height: 100svh;
@@ -144,7 +144,7 @@
 
         &__image {
             width: 100%;
-            height: 50vh;
+            height: 55vh;
             position: absolute;
             top: 0;
             left: 0;
@@ -160,16 +160,25 @@
             background: linear-gradient(to bottom, transparent, var(--color-white) 15%);
         }
 
-        &__content h2 {
-            font-size: 2.2rem;
-        }
-
         &__body {
             font-size: 1rem;
+            max-width: 100%;
         }
 
         &__greeting {
             font-size: 0.75rem;
+        }
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .hero {
+        &__image {
+            height: 48vh;
+        }
+
+        &__content {
+            padding: 2rem 1.25rem 3.5rem;
         }
     }
 }

@@ -34,7 +34,7 @@ onMounted(() => {
 footer {
     width: 100%;
     height: 2rem;
-    padding: 0 4rem;
+    padding: 0 1rem;
     text-align: center;
     display: flex;
     justify-content: center;

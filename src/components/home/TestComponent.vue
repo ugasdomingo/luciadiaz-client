@@ -64,6 +64,16 @@ use_scroll_reveal()
     }
 }
 
+@media screen and (max-width: 1024px) {
+    .test {
+        padding: 4rem 2rem 6rem;
+
+        &__content {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+}
+
 @media screen and (max-width: 720px) {
     .test {
         padding: 4rem 1.25rem;

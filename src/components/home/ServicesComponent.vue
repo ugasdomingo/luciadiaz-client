@@ -144,6 +144,8 @@ use_scroll_reveal()
 
 @media screen and (max-width: 1024px) {
     .services {
+        padding: 4rem 2rem 6rem;
+
         &__grid {
             grid-template-columns: repeat(2, 1fr);
         }

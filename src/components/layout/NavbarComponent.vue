@@ -39,8 +39,7 @@ const links = [
 
 <style scoped lang="scss">
 nav {
-    width: 100%;
-    max-width: fit-content;
+    width: max-content;
     display: flex;
     flex-direction: column;
     justify-content: center;

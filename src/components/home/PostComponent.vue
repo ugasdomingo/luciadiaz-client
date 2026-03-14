@@ -95,6 +95,8 @@ const common_store = useCommonStore()
 
 @media screen and (max-width: 1024px) {
     .post {
+        padding: 4rem 2rem 6rem;
+
         &__content {
             grid-template-columns: repeat(2, 1fr);
         }

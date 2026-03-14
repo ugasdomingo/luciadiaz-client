@@ -110,14 +110,26 @@
 
 /* ========== BASE ========== */
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   padding: 0;
-  min-width: 320px;
   min-height: 100vh;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
   background-color: var(--color-white);
   color: var(--color-text);
-  box-sizing: border-box;
   font-family: 'Montserrat', sans-serif;
 }
 
@@ -135,21 +147,10 @@ h4 {
   margin-bottom: 1rem;
 }
 
-h1 {
-  font-size: 4rem;
-}
-
-h2 {
-  font-size: 2.5rem;
-}
-
-h3 {
-  font-size: 1.75rem;
-}
-
-h4 {
-  font-size: 1.25rem;
-}
+h1 { font-size: clamp(2rem, 5vw, 4rem); }
+h2 { font-size: clamp(1.5rem, 4vw, 2.5rem); }
+h3 { font-size: clamp(1.25rem, 3vw, 1.75rem); }
+h4 { font-size: 1.25rem; }
 
 p {
   font-size: 1rem;
@@ -299,7 +300,9 @@ textarea {
 }
 
 #app {
+  width: 100%;
   max-width: 100%;
+  overflow-x: hidden;
   margin: 0 auto;
 }
 

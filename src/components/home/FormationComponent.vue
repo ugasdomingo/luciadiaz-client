@@ -93,6 +93,12 @@ const common_store = useCommonStore()
     }
 }
 
+@media screen and (max-width: 1024px) {
+    .formation {
+        padding: 4rem 2rem 6rem;
+    }
+}
+
 @media screen and (max-width: 720px) {
     .formation {
         padding: 4rem 1.25rem;
