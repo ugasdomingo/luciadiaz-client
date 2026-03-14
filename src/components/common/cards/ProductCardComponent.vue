@@ -2,24 +2,24 @@
     <article class="product-card">
         <RouterLink :to="`/productos/${product.slug}`" class="product-card__link">
             <div class="product-card__image">
-                <img :src="coverImage" :alt="product.title" @error="handleImageError">
+                <img :src="cover_image" :alt="product.title" @error="handle_image_error">
 
                 <span class="product-card__badge" :class="`badge--${product.type}`">
-                    {{ productTypeLabel }}
+                    {{ product_type_label }}
                 </span>
 
-                <span v-if="isPurchased" class="product-card__purchased">
+                <span v-if="is_purchased" class="product-card__purchased">
                     ✓ Comprado
                 </span>
 
-                <span v-else-if="isPending" class="product-card__pending">
+                <span v-else-if="is_pending" class="product-card__pending">
                     ⏳ Pendiente
                 </span>
             </div>
 
             <div class="product-card__price-banner">
                 <span class="product-card__price">
-                    {{ formattedPrice }}
+                    {{ formatted_price }}
                 </span>
             </div>
         </RouterLink>
@@ -40,52 +40,31 @@ const props = defineProps({
 
 const auth_store = useAuthStore()
 const product_store = useProductStore()
-const imageError = ref(false)
+const image_error = ref(false)
 
 // Imagen de portada (con fallback)
-const coverImage = computed(() => {
-    if (imageError.value) return '/placeholder-product.jpg'
-
-    if (typeof props.product.cover_image === 'string') {
-        return props.product.cover_image
-    }
-
+const cover_image = computed(() => {
+    if (image_error.value) return '/placeholder-product.jpg'
+    if (typeof props.product.cover_image === 'string') return props.product.cover_image
     return props.product.cover_image?.secure_url || '/placeholder-product.jpg'
 })
 
-// Manejar error de carga de imagen
-const handleImageError = () => {
-    imageError.value = true
-}
+const handle_image_error = () => { image_error.value = true }
 
 // Etiqueta del tipo de producto
-const productTypeLabel = computed(() => {
-    const types = {
-        'course': 'Curso',
-        'ebook': 'Guía',
-        'bundle': 'Pack',
-        'service': 'Servicio'
-    }
+const product_type_label = computed(() => {
+    const types = { course: 'Curso', ebook: 'Guía', bundle: 'Pack', service: 'Servicio' }
     return types[props.product.type] || props.product.type
 })
 
 // Precio formateado
-const formattedPrice = computed(() => {
+const formatted_price = computed(() => {
     if (props.product.price === 0) return 'Gratis'
     return `${props.product.price}$`
 })
 
-// Verificar si el usuario compró este producto
-const isPurchased = computed(() => {
-    if (!auth_store.user_data) return false
-    return product_store.has_access(props.product.slug)
-})
-
-// Verificar si tiene orden pendiente
-const isPending = computed(() => {
-    if (!auth_store.user_data) return false
-    return product_store.has_pending_order(props.product.slug)
-})
+const is_purchased = computed(() => auth_store.user_data && product_store.has_access(props.product.slug))
+const is_pending = computed(() => auth_store.user_data && product_store.has_pending_order(props.product.slug))
 </script>
 
 <style scoped lang="scss">
@@ -134,11 +113,11 @@ const isPending = computed(() => {
 
     &__badge {
         position: absolute;
-        top: 12px;
-        left: 12px;
-        padding: 6px 12px;
-        border-radius: 8px;
-        font-size: 12px;
+        top: var(--space-3);
+        left: var(--space-3);
+        padding: var(--space-1) var(--space-3);
+        border-radius: var(--radius-sm);
+        font-size: var(--text-xs);
         font-weight: 700;
         text-transform: uppercase;
         background: var(--overlay-white-85);
@@ -168,11 +147,11 @@ const isPending = computed(() => {
 
     &__purchased {
         position: absolute;
-        top: 12px;
-        right: 12px;
-        padding: 6px 12px;
-        border-radius: 8px;
-        font-size: 12px;
+        top: var(--space-3);
+        right: var(--space-3);
+        padding: var(--space-1) var(--space-3);
+        border-radius: var(--radius-sm);
+        font-size: var(--text-xs);
         font-weight: 700;
         background: var(--color-approve-alert);
         color: var(--color-text-dark);
@@ -182,11 +161,11 @@ const isPending = computed(() => {
 
     &__pending {
         position: absolute;
-        top: 12px;
-        right: 12px;
-        padding: 6px 12px;
-        border-radius: 8px;
-        font-size: 12px;
+        top: var(--space-3);
+        right: var(--space-3);
+        padding: var(--space-1) var(--space-3);
+        border-radius: var(--radius-sm);
+        font-size: var(--text-xs);
         font-weight: 700;
         background: var(--color-secondary);
         color: var(--color-white);
@@ -206,7 +185,7 @@ const isPending = computed(() => {
     }
 
     &__price {
-        font-size: 24px;
+        font-size: var(--text-2xl);
         font-weight: 800;
         color: var(--color-secondary);
         margin: 0;

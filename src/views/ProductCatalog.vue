@@ -15,7 +15,7 @@
             <!-- Contenido principal -->
             <main class="catalog-main">
                 <!-- Botón de filtros móvil -->
-                <button class="filters-toggle" @click="showMobileFilters = true">
+                <button class="filters-toggle" @click="show_mobile_filters = true">
                     Filtros
                 </button>
 
@@ -48,15 +48,15 @@
 
         <!-- Modal de filtros móvil -->
         <Teleport to="body">
-            <div v-if="showMobileFilters" class="filters-modal">
-                <div class="filters-modal__overlay" @click="showMobileFilters = false"></div>
+            <div v-if="show_mobile_filters" class="filters-modal">
+                <div class="filters-modal__overlay" @click="show_mobile_filters = false"></div>
                 <div class="filters-modal__content">
                     <div class="filters-modal__header">
                         <h2>Filtros</h2>
-                        <button @click="showMobileFilters = false" class="btn-close">✕</button>
+                        <button @click="show_mobile_filters = false" class="btn-close">✕</button>
                     </div>
                     <ProductFilters />
-                    <button @click="showMobileFilters = false" class="filters-modal__apply">
+                    <button @click="show_mobile_filters = false" class="filters-modal__apply">
                         Aplicar filtros
                     </button>
                 </div>
@@ -74,7 +74,7 @@ import LoadingComponent from '../components/common/LoadingComponent.vue'
 
 const product_store = useProductStore()
 const loading = ref(false)
-const showMobileFilters = ref(false)
+const show_mobile_filters = ref(false)
 
 onMounted(async () => {
     if (product_store.all_products.length === 0) {
@@ -111,31 +111,24 @@ onMounted(async () => {
 .catalog-layout {
     max-width: 1200px;
     width: 100%;
-    display: flex;
-    justify-content: flex-end;
-    position: relative;
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 2rem;
     margin: 0 auto;
+    align-items: start;
 
     @media (max-width: 1024px) {
         grid-template-columns: 1fr;
-        gap: 1.5rem;
     }
 }
 
 .catalog-sidebar {
-    width: 25%;
-    position: absolute;
-    z-index: 100;
-    left: 0;
-    top: 0;
-
     @media (max-width: 1024px) {
         display: none;
     }
 }
 
 .catalog-main {
-    width: 70%;
     min-height: 400px;
 }
 
