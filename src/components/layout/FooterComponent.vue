@@ -24,7 +24,7 @@ onMounted(() => {
         <p>© {{ new Date().getFullYear() }} Lucia Diaz. Todos los derechos reservados.</p>
 
         <a class="whatsapp-link" href="https://wa.me/34624721896" target="_blank" v-if="show_whatsapp_link">
-            <img src="/public/icon/icon-whatsapp.svg" alt="whatsapp">
+            <img src="/icon/icon-whatsapp.svg" alt="whatsapp">
         </a>
     </footer>
 

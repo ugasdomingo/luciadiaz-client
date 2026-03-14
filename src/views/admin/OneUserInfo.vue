@@ -8,7 +8,7 @@
                 </li>
                 <li>
                     <strong> Correo: </strong> {{ user_info?.user?.email }}
-                    <img src="/public/icon/icon-mail.svg" alt="checked verified email"
+                    <img src="/icon/icon-mail.svg" alt="checked verified email"
                         v-if="user_info?.user?.email_verified">
                 </li>
                 <li>

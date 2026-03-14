@@ -19,11 +19,11 @@
                 <h1 class="blog-post__title">{{ post_store.post.title }}</h1>
                 <div class="blog-post__meta">
                     <span class="blog-post__date">
-                        <img src="/public/icon/icon-calendar.svg" alt="fecha" class="icon">
+                        <img src="/icon/icon-calendar.svg" alt="fecha" class="icon">
                         {{ format_date(post_store.post.createdAt) }}
                     </span>
                     <span class="blog-post__reading-time">
-                        <img src="/public/icon/icon-clock.svg" alt="tiempo" class="icon">
+                        <img src="/icon/icon-clock.svg" alt="tiempo" class="icon">
                         {{ reading_time }} min lectura
                     </span>
                 </div>

@@ -35,13 +35,13 @@ onMounted(() => {
 
     <header class="header" :class="{ 'header__hidden': !show_header, 'header__bg': need_bg }">
         <RouterLink to="/" class="header__logo">
-            <img src="/public/logo-notextbg.png" alt="logo lucia">
+            <img src="/logo-notextbg.png" alt="logo lucia">
         </RouterLink>
         <section class="header__menu">
             <RouterLink to="/terapias" class="action-btn" v-if="!util_store.is_home">{{ screen_size < 768 ? 'Agendar'
                 : 'Agendar consulta terapeutica' }}</RouterLink>
                     <button @click="auth_store.logout()" v-if="auth_store.token" class="nobg-btn">Cerrar sesión</button>
-                    <img src="/public/icon/icon-hamburguer-menu.svg" alt="menu" class="header__menu__icon"
+                    <img src="/icon/icon-hamburguer-menu.svg" alt="menu" class="header__menu__icon"
                         @click="util_store.toggle_navbar">
                     <NavbarComponent :class="util_store.show_navbar ? 'header__navbar' : 'header__navbar__hidden'" />
         </section>

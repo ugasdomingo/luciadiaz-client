@@ -1,7 +1,7 @@
 <template>
     <section class="hero">
         <div class="hero__image">
-            <img src="/public/img/nuevo-fondo.jpg" alt="Consulta Lucia Diaz" />
+            <img src="/img/nuevo-fondo.jpg" alt="Consulta Lucia Diaz" />
             <div class="hero__veil"></div>
         </div>
 

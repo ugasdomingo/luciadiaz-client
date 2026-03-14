@@ -45,7 +45,7 @@ onMounted(async () => {
             <h3 @click="toggle_answers(test.id)" class="test-results__container__article__title"
                 :class="expanded_items[test.id] ? 'expanded' : ''">
                 {{ test.name }} <span class="arrow" :class="{ 'rotated': expanded_items[test.id] }">
-                    <img src="/public/icon/icon-plus.svg" alt="plus icon">
+                    <img src="/icon/icon-plus.svg" alt="plus icon">
                 </span>
             </h3>
             <transition name="accordion" @enter="enter" @after-enter="afterEnter" @leave="leave"
