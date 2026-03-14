@@ -154,7 +154,7 @@ const copy_link = async () => {
         background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
         z-index: 1000;
         transition: width 0.1s ease;
-        box-shadow: 0 2px 4px rgba(30, 86, 160, 0.3);
+        box-shadow: var(--shadow-sm);
     }
 
     &__breadcrumbs {
@@ -396,7 +396,7 @@ const copy_link = async () => {
 
         &.twitter {
             background: #1DA1F2;
-            color: white;
+            color: var(--color-white);
 
             &:hover {
                 background: #1a8cd8;
@@ -406,7 +406,7 @@ const copy_link = async () => {
 
         &.whatsapp {
             background: #25D366;
-            color: white;
+            color: var(--color-white);
 
             &:hover {
                 background: #20ba5a;
@@ -416,7 +416,7 @@ const copy_link = async () => {
 
         &.linkedin {
             background: #0A66C2;
-            color: white;
+            color: var(--color-white);
 
             &:hover {
                 background: #084d92;

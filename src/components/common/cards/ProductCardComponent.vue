@@ -141,7 +141,7 @@ const isPending = computed(() => {
         font-size: 12px;
         font-weight: 700;
         text-transform: uppercase;
-        background: rgba(255, 255, 255, 0.95);
+        background: var(--overlay-white-85);
         color: var(--color-text);
         backdrop-filter: blur(4px);
 
@@ -199,8 +199,8 @@ const isPending = computed(() => {
         justify-content: center;
         align-items: center;
         background: var(--color-white);
-        /* Opcional: una línea sutil que separa la imagen del banner */
-        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        /* Línea sutil que separa la imagen del banner */
+        border-top: 1px solid var(--color-border-light);
         flex-grow: 1;
         /* Para que empuje el banner al final si las cards tienen alturas fijas */
     }

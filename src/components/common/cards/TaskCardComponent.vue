@@ -130,17 +130,17 @@ const handleComplete = async () => {
         font-family: 'Text', sans-serif;
 
         &.status-pending {
-            background: rgba(245, 158, 11, 0.15);
+            background: color-mix(in srgb, var(--color-warning) 15%, transparent);
             color: var(--color-warning);
         }
 
         &.status-completed {
-            background: rgba(16, 185, 129, 0.15);
+            background: color-mix(in srgb, var(--color-success) 15%, transparent);
             color: var(--color-success);
         }
 
         &.status-cancelled {
-            background: rgba(107, 114, 128, 0.15);
+            background: color-mix(in srgb, var(--color-text-muted) 15%, transparent);
             color: var(--color-text-muted);
         }
     }
@@ -190,7 +190,7 @@ const handleComplete = async () => {
         font-family: 'Text', sans-serif;
         cursor: pointer;
         transition: all 0.3s ease;
-        box-shadow: 0 4px 12px rgba(30, 86, 160, 0.2);
+        box-shadow: var(--shadow-md);
 
         &:hover {
             transform: translateY(-2px);

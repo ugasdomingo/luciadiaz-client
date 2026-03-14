@@ -45,7 +45,7 @@ const go_to_course = () => {
     <article class="course-card" @click="go_to_course">
         <!-- Imagen -->
         <div class="course-card__image-wrapper">
-            <img :src="progress.product_id.cover_image.secure_url" :alt="progress.product_id.title"
+            <img :src="progress.product_id.cover_image?.secure_url || '/placeholder-product.jpg'" :alt="progress.product_id.title"
                 class="course-card__image">
 
             <!-- Badge de tipo -->
@@ -142,7 +142,7 @@ const go_to_course = () => {
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.5px;
-        color: white;
+        color: var(--color-white);
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
 
@@ -152,7 +152,7 @@ const go_to_course = () => {
         left: 1rem;
         padding: 0.5rem 1rem;
         background: rgba(90, 158, 125, 0.95);
-        color: white;
+        color: var(--color-white);
         border-radius: 2rem;
         font-family: 'Text';
         font-size: 0.85rem;

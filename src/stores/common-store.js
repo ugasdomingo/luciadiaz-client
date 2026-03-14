@@ -15,7 +15,7 @@ export const useCommonStore = defineStore('common', () => {
      * Obtener datos para la página Home
      * Backend devuelve: { posts, videos, products }
      */
-    const getCommon = async () => {
+    const get_common = async () => {
         try {
             util_store.set_loading(true)
             const response = await api.get('/common/home')
@@ -37,6 +37,6 @@ export const useCommonStore = defineStore('common', () => {
         posts,
         products,
         videos,
-        getCommon
+        get_common
     }
 })

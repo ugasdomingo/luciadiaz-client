@@ -210,7 +210,7 @@ const goToProducts = () => {
 .pending-card {
     max-width: 600px;
     width: 100%;
-    background: white;
+    background: var(--color-white);
     padding: 60px 40px;
     border-radius: 16px;
     box-shadow: var(--shadow-md);
@@ -337,7 +337,7 @@ const goToProducts = () => {
             align-items: center;
             justify-content: center;
             background: var(--color-primary);
-            color: white;
+            color: var(--color-white);
             border-radius: 50%;
             font-weight: 700;
             font-size: 18px;
@@ -448,13 +448,13 @@ const goToProducts = () => {
         align-items: center;
         justify-content: center;
         border: none;
-        background: rgba(255, 255, 255, 0.9);
+        background: var(--overlay-white-85);
         border-radius: 50%;
         cursor: pointer;
         font-size: 16px;
 
         &:hover {
-            background: white;
+            background: var(--color-white);
         }
     }
 }
@@ -468,7 +468,7 @@ const goToProducts = () => {
 .btn-cancel {
     padding: 10px 20px;
     border: 1px solid var(--color-border);
-    background: white;
+    background: var(--color-white);
     border-radius: 8px;
     font-size: 14px;
     font-weight: 600;
@@ -484,7 +484,7 @@ const goToProducts = () => {
     padding: 10px 20px;
     border: none;
     background: var(--color-primary);
-    color: white;
+    color: var(--color-white);
     border-radius: 8px;
     font-size: 14px;
     font-weight: 600;
@@ -530,7 +530,7 @@ const goToProducts = () => {
 
 .btn-primary {
     background: var(--color-primary);
-    color: white;
+    color: var(--color-white);
 
     &:hover {
         background: var(--color-primary-dark);
@@ -538,7 +538,7 @@ const goToProducts = () => {
 }
 
 .btn-secondary {
-    background: white;
+    background: var(--color-white);
     color: var(--color-primary);
     border: 2px solid var(--color-primary);
 

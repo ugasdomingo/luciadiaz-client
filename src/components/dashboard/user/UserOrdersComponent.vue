@@ -312,7 +312,7 @@ const sorted_orders = computed(() => {
 
 .btn-access {
     background: var(--color-primary);
-    color: white;
+    color: var(--color-white);
 
     &:hover {
         background: var(--color-primary-dark);

@@ -1,7 +1,7 @@
 <template>
     <RouterLink :to="`/blog/${post._id}`" class="post-card">
         <div class="post-card__image-wrapper">
-            <img :src="post.post_cover.secure_url" :alt="post.title" class="post-card__image">
+            <img :src="post.post_cover?.secure_url || '/placeholder-post.jpg'" :alt="post.title" class="post-card__image">
         </div>
 
         <div class="post-card__content">
@@ -96,7 +96,7 @@ const get_excerpt = (html) => {
 
     &__category {
         padding: 0.2rem 0.625rem;
-        background: rgba(30, 86, 160, 0.06);
+        background: var(--overlay-primary-06);
         color: var(--color-primary);
         border-radius: var(--radius-full);
         font-weight: 500;

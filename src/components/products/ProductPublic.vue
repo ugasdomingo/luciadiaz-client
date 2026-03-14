@@ -267,7 +267,7 @@ const handlePurchaseClick = () => {
     &:hover {
         background: var(--color-secondary-dark);
         transform: translateY(-2px);
-        box-shadow: 0 8px 24px rgba(30, 86, 160, 0.2);
+        box-shadow: var(--shadow-md);
     }
 
     @media (max-width: 568px) {

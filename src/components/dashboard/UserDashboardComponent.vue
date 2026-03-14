@@ -147,7 +147,7 @@ const is_patient = computed(() => {
         }
 
         &.active {
-            background: rgba(30, 86, 160, 0.1);
+            background: var(--overlay-primary-10);
             color: var(--color-primary);
             font-weight: 600;
         }

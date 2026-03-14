@@ -130,22 +130,38 @@
         &:hover {
             background: var(--color-secondary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(212, 160, 23, 0.25);
+            box-shadow: var(--shadow-gold);
         }
     }
 }
 
 @media screen and (max-width: 768px) {
     .hero {
-        height: 90vh;
+        height: auto;
+        min-height: 100svh;
+        flex-direction: column;
+        justify-content: flex-end;
+
+        &__image {
+            width: 100%;
+            height: 50vh;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
 
         &__content {
-            margin-top: 2rem;
-            padding: 0 1.5rem;
+            position: relative;
+            z-index: 2;
+            max-width: 100%;
+            width: 100%;
+            padding: 2rem 1.5rem 4rem;
+            margin-top: 0;
+            background: linear-gradient(to bottom, transparent, var(--color-white) 15%);
+        }
 
-            h2 {
-                font-size: 2.2rem;
-            }
+        &__content h2 {
+            font-size: 2.2rem;
         }
 
         &__body {

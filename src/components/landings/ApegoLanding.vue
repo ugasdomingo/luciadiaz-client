@@ -416,13 +416,13 @@ const toggleFaq = (index) => {
 
 <style scoped lang="scss">
 // Variables de colores
-$apego-primary: #1E56A0;
-$apego-secondary: #2E7AD4;
-$apego-accent: #D4A017;
-$apego-warm: #E8B930;
-$apego-dark: #143D75;
-$gradient-hero: linear-gradient(135deg, #1E56A0 0%, #143D75 100%);
-$gradient-cta: linear-gradient(135deg, #D4A017 0%, #B8860B 100%);
+$apego-primary: var(--color-primary);
+$apego-secondary: var(--color-primary-light);
+$apego-accent: var(--color-secondary);
+$apego-warm: var(--color-secondary-light);
+$apego-dark: var(--color-primary-dark);
+$gradient-hero: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+$gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-secondary-dark) 100%);
 
 .landing-apego {
     width: 100%;

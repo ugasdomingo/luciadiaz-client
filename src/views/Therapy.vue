@@ -15,9 +15,9 @@ import TherapyCardComponent from '../components/common/cards/TherapyCardComponen
 <style scoped lang="scss">
 .therapy {
     width: 100%;
-    height: 100vh;
+    min-height: 100vh;
     margin: 0;
-    padding: 4rem;
+    padding: 6rem 4rem 4rem;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -27,27 +27,25 @@ import TherapyCardComponent from '../components/common/cards/TherapyCardComponen
 
     h2 {
         text-align: center;
-        margin: 1rem 0
+        margin: 1rem 0;
     }
 
     &__content {
         width: 100%;
-        display: flex;
-        justify-content: space-around;
-        gap: 3rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        justify-items: center;
+        gap: 2rem;
         box-sizing: border-box;
-
     }
 }
 
 @media screen and (max-width: 768px) {
     .therapy {
-        padding: 4rem 1rem;
+        padding: 5rem 1rem 3rem;
 
         &__content {
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            grid-template-columns: 1fr;
             gap: 1rem;
         }
     }

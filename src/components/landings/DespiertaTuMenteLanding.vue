@@ -376,12 +376,12 @@ const toggleFaq = (index) => {
 </script>
 
 <style scoped lang="scss">
-// Variables de la landing
-$landing-accent: #D4A017;
-$landing-warm: #B8860B;
-$landing-dark: #143D75;
-$gradient-hero: linear-gradient(135deg, #1E56A0 0%, #143D75 100%);
-$gradient-cta: linear-gradient(135deg, #D4A017 0%, #B8860B 100%);
+// Variables de la landing — mapped to design tokens
+$landing-accent: var(--color-secondary);
+$landing-warm: var(--color-secondary-dark);
+$landing-dark: var(--color-primary-dark);
+$gradient-hero: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+$gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-secondary-dark) 100%);
 
 .landing-despierta {
     width: 100%;

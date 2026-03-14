@@ -70,7 +70,7 @@ watch(() => props.isVisible, (newValue) => {
     align-items: center;
     gap: 1.5rem;
     padding: 2rem;
-    background: rgba(255, 255, 255, 0.9);
+    background: var(--overlay-white-85);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-lg);
     border: 1px solid var(--color-border-light);

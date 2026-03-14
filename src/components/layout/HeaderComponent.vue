@@ -102,7 +102,7 @@ onMounted(() => {
 }
 
 .header__bg {
-    background-color: rgba(255, 255, 255, 0.85);
+    background-color: var(--overlay-white-85);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     box-shadow: var(--shadow-sm);

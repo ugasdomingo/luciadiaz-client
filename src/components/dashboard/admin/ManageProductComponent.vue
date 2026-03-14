@@ -729,17 +729,17 @@ onMounted(() => {
 
 .type-badge {
     &--course {
-        background: rgba(30, 86, 160, 0.12);
+        background: var(--overlay-primary-10);
         color: var(--color-primary);
     }
 
     &--ebook {
-        background: rgba(212, 160, 23, 0.12);
+        background: color-mix(in srgb, var(--color-secondary) 12%, transparent);
         color: var(--color-secondary-dark);
     }
 
     &--bundle {
-        background: rgba(20, 61, 117, 0.12);
+        background: color-mix(in srgb, var(--color-primary-dark) 12%, transparent);
         color: var(--color-primary-dark);
     }
 

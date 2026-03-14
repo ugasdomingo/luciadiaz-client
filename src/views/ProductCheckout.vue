@@ -462,7 +462,7 @@ onMounted(() => {
 
     &:hover {
         background: var(--color-primary);
-        color: white;
+        color: var(--color-white);
     }
 }
 
