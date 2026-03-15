@@ -4,9 +4,10 @@ import { use_scroll_reveal } from '../../composables/use-scroll-reveal.js'
 
 use_scroll_reveal()
 </script>
+
 <template>
-    <section class="services">
-        <div class="services__intro" data-scroll-reveal="fade-up">
+    <section class="section-container services">
+        <div class="section-container__header" data-scroll-reveal="fade-up">
             <h2>¿Qué quieres hacer hoy?</h2>
             <p>Elige el camino que mejor se adapte a donde estás ahora</p>
         </div>
@@ -27,38 +28,6 @@ use_scroll_reveal()
 
 <style scoped lang="scss">
 .services {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 6rem 4rem 8rem;
-    display: flex;
-    flex-direction: column;
-    box-sizing: border-box;
-
-    &__intro {
-        text-align: center;
-        margin-bottom: 3.5rem;
-        opacity: 0;
-        transform: translateY(20px);
-        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-
-        &.is-visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        h2 {
-            margin-bottom: 0.75rem;
-        }
-
-        p {
-            color: var(--color-text-muted);
-            font-size: 1.05rem;
-            max-width: 400px;
-            margin: 0 auto;
-        }
-    }
-
     &__grid {
         width: 100%;
         display: grid;
@@ -143,27 +112,19 @@ use_scroll_reveal()
 }
 
 @media screen and (max-width: 1024px) {
-    .services {
-        padding: 4rem 2rem 6rem;
-
-        &__grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
+    .services__grid {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
 @media screen and (max-width: 720px) {
-    .services {
-        padding: 4rem 1.25rem;
+    .services__grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
 
-        &__grid {
-            grid-template-columns: 1fr;
-            gap: 1rem;
-        }
-
-        &__card {
-            padding: 1.5rem 1.25rem 1.25rem;
-        }
+    .services__card {
+        padding: 1.5rem 1.25rem 1.25rem;
     }
 }
 </style>

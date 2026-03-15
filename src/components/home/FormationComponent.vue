@@ -8,12 +8,12 @@ const common_store = useCommonStore()
 </script>
 
 <template>
-    <section class="formation">
-        <div class="formation__intro" data-scroll-reveal>
+    <section class="section-container formation">
+        <div class="section-container__header" data-scroll-reveal>
             <h2>Próximas formaciones y talleres vivenciales</h2>
             <p>Experiencias diseñadas para acompañarte en tu proceso de crecimiento</p>
         </div>
-        <div class="formation__content">
+        <div class="formation__grid">
             <ProductCardComponent v-for="(product, index) in common_store.products" :key="product._id"
                 :product="product" data-scroll-reveal :style="{ '--delay': `${0.2 + index * 0.15}s` }" />
         </div>
@@ -26,40 +26,12 @@ const common_store = useCommonStore()
 
 <style scoped lang="scss">
 .formation {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 6rem 4rem 8rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 2.5rem;
-    box-sizing: border-box;
 
-    &__intro {
-        text-align: center;
-        opacity: 0;
-        transform: translateY(20px);
-        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-
-        &.is-visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        h2 {
-            margin-bottom: 0.75rem;
-        }
-
-        p {
-            color: var(--color-text-muted);
-            font-size: 1.05rem;
-            max-width: 480px;
-            margin: 0 auto;
-        }
-    }
-
-    &__content {
+    &__grid {
         width: 100%;
         display: grid;
         grid-template-columns: repeat(2, 1fr);
@@ -93,20 +65,10 @@ const common_store = useCommonStore()
     }
 }
 
-@media screen and (max-width: 1024px) {
-    .formation {
-        padding: 4rem 2rem 6rem;
-    }
-}
-
 @media screen and (max-width: 720px) {
-    .formation {
-        padding: 4rem 1.25rem;
-
-        &__content {
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-        }
+    .formation__grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
     }
 }
 </style>
