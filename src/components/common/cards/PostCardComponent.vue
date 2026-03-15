@@ -1,43 +1,38 @@
+<script setup>
+import { computed } from 'vue'
+import { useDateFormatter } from '../../../composables/useDateFormatter.js'
+import { useImageFallback } from '../../../composables/useImageFallback.js'
+
+const props = defineProps({
+    post: { type: Object, required: true }
+})
+
+const { format_date, reading_time } = useDateFormatter()
+const { src: cover_src, on_error } = useImageFallback(
+    () => props.post.post_cover?.secure_url,
+    '/img/placeholder-post.jpg'
+)
+
+const category = computed(() => props.post.category || 'Psicología')
+const time = computed(() => reading_time(props.post.content))
+</script>
+
 <template>
     <RouterLink :to="`/blog/${post._id}`" class="post-card">
-        <div class="post-card__image-wrapper">
-            <img :src="post.post_cover?.secure_url || '/placeholder-post.jpg'" :alt="post.title" class="post-card__image">
+        <div class="post-card__image">
+            <img :src="cover_src" :alt="post.title" @error="on_error" />
+            <span class="post-card__category badge badge--primary">{{ category }}</span>
         </div>
-
-        <div class="post-card__content">
-            <div class="post-card__meta">
-                <span class="post-card__category">{{ post.category }}</span>
-                <span class="post-card__date">{{ format_date(post.createdAt) }}</span>
-            </div>
-
+        <div class="post-card__body">
             <h3 class="post-card__title">{{ post.title }}</h3>
-
-            <p class="post-card__excerpt" v-html="get_excerpt(post.content)"></p>
-
-            <span class="post-card__cta">Leer artículo →</span>
+            <p class="post-card__excerpt" v-html="post.brief || post.content?.substring(0, 120) + '...'" />
+            <div class="post-card__meta">
+                <span class="post-card__date">{{ format_date(post.createdAt) }}</span>
+                <span class="post-card__read-time">{{ time }} min lectura</span>
+            </div>
         </div>
     </RouterLink>
 </template>
-
-<script setup>
-import { RouterLink } from 'vue-router'
-
-defineProps({
-    post: Object
-})
-
-const format_date = (date) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' }
-    return new Date(date).toLocaleDateString('es-ES', options)
-}
-
-const get_excerpt = (html) => {
-    const temp = document.createElement('div')
-    temp.innerHTML = html
-    const text = temp.textContent || temp.innerText || ''
-    return text.substring(0, 120) + (text.length > 120 ? '...' : '')
-}
-</script>
 
 <style scoped lang="scss">
 .post-card {
@@ -47,78 +42,61 @@ const get_excerpt = (html) => {
     border-radius: var(--radius-md);
     overflow: hidden;
     border: 1px solid var(--color-border-light);
-    transition: all 0.3s ease;
-    cursor: pointer;
+    text-decoration: none;
+    color: var(--color-text);
+    transition: var(--transition-slow);
+    box-sizing: border-box;
 
     &:hover {
-        transform: translateY(-4px);
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-md);
         border-color: var(--color-border);
-        box-shadow: var(--shadow-sm);
 
-        .post-card__image {
-            transform: scale(1.04);
+        .post-card__image img {
+            transform: scale(1.05);
         }
-
-        .post-card__cta {
-            color: var(--color-secondary);
-        }
-    }
-
-    &__image-wrapper {
-        position: relative;
-        width: 100%;
-        height: 220px;
-        overflow: hidden;
-        background: var(--color-bg);
     }
 
     &__image {
+        position: relative;
         width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.4s ease;
-    }
+        aspect-ratio: 16 / 9;
+        overflow: hidden;
+        background: var(--color-bg);
+        flex-shrink: 0;
 
-    &__content {
-        padding: 1.5rem;
-        display: flex;
-        flex-direction: column;
-        gap: 0.625rem;
-        flex: 1;
-    }
-
-    &__meta {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 0.75rem;
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
     }
 
     &__category {
-        padding: 0.2rem 0.625rem;
-        background: var(--overlay-primary-06);
+        position: absolute;
+        top: 0.75rem;
+        left: 0.75rem;
+        backdrop-filter: blur(4px);
+        background: rgba(255, 255, 255, 0.92);
         color: var(--color-primary);
-        border-radius: var(--radius-full);
-        font-weight: 500;
-        font-family: 'Montserrat', sans-serif;
-        font-size: 0.75rem;
-        text-transform: capitalize;
-        letter-spacing: 0.02em;
     }
 
-    &__date {
-        color: var(--color-text-muted);
-        font-family: 'Montserrat', sans-serif;
-        font-size: 0.75rem;
+    &__body {
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        flex: 1;
     }
 
     &__title {
-        margin: 0;
-        font-size: 1.15rem;
-        line-height: 1.4;
-        color: var(--color-text-heading);
         font-family: 'Playfair Display', serif;
-        font-weight: 600;
+        font-size: var(--text-xl);
+        font-weight: 700;
+        color: var(--color-primary-dark);
+        margin: 0;
+        line-height: 1.3;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
@@ -126,46 +104,31 @@ const get_excerpt = (html) => {
     }
 
     &__excerpt {
-        margin: 0;
-        font-size: 0.9rem;
-        line-height: 1.6;
+        font-size: var(--text-sm);
         color: var(--color-text-muted);
-        font-family: 'Montserrat', sans-serif;
-        font-weight: 300;
+        line-height: 1.6;
+        margin: 0;
         display: -webkit-box;
         -webkit-line-clamp: 3;
         -webkit-box-orient: vertical;
         overflow: hidden;
     }
 
-    &__cta {
+    &__meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         margin-top: auto;
-        padding-top: 0.5rem;
-        font-size: 0.85rem;
-        font-weight: 500;
-        color: var(--color-primary);
+        padding-top: 0.75rem;
+        border-top: 1px solid var(--color-border-light);
+        font-size: var(--text-xs);
+        color: var(--color-text-muted);
         font-family: 'Montserrat', sans-serif;
-        transition: color 0.25s ease;
     }
-}
 
-@media screen and (max-width: 768px) {
-    .post-card {
-        &__image-wrapper {
-            height: 180px;
-        }
-
-        &__content {
-            padding: 1.25rem;
-        }
-
-        &__title {
-            font-size: 1.05rem;
-        }
-
-        &__excerpt {
-            font-size: 0.85rem;
-        }
+    &__read-time {
+        font-weight: 500;
+        color: var(--color-secondary-dark);
     }
 }
 </style>

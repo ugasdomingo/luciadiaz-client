@@ -1,20 +1,25 @@
 <script setup>
-import { RouterLink } from 'vue-router'
+import { useImageFallback } from '../../../composables/useImageFallback.js'
 
-defineProps({
-    video: Object
+const props = defineProps({
+    video: { type: Object, required: true }
 })
 
 const max_length = 150
-const truncate = (text, max_length) => {
-    return text.substring(0, max_length) + '... seguir leyendo'
+const truncate = (text, length) => {
+    return text.substring(0, length) + '... seguir leyendo'
 }
+
+const { src: cover_src, on_error } = useImageFallback(
+    () => props.video.video_cover?.secure_url,
+    '/img/placeholder-video.jpg'
+)
 </script>
 
 <template>
     <RouterLink :to="`/video/${video._id}`" class="video-card">
         <div class="video-card__image">
-            <img :src="video.video_cover?.secure_url || '/placeholder-video.jpg'" :alt="video.title">
+            <img :src="cover_src" :alt="video.title" @error="on_error" />
         </div>
         <div class="video-card__body">
             <h4 class="video-card__title">{{ video.title }}</h4>
