@@ -1,12 +1,15 @@
 <template>
-    <div class="product-public">
+    <!-- Landing personalizada para cursos/talleres con diseño propio -->
+    <CourseLanding v-if="course_config" :course="course_config" :formation="product" />
+
+    <div v-else class="product-public">
         <!-- Hero / Portada -->
         <section class="product-hero">
             <div class="product-hero__image">
                 <img :src="product.cover_image?.secure_url || '/placeholder-product.jpg'" :alt="product.title">
             </div>
             <div class="product-hero__content">
-                <span class="product-badge">{{ productTypeLabel }}</span>
+                <span class="product-badge">{{ type_label }}</span>
                 <h1 class="product-title">{{ product.title }}</h1>
                 <p class="product-description">{{ product.description }}</p>
 
@@ -15,25 +18,25 @@
                         📂 {{ product.category }}
                     </span>
                     <span v-if="product.start_date" class="meta-item">
-                        📅 Inicia: {{ formattedStartDate }}
+                        📅 Inicia: {{ formatted_start_date }}
                     </span>
                 </div>
 
                 <!-- CTA principal -->
                 <div class="product-cta">
                     <div class="product-price">
-                        <span class="price-amount">{{ formattedPrice }}</span>
+                        <span class="price-amount">{{ formatted_price }}</span>
                     </div>
 
-                    <button @click="handlePurchaseClick" class="btn-primary">
-                        {{ ctaText }}
+                    <button @click="handle_purchase" class="btn-primary">
+                        {{ cta_text }}
                     </button>
                 </div>
             </div>
         </section>
 
         <!-- Curriculum / Contenido (preview) -->
-        <section v-if="hasCurriculum" class="product-curriculum">
+        <section v-if="has_curriculum" class="product-curriculum">
             <h2>Contenido del programa</h2>
             <div class="curriculum-list">
                 <div v-for="(lesson, index) in product.curriculum" :key="index" class="curriculum-item"
@@ -71,9 +74,9 @@
 
         <!-- CTA fijo en móvil -->
         <div class="cta-mobile">
-            <div class="cta-mobile__price">{{ formattedPrice }}</div>
-            <button @click="handlePurchaseClick" class="cta-mobile__button">
-                {{ ctaText }}
+            <div class="cta-mobile__price">{{ formatted_price }}</div>
+            <button @click="handle_purchase" class="cta-mobile__button">
+                {{ cta_text }}
             </button>
         </div>
     </div>
@@ -83,68 +86,40 @@
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../../stores/auth-store'
+import CourseLanding from '../landings/CourseLanding.vue'
+import { courses } from '../../static/courses.js'
 
 const props = defineProps({
-    product: {
-        type: Object,
-        required: true
-    }
+    product: { type: Object, required: true }
 })
 
 const router = useRouter()
 const auth_store = useAuthStore()
 
-// Etiqueta del tipo
-const productTypeLabel = computed(() => {
-    const types = {
-        'course': 'Formación Online',
-        'ebook': 'Guía Digital',
-        'bundle': 'Pack Completo',
-        'service': 'Servicio'
-    }
+// Si el producto tiene una landing personalizada (free_course / paid_workshop), la usamos
+const course_config = computed(() => courses[props.product.slug] ?? null)
+
+const type_label = computed(() => {
+    const types = { course: 'Formación Online', ebook: 'Guía Digital', bundle: 'Pack Completo', service: 'Servicio' }
     return types[props.product.type] || props.product.type
 })
 
-// Precio formateado
-const formattedPrice = computed(() => {
-    if (props.product.price === 0) return 'Gratis'
-    return `${props.product.price}$`
-})
+const formatted_price = computed(() => props.product.price === 0 ? 'Gratis' : `${props.product.price}€`)
 
-// Fecha de inicio formateada
-const formattedStartDate = computed(() => {
+const formatted_start_date = computed(() => {
     if (!props.product.start_date) return ''
-    const date = new Date(props.product.start_date)
-    return date.toLocaleDateString('es-ES', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric'
-    })
+    return new Date(props.product.start_date).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })
 })
 
-// Verificar si tiene curriculum
-const hasCurriculum = computed(() => {
-    return props.product.curriculum && props.product.curriculum.length > 0
-})
+const has_curriculum = computed(() => props.product.curriculum?.length > 0)
 
-// Texto del botón
-const ctaText = computed(() => {
-    if (props.product.price === 0) return 'Acceder gratis'
-    return 'Comprar ahora'
-})
+const cta_text = computed(() => props.product.price === 0 ? 'Acceder gratis' : 'Comprar ahora')
 
-// Manejar click en comprar
-const handlePurchaseClick = () => {
-    // Si no está logueado, redirigir a login con redirect
+const handle_purchase = () => {
     if (!auth_store.user_data) {
-        router.push({
-            path: '/acceso',
-            query: { redirect: `/productos/${props.product.slug}` }
-        })
+        router.push({ path: '/acceso', query: { redirect: `/productos/${props.product.slug}` } })
         return
     }
-
-    // Si está logueado, ir a checkout
     router.push(`/checkout/${props.product.slug}`)
 }
 </script>
