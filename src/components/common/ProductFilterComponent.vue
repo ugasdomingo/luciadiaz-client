@@ -30,7 +30,7 @@
         <!-- Búsqueda por texto -->
         <div class="filter-group">
             <label class="filter-label">Buscar</label>
-            <input :value="product_store.filters.search" @input="handleSearch($event.target.value)" type="text"
+            <input :value="product_store.filters.search" @input="handle_search($event.target.value)" type="text"
                 placeholder="Buscar por título..." class="filter-input">
         </div>
 
@@ -48,7 +48,7 @@
         </div>
 
         <!-- Botón para limpiar filtros -->
-        <button v-if="hasActiveFilters" @click="product_store.clear_filters()" class="filter-clear">
+        <button v-if="has_active_filters" @click="product_store.clear_filters()" class="filter-clear">
             Limpiar filtros
         </button>
     </aside>
@@ -60,17 +60,17 @@ import { useProductStore } from '../../stores/product-store'
 
 const product_store = useProductStore()
 
-const hasActiveFilters = computed(() => {
+const has_active_filters = computed(() => {
     return product_store.filters.type ||
         product_store.filters.category ||
         product_store.filters.search
 })
 
 // Debounce para la búsqueda
-let searchTimeout = null
-const handleSearch = (value) => {
-    clearTimeout(searchTimeout)
-    searchTimeout = setTimeout(() => {
+let search_timeout = null
+const handle_search = (value) => {
+    clearTimeout(search_timeout)
+    search_timeout = setTimeout(() => {
         product_store.set_filter('search', value)
     }, 300)
 }
