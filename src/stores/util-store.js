@@ -8,11 +8,22 @@ export const useUtilStore = defineStore('utils', () => {
     //Whatsapp link:
     const whatsapp_link = ref('https://wa.me/34604822385')
 
-    // Navbar
+    // Navbar (menú de navegación global)
     const show_navbar = ref(false)
 
     const toggle_navbar = () => {
         show_navbar.value = !show_navbar.value
+    }
+
+    // Dashboard sidebar (aside del dashboard)
+    const dashboard_sidebar_open = ref(false)
+
+    const toggle_dashboard_sidebar = () => {
+        dashboard_sidebar_open.value = !dashboard_sidebar_open.value
+    }
+
+    const close_dashboard_sidebar = () => {
+        dashboard_sidebar_open.value = false
     }
 
     // Loading
@@ -68,6 +79,9 @@ export const useUtilStore = defineStore('utils', () => {
         whatsapp_link,
         show_navbar,
         toggle_navbar,
+        dashboard_sidebar_open,
+        toggle_dashboard_sidebar,
+        close_dashboard_sidebar,
         loading,
         set_loading,
         last_page,

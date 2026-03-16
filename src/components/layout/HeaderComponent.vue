@@ -1,67 +1,82 @@
 <script setup>
-import { onMounted, ref } from 'vue';
-import { useUtilStore } from '../../stores/util-store';
-import { useAuthStore } from '../../stores/auth-store';
-import NavbarComponent from './NavbarComponent.vue';
+import { onMounted, ref, computed } from 'vue'
+import { useRoute } from 'vue-router'
+import { useUtilStore } from '../../stores/util-store'
+import { useAuthStore } from '../../stores/auth-store'
+import NavbarComponent from './NavbarComponent.vue'
 
+const route = useRoute()
 const util_store = useUtilStore()
 const auth_store = useAuthStore()
+
 const show_header = ref(true)
 const need_bg = ref(false)
-let last_scroll_position_y = 0
+let last_scroll_y = 0
+
+// En el dashboard la hamburguesa controla el aside, no el navbar global
+const is_dashboard = computed(() => route.name === 'Dashboard' || route.name === 'One User Info')
+
+const on_hamburger_click = () => {
+    if (is_dashboard.value) {
+        util_store.toggle_dashboard_sidebar()
+    } else {
+        util_store.toggle_navbar()
+    }
+}
 
 onMounted(() => {
     window.addEventListener('scroll', () => {
-        if (window.scrollY > last_scroll_position_y) {
-            show_header.value = false
-        } else {
-            show_header.value = true
-        }
-
-        last_scroll_position_y = window.scrollY
-
-        if (last_scroll_position_y > 100) {
-            need_bg.value = true
-        } else {
-            need_bg.value = false
-        }
+        show_header.value = window.scrollY <= last_scroll_y
+        need_bg.value = window.scrollY > 100
+        last_scroll_y = window.scrollY
     })
 })
-
 </script>
 
 <template>
+    <header class="header" :class="{ 'header--hidden': !show_header, 'header--bg': need_bg }">
 
-    <header class="header" :class="{ 'header__hidden': !show_header, 'header__bg': need_bg }">
         <RouterLink to="/" class="header__logo">
             <img src="/logo-notextbg.png" alt="logo lucia">
         </RouterLink>
-        <section class="header__menu">
-            <RouterLink to="/terapias" class="action-btn" v-if="!util_store.is_home">
-                <span class="btn-long">Agendar consulta terapéutica</span>
-                <span class="btn-short">Agendar</span>
+
+        <div class="header__menu">
+            <!-- Agendar: solo fuera de home -->
+            <RouterLink v-if="!util_store.is_home" to="/terapias" class="action-btn header__agendar">
+                <span class="text--long">Agendar consulta terapéutica</span>
+                <span class="text--short">Agendar</span>
             </RouterLink>
-            <button @click="auth_store.logout()" v-if="auth_store.token" class="logout-btn" title="Cerrar sesión">
-                <span class="logout-long">Cerrar sesión</span>
-                <span class="logout-short">✕</span>
+
+            <!-- Cerrar sesión: solo si hay token -->
+            <button v-if="auth_store.token" @click="auth_store.logout()" class="logout-btn" title="Cerrar sesión">
+                <span class="text--long">Cerrar sesión</span>
+                <span class="text--short">✕</span>
             </button>
-            <img src="/icon/icon-hamburguer-menu.svg" alt="menu" class="header__menu__icon"
-                @click="util_store.toggle_navbar">
-            <NavbarComponent :class="util_store.show_navbar ? 'header__navbar' : 'header__navbar__hidden'" />
-        </section>
+
+            <!-- Hamburguesa: abre aside en dashboard, navbar en el resto -->
+            <button class="hamburger" @click="on_hamburger_click" aria-label="Menú">
+                <span class="hamburger__line"
+                    :class="{ 'hamburger__line--open': is_dashboard ? util_store.dashboard_sidebar_open : util_store.show_navbar }">
+                    <span></span><span></span><span></span>
+                </span>
+            </button>
+
+            <!-- Navbar global (solo en páginas normales) -->
+            <NavbarComponent v-if="!is_dashboard"
+                :class="util_store.show_navbar ? 'navbar--visible' : 'navbar--hidden'" />
+        </div>
+
     </header>
 </template>
-
 
 <style scoped lang="scss">
 .header {
     width: 100%;
     max-width: 1360px;
-    max-height: 4rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 4rem;
+    padding: 0.75rem 4rem;
     margin: 0 auto;
     position: fixed;
     top: 0.5rem;
@@ -69,12 +84,21 @@ onMounted(() => {
     right: 0;
     z-index: 100;
     box-sizing: border-box;
+    height: 4rem;
 
-    &__logo {
-        img {
-            width: 4rem;
-            object-fit: contain;
-        }
+    &--hidden { display: none; }
+
+    &--bg {
+        background-color: var(--overlay-white-85);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        box-shadow: var(--shadow-sm);
+    }
+
+    &__logo img {
+        width: 3.5rem;
+        object-fit: contain;
+        display: block;
     }
 
     &__menu {
@@ -82,30 +106,17 @@ onMounted(() => {
         align-items: center;
         gap: 0.75rem;
         flex-shrink: 0;
-
-        &__icon {
-            width: 2rem;
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-
-        .action-btn {
-            white-space: nowrap;
-        }
     }
 
-    &__navbar {
-        display: block;
-
-        &__hidden {
-            display: none;
-        }
+    // "Agendar consulta terapéutica" / "Agendar"
+    &__agendar {
+        white-space: nowrap;
     }
 }
 
-// Botón "Agendar": texto largo en desktop, corto en móvil
-.btn-long  { display: inline; }
-.btn-short { display: none; }
+// Textos adaptativos
+.text--long  { display: inline; }
+.text--short { display: none; }
 
 // Botón logout
 .logout-btn {
@@ -122,34 +133,53 @@ onMounted(() => {
 
     &:hover { color: var(--color-error); border-color: var(--color-error); }
 }
-.logout-long  { display: inline; }
-.logout-short { display: none; }
 
-.header__hidden { display: none; }
+// Hamburguesa animada
+.hamburger {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
 
-.header__bg {
-    background-color: var(--overlay-white-85);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    box-shadow: var(--shadow-sm);
+    &__line {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        width: 22px;
+
+        span {
+            display: block;
+            height: 2px;
+            background: var(--color-text);
+            border-radius: 2px;
+            transition: all 0.25s ease;
+            transform-origin: center;
+        }
+
+        &--open {
+            span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+            span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+            span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+        }
+    }
 }
 
-@media screen and (max-width: 720px) {
+// Visibilidad del navbar global
+.navbar--visible { display: block; }
+.navbar--hidden  { display: none; }
+
+// ─── Responsive ────────────────────────────────────────────────────────────
+@media (max-width: 720px) {
     .header { padding: 0.75rem 1rem; }
 
-    // "Agendar consulta terapéutica" → "Agendar"
-    .btn-long  { display: none; }
-    .btn-short { display: inline; }
-}
+    // Texto largo → corto
+    .text--long  { display: none; }
+    .text--short { display: inline; }
 
-@media screen and (max-width: 480px) {
-    // Logout: texto → icono ✕
-    .logout-long  { display: none; }
-    .logout-short { display: inline; }
-
-    .logout-btn {
-        padding: 0.35rem 0.5rem;
-        font-size: 0.95rem;
-    }
+    .logout-btn { font-size: 0.95rem; padding: 0.35rem 0.5rem; }
 }
 </style>

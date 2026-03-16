@@ -1,27 +1,19 @@
 <template>
     <div class="dashboard-layout">
 
-        <!-- Barra superior móvil (solo visible en móvil) -->
-        <div class="mobile-bar">
-            <div class="mobile-bar__left">
-                <button class="mobile-bar__toggle" @click="sidebar_open = !sidebar_open" aria-label="Menú">
-                    <span class="toggle-icon" :class="{ 'toggle-icon--open': sidebar_open }">
-                        <span></span><span></span><span></span>
-                    </span>
-                </button>
-                <span class="mobile-bar__title">{{ section_title }}</span>
-            </div>
-            <RouterLink to="/terapias" class="mobile-bar__cta">📅 Agendar</RouterLink>
-        </div>
+        <!-- Backdrop (móvil) -->
+        <div v-if="util_store.dashboard_sidebar_open"
+            class="sidebar-backdrop"
+            @click="util_store.close_dashboard_sidebar()" />
 
-        <!-- Backdrop -->
-        <div v-if="sidebar_open" class="sidebar-backdrop" @click="sidebar_open = false" />
+        <!-- Sidebar / Aside -->
+        <aside class="dashboard-sidebar"
+            :class="{ 'dashboard-sidebar--open': util_store.dashboard_sidebar_open }">
 
-        <!-- Sidebar -->
-        <aside class="dashboard-sidebar" :class="{ 'dashboard-sidebar--open': sidebar_open }">
-
-            <!-- Botón cerrar (solo móvil) -->
-            <button class="sidebar-close" @click="sidebar_open = false" aria-label="Cerrar menú">✕</button>
+            <!-- Cerrar (solo móvil) -->
+            <button class="sidebar-close" @click="util_store.close_dashboard_sidebar()" aria-label="Cerrar menú">
+                ✕
+            </button>
 
             <div class="user-profile">
                 <div class="avatar">{{ initial }}</div>
@@ -39,22 +31,24 @@
                 <button @click="set_view('orders')" :class="{ active: current_view === 'orders' }">
                     🛍️ Mis Compras
                 </button>
-                <button v-if="is_patient" @click="set_view('tasks')" :class="{ active: current_view === 'tasks' }">
+                <button v-if="is_patient" @click="set_view('tasks')"
+                    :class="{ active: current_view === 'tasks' }">
                     📝 Tareas Terapéuticas
                 </button>
-                <button v-if="is_patient" @click="set_view('medical')" :class="{ active: current_view === 'medical' }">
+                <button v-if="is_patient" @click="set_view('medical')"
+                    :class="{ active: current_view === 'medical' }">
                     🏥 Historial Clínico
                 </button>
 
                 <div class="divider"></div>
 
-                <RouterLink to="/terapias" class="nav-link" @click="sidebar_open = false">
+                <RouterLink to="/terapias" class="nav-link" @click="util_store.close_dashboard_sidebar()">
                     📅 Agendar cita
                 </RouterLink>
             </nav>
         </aside>
 
-        <!-- Contenido -->
+        <!-- Contenido principal -->
         <section class="dashboard-content">
             <UserCoursesComponent v-if="current_view === 'courses'" />
             <UserOrdersComponent v-else-if="current_view === 'orders'" />
@@ -68,29 +62,22 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useAuthStore } from '../../stores/auth-store.js'
+import { useUtilStore } from '../../stores/util-store.js'
 import UserCoursesComponent from './user/UserCoursesComponent.vue'
 import UserOrdersComponent from './user/UserOrdersComponent.vue'
 import UserMedicalHistoryComponent from './user/UserMedicalHistoryComponent.vue'
 import UserTaskComponent from './user/UserTaskComponent.vue'
 
 const auth_store = useAuthStore()
-const current_view = ref('courses')
-const sidebar_open = ref(false)
+const util_store = useUtilStore()
 
+const current_view = ref('courses')
 const is_patient = computed(() => auth_store.user_data?.user?.role === 'patient')
 const initial = computed(() => auth_store.user_data?.user?.name?.charAt(0)?.toUpperCase() || '?')
 
-const section_labels = {
-    courses: '📚 Mis Cursos',
-    orders:  '🛍️ Mis Compras',
-    tasks:   '📝 Tareas',
-    medical: '🏥 Historial',
-}
-const section_title = computed(() => section_labels[current_view.value] || 'Mi Espacio')
-
 const set_view = (view) => {
     current_view.value = view
-    sidebar_open.value = false
+    util_store.close_dashboard_sidebar()
 }
 </script>
 
@@ -99,90 +86,6 @@ const set_view = (view) => {
 .dashboard-layout {
     display: flex;
     min-height: 80vh;
-    background: var(--color-bg);
-}
-
-// ─── Mobile top bar ────────────────────────────────────────────────────────
-.mobile-bar {
-    display: none;
-    position: fixed;
-    top: 4rem;          // justo bajo el header global
-    left: 0;
-    right: 0;
-    z-index: 90;
-    height: 3rem;
-    background: var(--color-bg-card);
-    border-bottom: 1px solid var(--color-border-light);
-    padding: 0 1rem;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem;
-
-    &__left {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        min-width: 0;
-    }
-
-    &__title {
-        font-size: 0.95rem;
-        font-weight: 600;
-        color: var(--color-text);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    &__cta {
-        white-space: nowrap;
-        font-size: 0.8rem;
-        font-weight: 600;
-        color: var(--color-primary);
-        background: var(--overlay-primary-10);
-        border-radius: 6px;
-        padding: 0.3rem 0.7rem;
-        text-decoration: none;
-        flex-shrink: 0;
-    }
-
-    @media (max-width: 768px) {
-        display: flex;
-    }
-}
-
-// Botón hamburguesa animado
-.mobile-bar__toggle {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0.3rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-.toggle-icon {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    width: 20px;
-
-    span {
-        display: block;
-        height: 2px;
-        background: var(--color-text);
-        border-radius: 2px;
-        transition: all 0.25s ease;
-        transform-origin: center;
-    }
-
-    &--open {
-        span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
-        span:nth-child(2) { opacity: 0; transform: scaleX(0); }
-        span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
-    }
 }
 
 // ─── Backdrop ──────────────────────────────────────────────────────────────
@@ -200,7 +103,7 @@ const set_view = (view) => {
 
 // ─── Sidebar ───────────────────────────────────────────────────────────────
 .dashboard-sidebar {
-    width: 280px;
+    width: 260px;
     background: var(--color-bg-card);
     padding: 2rem;
     border-right: 1px solid var(--color-border-light);
@@ -213,20 +116,18 @@ const set_view = (view) => {
         top: 0;
         left: 0;
         bottom: 0;
-        width: 280px;
         z-index: 100;
         padding-top: 1rem;
         transform: translateX(-100%);
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.25);
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3);
         overflow-y: auto;
 
-        &--open {
-            transform: translateX(0);
-        }
+        &--open { transform: translateX(0); }
     }
 }
 
+// Botón cerrar (solo móvil)
 .sidebar-close {
     display: none;
     align-self: flex-end;
@@ -236,17 +137,16 @@ const set_view = (view) => {
     width: 2rem;
     height: 2rem;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: var(--color-text-muted);
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
 
     &:hover { color: var(--color-text); }
 
-    @media (max-width: 768px) {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+    @media (max-width: 768px) { display: flex; }
 }
 
 // ─── User profile ──────────────────────────────────────────────────────────
@@ -255,21 +155,21 @@ const set_view = (view) => {
     margin-bottom: 2rem;
 
     .avatar {
-        width: 72px;
-        height: 72px;
+        width: 68px;
+        height: 68px;
         background: var(--color-primary);
         color: white;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.8rem;
+        font-size: 1.75rem;
         font-weight: 700;
         margin: 0 auto 0.75rem;
     }
 
-    h3 { font-size: 1rem; margin: 0 0 0.25rem; }
-    .email { color: var(--color-text-muted); font-size: 0.82rem; margin: 0; }
+    h3   { font-size: 0.95rem; margin: 0 0 0.25rem; }
+    .email { color: var(--color-text-muted); font-size: 0.8rem; margin: 0; }
 
     .hc-badge {
         display: inline-block;
@@ -277,7 +177,7 @@ const set_view = (view) => {
         background: var(--color-border-light);
         padding: 0.2rem 0.5rem;
         border-radius: 4px;
-        font-size: 0.75rem;
+        font-size: 0.72rem;
     }
 }
 
@@ -285,17 +185,17 @@ const set_view = (view) => {
 .dashboard-nav {
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
+    gap: 0.3rem;
 
     button, .nav-link {
         text-align: left;
         background: none;
         border: none;
-        padding: 0.75rem 1rem;
+        padding: 0.7rem 1rem;
         border-radius: 8px;
         cursor: pointer;
         color: var(--color-text-muted);
-        font-size: 0.95rem;
+        font-size: 0.9rem;
         transition: all 0.2s;
         text-decoration: none;
         display: block;
@@ -326,8 +226,7 @@ const set_view = (view) => {
     min-width: 0;
 
     @media (max-width: 768px) {
-        padding: 1rem 1rem 2rem;
-        margin-top: 3rem; // altura de .mobile-bar
+        padding: 1.5rem 1rem 3rem;
     }
 }
 </style>
