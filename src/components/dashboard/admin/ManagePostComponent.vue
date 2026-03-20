@@ -139,7 +139,7 @@ const handle_update = async () => {
 .section__container {
     width: 100%;
     margin: 0;
-    padding: 0 $space-16;
+    padding: 0;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
@@ -149,10 +149,9 @@ const handle_update = async () => {
         justify-content: space-between;
         align-items: center;
         margin: 0;
-        padding: $space-8 $space-2;
+        padding: $space-6 $space-2;
         cursor: pointer;
         color: var(--color-text);
-
         transition: all 0.25s;
 
         &:hover {
@@ -164,11 +163,15 @@ const handle_update = async () => {
         width: 100%;
         display: flex;
         flex-direction: column;
-        gap: $space-6;
-        padding: $space-8;
+        gap: $space-4;
+        padding: $space-4 0;
+
+        input, select {
+            max-width: 100%;
+        }
 
         button {
-            margin-top: $space-8;
+            margin-top: $space-4;
         }
     }
 
@@ -178,11 +181,12 @@ const handle_update = async () => {
         justify-content: space-between;
         flex-wrap: wrap;
         gap: $space-6;
-        padding: $space-8;
+        padding: $space-4 0;
 
         &__actions {
             display: flex;
-            gap: $space-4;
+            flex-wrap: wrap;
+            gap: $space-3;
         }
     }
 }

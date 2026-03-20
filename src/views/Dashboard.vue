@@ -19,10 +19,9 @@ const is_admin = computed(() => {
 })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .dashboard-page {
-    padding-top: 4rem;
-    /* Espacio para navbar fija */
+    padding-top: $header-height;
     min-height: 100vh;
 }
 </style>
