@@ -6,6 +6,11 @@ import LoadingComponent from '../../common/LoadingComponent.vue'
 import ProductTableRow from './ProductTableRow.vue'
 import ProductFormModal from './ProductFormModal.vue'
 
+const selected_product_id = ref(null)
+const toggle_product = (id) => {
+    selected_product_id.value = selected_product_id.value === id ? null : id
+}
+
 const product_store = useProductStore()
 const { is_open, mode, selected, open_create, open_edit, close } = useModalState()
 
@@ -88,30 +93,60 @@ onMounted(() => load_products())
         <!-- Loading -->
         <LoadingComponent v-if="loading" />
 
-        <!-- Tabla -->
-        <div v-else-if="products.length > 0" class="products-table-wrapper">
-            <table class="products-table">
-                <thead>
-                    <tr>
-                        <th>Producto</th>
-                        <th>Tipo</th>
-                        <th>Precio</th>
-                        <th>Estado</th>
-                        <th>Fecha inicio</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <ProductTableRow
-                        v-for="product in products"
-                        :key="product._id"
-                        :product="product"
-                        @edit="open_edit"
-                        @delete="confirm_delete"
-                    />
-                </tbody>
-            </table>
-        </div>
+        <template v-else-if="products.length > 0">
+            <!-- Desktop: tabla -->
+            <div class="products-table-wrapper">
+                <table class="products-table">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Tipo</th>
+                            <th>Precio</th>
+                            <th>Estado</th>
+                            <th>Fecha inicio</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ProductTableRow
+                            v-for="product in products"
+                            :key="product._id"
+                            :product="product"
+                            @edit="open_edit"
+                            @delete="confirm_delete"
+                        />
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Móvil: lista expandible -->
+            <ul class="products-list">
+                <li v-for="product in products" :key="product._id" class="product-item">
+                    <button class="product-row" @click="toggle_product(product._id)"
+                        :class="{ 'product-row--open': selected_product_id === product._id }">
+                        <img :src="product.cover_image?.secure_url || product.cover_image || '/img/placeholder-product.jpg'"
+                            :alt="product.title" class="product-thumb"
+                            @error="(e) => e.target.src = '/img/placeholder-product.jpg'" />
+                        <span class="product-name">{{ product.title }}</span>
+                        <span class="product-price">{{ product.price === 0 ? 'Gratis' : `${product.price}$` }}</span>
+                        <span class="chevron" :class="{ 'chevron--open': selected_product_id === product._id }">›</span>
+                    </button>
+                    <div v-if="selected_product_id === product._id" class="product-actions">
+                        <div class="product-meta">
+                            <span class="meta-item"><strong>Tipo:</strong> {{ product.type }}</span>
+                            <span class="meta-item"><strong>Estado:</strong> {{ product.status }}</span>
+                            <span v-if="product.start_date" class="meta-item">
+                                <strong>Inicio:</strong> {{ new Date(product.start_date).toLocaleDateString('es-ES') }}
+                            </span>
+                        </div>
+                        <div class="product-btns">
+                            <button @click="open_edit(product)" class="btn-primary">✏️ Editar</button>
+                            <button @click="confirm_delete(product)" class="btn-danger">🗑️ Eliminar</button>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </template>
 
         <!-- Estado vacío -->
         <div v-else class="empty-state">
@@ -164,8 +199,10 @@ onMounted(() => load_products())
 .manage-products {
     background: var(--color-bg);
     min-height: 100vh;
-    padding: $space-10 $space-5;
 }
+
+/* ── Mobile list ── */
+.products-list { display: none; }
 
 .manage-header {
     display: flex;
@@ -428,6 +465,111 @@ onMounted(() => load_products())
 
     &:hover:not(:disabled) {
         opacity: 0.8;
+    }
+}
+
+@media (max-width: $bp-md) {
+    .products-table-wrapper { display: none; }
+
+    .products-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        border: 1px solid var(--color-border);
+        border-radius: $radius-md;
+        overflow: hidden;
+        background: var(--color-bg-card);
+    }
+
+    .product-item {
+        border-bottom: 1px solid var(--color-border);
+        &:last-child { border-bottom: none; }
+    }
+
+    .product-row {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: $space-3;
+        padding: $space-3;
+        background: var(--color-bg-card);
+        border: none;
+        cursor: pointer;
+        text-align: left;
+        transition: $transition-fast;
+
+        &:hover, &--open { background: var(--overlay-primary-06); }
+    }
+
+    .product-thumb {
+        width: 48px;
+        height: 48px;
+        border-radius: $radius-sm;
+        object-fit: cover;
+        flex-shrink: 0;
+    }
+
+    .product-name {
+        flex: 1;
+        font-size: $text-sm;
+        font-weight: $fw-medium;
+        font-family: $font-body;
+        color: var(--color-text);
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .product-price {
+        font-size: $text-sm;
+        font-weight: $fw-semibold;
+        color: var(--color-primary);
+        font-family: $font-body;
+        white-space: nowrap;
+    }
+
+    .chevron {
+        font-size: $text-xl;
+        color: var(--color-text-muted);
+        transition: transform 0.2s ease;
+        line-height: 1;
+        flex-shrink: 0;
+        &--open { transform: rotate(90deg); }
+    }
+
+    .product-actions {
+        display: flex;
+        flex-direction: column;
+        gap: $space-3;
+        padding: $space-3;
+        background: var(--color-bg);
+        border-top: 1px solid var(--color-border-light);
+    }
+
+    .product-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: $space-2 $space-4;
+    }
+
+    .meta-item {
+        font-size: $text-xs;
+        color: var(--color-text-muted);
+        font-family: $font-body;
+    }
+
+    .product-btns {
+        display: flex;
+        gap: $space-3;
+
+        .btn-primary, .btn-danger {
+            flex: 1;
+            text-align: center;
+        }
     }
 }
 </style>
