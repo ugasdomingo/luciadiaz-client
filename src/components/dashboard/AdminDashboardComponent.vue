@@ -6,9 +6,18 @@ import { useUtilStore } from '../../stores/util-store'
 const auth_store = useAuthStore()
 const util_store = useUtilStore()
 
-const show_component = ref('')
+const show_component = ref('ManageUserComponent')
 const display_component = ref(null)
 const component_cache = ref({})
+
+const nav_items = [
+    { key: 'ManageUserComponent', label: 'Buscar usuarios' },
+    { key: 'ManagePostComponent', label: 'Gestionar posts' },
+    { key: 'ManageVideoComponent', label: 'Gestionar videos' },
+    { key: 'ManageOrdersComponent', label: 'Gestionar pedidos' },
+    { key: 'ManageProductComponent', label: 'Gestionar productos' },
+    { key: 'ManageLikesComponent', label: 'Ver últimos likes' },
+]
 
 const load_component = async (component_name) => {
     if (component_cache.value[component_name]) {
@@ -33,75 +42,185 @@ watch(() => show_component.value, async (new_value) => {
     } finally {
         util_store.set_loading(false)
     }
-})
+}, { immediate: true })
+
+const set_view = (key) => {
+    show_component.value = key
+    util_store.close_dashboard_sidebar()
+}
 </script>
 
 <template>
-    <section class="admin__dashboard">
-        <h2>Hola Lucia, bienvenida a tu área privada</h2>
-        <div class="admin__dashboard__actions">
-            <button class="action-btn" @click="show_component = 'ManageUserComponent'">Buscar usuarios</button>
-            <button class="action-btn" @click="show_component = 'ManagePostComponent'">Gestionar posts</button>
-            <button class="action-btn" @click="show_component = 'ManageVideoComponent'">Gestionar videos</button>
-            <button class="action-btn" @click="show_component = 'ManageOrdersComponent'">Gestionar
-                pedidos</button>
-            <button class="action-btn" @click="show_component = 'ManageProductComponent'">Gestionar
-                productos</button>
-            <button class="action-btn" @click="show_component = 'ManageLikesComponent'">Ver ultimos likes</button>
-        </div>
-        <div class="admin__dashboard__component__displayer" v-if="display_component">
-            <Suspense>
+    <div class="dashboard-layout">
+
+        <!-- Backdrop (móvil) -->
+        <div v-if="util_store.dashboard_sidebar_open"
+            class="sidebar-backdrop"
+            @click="util_store.close_dashboard_sidebar()" />
+
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar"
+            :class="{ 'dashboard-sidebar--open': util_store.dashboard_sidebar_open }">
+
+            <button class="sidebar-close" @click="util_store.close_dashboard_sidebar()" aria-label="Cerrar menú">
+                ✕
+            </button>
+
+            <div class="admin-profile">
+                <div class="avatar">L</div>
+                <h3>{{ auth_store.user_data?.user?.name }}</h3>
+                <p class="role">Administradora</p>
+            </div>
+
+            <nav class="dashboard-nav">
+                <button
+                    v-for="item in nav_items"
+                    :key="item.key"
+                    @click="set_view(item.key)"
+                    :class="{ active: show_component === item.key }">
+                    {{ item.label }}
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Contenido principal -->
+        <section class="dashboard-content">
+            <Suspense v-if="display_component">
                 <template #default>
                     <component :is="display_component" />
                 </template>
                 <template #fallback>
-                    <div class="loading">
-                        <h2>Cargando...</h2>
-                    </div>
+                    <p>Cargando...</p>
                 </template>
             </Suspense>
-        </div>
-    </section>
+        </section>
+
+    </div>
 </template>
 
-
 <style scoped lang="scss">
-.admin__dashboard {
-    h2 {
-        margin: 0 0 $space-8;
-        text-align: center;
-    }
+.dashboard-layout {
+    display: flex;
+    min-height: 80vh;
+}
 
-    &__actions {
-        display: flex;
-        gap: $space-4;
-        flex-wrap: wrap;
+.sidebar-backdrop {
+    display: none;
 
-        button {
-            flex: 1;
-            min-width: 140px;
-        }
-    }
-
-    &__component__displayer {
-        margin-top: $space-8;
-    }
-
-    .loading {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
+    @media (max-width: $bp-md) {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 95;
     }
 }
 
-@media screen and (max-width: $bp-md) {
-    .admin__dashboard {
-        &__actions {
-            flex-direction: column;
-            padding-bottom: $space-4;
-            border-bottom: 2px solid var(--color-primary);
+.dashboard-sidebar {
+    width: $sidebar-width;
+    background: var(--color-bg-card);
+    padding: $space-8;
+    border-right: 1px solid var(--color-border-light);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+
+    @media (max-width: $bp-md) {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 100;
+        padding-top: $space-4;
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3);
+        overflow-y: auto;
+
+        &--open { transform: translateX(0); }
+    }
+}
+
+.sidebar-close {
+    display: none;
+    align-self: flex-end;
+    background: none;
+    border: 1px solid var(--color-border-light);
+    border-radius: $radius-sm;
+    width: $space-8;
+    height: $space-8;
+    cursor: pointer;
+    font-size: $text-sm;
+    color: var(--color-text-muted);
+    margin-bottom: $space-6;
+    align-items: center;
+    justify-content: center;
+    transition: $transition-fast;
+
+    &:hover { color: var(--color-text); }
+
+    @media (max-width: $bp-md) { display: flex; }
+}
+
+.admin-profile {
+    text-align: center;
+    margin-bottom: $space-8;
+
+    .avatar {
+        width: 68px;
+        height: 68px;
+        background: var(--color-primary);
+        color: white;
+        border-radius: $radius-full;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: $text-2xl;
+        font-weight: $fw-bold;
+        margin: 0 auto $space-3;
+    }
+
+    h3 { font-size: $text-base; margin: 0 0 $space-1; }
+    .role { color: var(--color-text-muted); font-size: $text-xs; margin: 0; }
+}
+
+.dashboard-nav {
+    display: flex;
+    flex-direction: column;
+    gap: $space-1;
+
+    button {
+        text-align: left;
+        background: none;
+        border: none;
+        padding: $space-3 $space-4;
+        border-radius: $radius-sm;
+        cursor: pointer;
+        color: var(--color-text-muted);
+        font-size: $text-sm;
+        font-family: $font-body;
+        transition: $transition-fast;
+
+        &:hover {
+            background: var(--color-bg);
+            color: var(--color-primary);
         }
+
+        &.active {
+            background: var(--overlay-primary-10);
+            color: var(--color-primary);
+            font-weight: $fw-semibold;
+        }
+    }
+}
+
+.dashboard-content {
+    flex: 1;
+    padding: $space-12;
+    min-width: 0;
+
+    @media (max-width: $bp-md) {
+        padding: $space-6 $space-4 $space-12;
     }
 }
 </style>
