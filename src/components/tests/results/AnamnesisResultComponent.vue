@@ -31,7 +31,7 @@ const anamnesis_result = Object.entries(props.anamnesis).map(([key, value]) => (
 section {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: $space-4;
     padding: 0;
     box-sizing: border-box;
 
@@ -42,18 +42,23 @@ section {
     ul {
         display: flex;
         flex-direction: column;
-        gap: 0.5rem;
+        gap: $space-2;
         list-style: none;
         padding: 0;
 
         li {
             max-width: 80%;
             display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: $space-2;
+            margin-bottom: $space-2;
             box-shadow: var(--shadow-sm);
-            padding: 1rem;
-            border-radius: 1rem;
+            padding: $space-3;
+            border-radius: $radius-lg;
+
+            @media screen and (max-width: $bp-md) {
+                max-width: 100%;
+            }
         }
     }
 }

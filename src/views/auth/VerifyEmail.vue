@@ -27,7 +27,7 @@ auth_store.verify_email(login_token, email)
     height: 100vh;
 
     h1 {
-        margin-bottom: 1rem;
+        margin-bottom: $space-4;
     }
 
     .animate {

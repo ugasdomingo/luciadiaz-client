@@ -34,19 +34,19 @@ const handle_submit = async () => {
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 2rem;
+        gap: $space-8;
 
         input {
             width: 100%;
             max-width: 40rem;
-            padding: 0.5rem;
+            padding: $space-2;
             margin: 0;
             background-color: transparent;
             border-radius: 0;
             border: 1px solid transparent;
             border-bottom: 1px solid var(--color-text);
             outline: none;
-            transition: border-color 0.3s ease;
+            transition: border-color $transition-slow;
 
             &:focus {
                 border-bottom-color: var(--color-primary);

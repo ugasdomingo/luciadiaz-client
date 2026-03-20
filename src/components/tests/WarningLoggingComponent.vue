@@ -36,8 +36,8 @@ import { RouterLink } from 'vue-router'
     min-height: 60vh;
     display: flex;
     flex-direction: column;
-    padding: 2rem;
-    border-radius: 1rem;
+    padding: $space-8;
+    border-radius: $radius-lg;
     margin: 0 auto;
 
     h2 {
@@ -48,7 +48,7 @@ import { RouterLink } from 'vue-router'
 
     p {
         padding: 0;
-        font-size: 1.25rem;
+        font-size: $text-xl;
     }
 
     ul {
@@ -65,7 +65,7 @@ import { RouterLink } from 'vue-router'
     .warning__actions {
         display: flex;
         justify-content: center;
-        gap: 1rem;
+        gap: $space-4;
     }
 
     .nobg-btn {

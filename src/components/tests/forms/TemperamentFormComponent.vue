@@ -96,38 +96,41 @@ const handle_submit = async () => {
     max-width: 60%;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: $space-4;
     margin: 0 auto;
     box-shadow: var(--shadow-md);
-    padding: 1rem;
-    border-radius: 0.5rem;
+    padding: $space-4;
+    border-radius: $space-2;
     box-sizing: border-box;
 
     h2,
     p {
         text-align: center;
-        margin: 0 0 0 0.5rem
+        margin: 0 0 0 $space-2
     }
 
     form {
         display: flex;
         flex-direction: column;
-        gap: 1.5rem;
+        gap: $space-6;
 
         .question {
             display: flex;
             flex-direction: column;
-            padding: 1rem;
-            border-radius: 0.5rem;
+            padding: $space-4;
+            border-radius: $space-2;
             box-shadow: var(--shadow-sm);
 
             &__options {
                 width: 100%;
                 display: flex;
-                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: $space-3;
 
                 label {
+                    flex: 1 1 45%;
                     cursor: pointer;
+                    min-width: 0;
                 }
             }
 
@@ -143,7 +146,7 @@ const handle_submit = async () => {
 
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: $bp-md) {
     .temperament_form {
         max-width: 100%;
 
@@ -155,7 +158,7 @@ const handle_submit = async () => {
 
                 &__options {
                     flex-direction: column;
-                    gap: 0.25rem;
+                    gap: $space-2;
                 }
             }
         }

@@ -55,24 +55,24 @@ watch(() => answers.value, () => {
     max-width: 60%;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: $space-4;
     margin: 0 auto;
     box-shadow: var(--shadow-md);
-    padding: 1rem;
-    border-radius: 0.5rem;
+    padding: $space-4;
+    border-radius: $space-2;
     box-sizing: border-box;
 
     h2,
     p {
         text-align: center;
-        margin: 0 0 0.5rem 0;
+        margin: 0 0 $space-2 0;
     }
 
     form {
-        min-width: 60%;
+        width: 100%;
         display: flex;
         flex-direction: column;
-        gap: 1.5rem;
+        gap: $space-4;
         margin: 0 auto;
 
         input {
@@ -80,13 +80,13 @@ watch(() => answers.value, () => {
 
             &:first-child {
                 background-color: var(--color-approve-alert);
-                margin: 2rem 0;
+                margin: $space-8 0;
             }
         }
     }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: $bp-md) {
     .letter_form {
         max-width: 100%;
     }

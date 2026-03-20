@@ -43,17 +43,17 @@ const handle_submit = () => {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 1rem;
+    gap: $space-4;
 
     form {
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        gap: 1rem;
+        gap: $space-4;
 
         button {
-            margin-top: 1.5rem;
+            margin-top: $space-6;
         }
     }
 }

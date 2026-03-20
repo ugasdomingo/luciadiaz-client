@@ -131,7 +131,7 @@ const handle_submit = async () => {
     }
 
     .question__container {
-        margin: $space-10 0;
+        margin: $space-6 0;
 
         &__enum {
             margin-bottom: $space-2;

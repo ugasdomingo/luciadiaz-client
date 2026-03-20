@@ -68,7 +68,7 @@ const handle_submit = async () => {
     }
 
     .note {
-        font-size: 0.8rem;
+        font-size: $text-xs;
         font-style: italic;
         color: var(--color-primary);
     }
@@ -104,6 +104,10 @@ const handle_submit = async () => {
 @media screen and (max-width: $bp-md) {
     .anamnesis__form {
         max-width: 100%;
+
+        form {
+            gap: $space-4;
+        }
     }
 }
 </style>

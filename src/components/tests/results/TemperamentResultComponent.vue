@@ -85,8 +85,8 @@ const show_others = ref(false)
 .temperament-result-section {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    padding: 0 0 0 2rem;
+    gap: $space-4;
+    padding: 0 0 0 $space-8;
     box-sizing: border-box;
 
     h3 {
@@ -97,8 +97,8 @@ const show_others = ref(false)
         display: flex;
         flex-direction: column;
         gap: 0;
-        padding: 1rem;
-        border-radius: 1rem;
+        padding: $space-4;
+        border-radius: $radius-lg;
         box-shadow: var(--shadow-sm);
         box-sizing: border-box;
 
@@ -109,25 +109,26 @@ const show_others = ref(false)
         ul {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: $space-2;
             list-style: none;
         }
     }
 
     .total-results {
-        padding: 1rem;
-        border-radius: 1rem;
+        padding: $space-4;
+        border-radius: $radius-lg;
         box-shadow: var(--shadow-sm);
         box-sizing: border-box;
 
         h3 {
             color: var(--color-text);
-            font-weight: 700;
+            font-weight: $fw-bold;
         }
 
         ul {
             display: flex;
-            gap: 1.5rem;
+            flex-wrap: wrap;
+            gap: $space-4;
             list-style: none;
         }
     }
@@ -139,31 +140,30 @@ const show_others = ref(false)
     .other-temperaments {
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        gap: $space-4;
 
         .temperament-info {
             display: flex;
             flex-direction: column;
             gap: 0;
-            padding: 1rem;
-            border-radius: 1rem;
+            padding: $space-4;
+            border-radius: $radius-lg;
             box-shadow: var(--shadow-sm);
             box-sizing: border-box;
         }
     }
 }
 
-@media screen and (max-width: 720px) {
+@media screen and (max-width: $bp-md) {
     .temperament-result-section {
-        padding: 0 0 0 1rem;
+        padding: 0;
 
         .temperament-info {
-            padding: 0.5rem;
+            padding: $space-2;
         }
 
         .total-results {
-
-            padding: 0.5rem;
+            padding: $space-2;
             box-sizing: border-box;
 
             h3 {
@@ -171,10 +171,8 @@ const show_others = ref(false)
             }
 
             ul {
-                display: flex;
                 flex-direction: column;
-                gap: 0.5rem;
-                list-style: none;
+                gap: $space-2;
             }
         }
     }

@@ -20,7 +20,7 @@ const close_tab = () => {
     height: 100vh;
 
     h1 {
-        margin-bottom: 1rem;
+        margin-bottom: $space-4;
     }
 }
 </style>

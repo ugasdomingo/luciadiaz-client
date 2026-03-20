@@ -49,8 +49,8 @@ const reasons = ref(props.letter_results.reasons)
 .letter-result-section {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    padding: 0 0 0 2rem;
+    gap: $space-4;
+    padding: 0 0 0 $space-8;
     box-sizing: border-box;
 
     h2 {
@@ -59,8 +59,8 @@ const reasons = ref(props.letter_results.reasons)
 
     .letter {
         max-width: 60%;
-        padding: 1rem;
-        border-radius: 1rem;
+        padding: $space-4;
+        border-radius: $radius-lg;
         border: 1px dotted var(--color-text);
         box-shadow: var(--shadow-sm);
         box-sizing: border-box;
@@ -69,12 +69,12 @@ const reasons = ref(props.letter_results.reasons)
     }
 }
 
-@media screen and (max-width: 720px) {
+@media screen and (max-width: $bp-md) {
     .letter-result-section {
-        padding: 0 0 0 1rem;
+        padding: 0;
 
         .letter {
-            max-width: 90%;
+            max-width: 100%;
         }
     }
 }

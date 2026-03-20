@@ -419,7 +419,7 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 8rem 2rem 4rem;
+    padding: $space-32 $space-8 $space-16;
     position: relative;
 
     &::before {
@@ -442,75 +442,75 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
 
     &__headline {
         font-size: 3.2rem;
-        font-family: 'Playfair Display', serif;
+        font-family: $font-title;
         color: var(--color-white);
         line-height: 1.2;
-        margin: 0 0 1.5rem;
-        font-weight: 600;
+        margin: 0 0 $space-6;
+        font-weight: $fw-semibold;
     }
 
     &__subheadline {
         font-size: 1.3rem;
-        font-family: 'Montserrat', sans-serif;
+        font-family: $font-body;
         color: rgba(255, 255, 255, 0.95);
         line-height: 1.6;
-        margin: 0 0 3rem;
-        font-weight: 300;
+        margin: 0 0 $space-12;
+        font-weight: $fw-light;
     }
 
     &__cta {
-        margin-bottom: 2rem;
+        margin-bottom: $space-8;
     }
 
     &__ctas {
         display: flex;
-        gap: 1.5rem;
+        gap: $space-6;
         justify-content: center;
         flex-wrap: wrap;
-        margin-bottom: 2rem;
+        margin-bottom: $space-8;
     }
 
     &__full {
         display: flex;
         flex-direction: column;
-        gap: 1.5rem;
+        gap: $space-6;
         align-items: center;
-        margin-bottom: 2rem;
+        margin-bottom: $space-8;
 
         .full-message {
             font-size: 1.3rem;
             color: var(--color-white);
-            font-weight: 500;
+            font-weight: $fw-medium;
             margin: 0;
         }
     }
 
     &__info {
         display: flex;
-        gap: 1.5rem;
+        gap: $space-6;
         justify-content: center;
         flex-wrap: wrap;
         font-size: 0.95rem;
         color: rgba(255, 255, 255, 0.9);
-        font-family: 'Montserrat', sans-serif;
+        font-family: $font-body;
 
         span {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: $space-2;
         }
     }
 }
 
 // ========== BOTONES CTA ==========
 .cta-btn {
-    padding: 1rem 2.5rem;
+    padding: $space-4 $space-10;
     font-size: 1.1rem;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 600;
-    border-radius: 0.75rem;
+    font-family: $font-body;
+    font-weight: $fw-semibold;
+    border-radius: $space-3;
     text-decoration: none;
-    transition: all 0.3s ease;
+    transition: $transition-slow;
     display: inline-block;
     border: none;
     cursor: pointer;
@@ -549,19 +549,19 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
     }
 
     &--large {
-        padding: 1.25rem 3rem;
+        padding: $space-5 $space-12;
         font-size: 1.2rem;
     }
 
     &--xl {
-        padding: 1.5rem 4rem;
+        padding: $space-6 $space-16;
         font-size: 1.3rem;
     }
 }
 
 // ========== MIRROR ==========
 .mirror {
-    padding: 6rem 2rem;
+    padding: $space-24 $space-8;
     background: var(--color-white);
 
     &__container {
@@ -572,40 +572,40 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
     &__title {
         font-size: 2.5rem;
         text-align: center;
-        margin: 0 0 4rem;
+        margin: 0 0 $space-16;
         color: var(--color-primary);
     }
 
     &__category {
-        margin-bottom: 3rem;
+        margin-bottom: $space-12;
 
-        &:last-of-type { margin-bottom: 4rem; }
+        &:last-of-type { margin-bottom: $space-16; }
     }
 
     &__category-title {
-        font-size: 1.5rem;
+        font-size: $text-2xl;
         color: var(--color-primary-light);
-        margin: 0 0 1.5rem;
-        font-family: 'Playfair Display', serif;
+        margin: 0 0 $space-6;
+        font-family: $font-title;
     }
 
     &__items,
     &__checks {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-        gap: 1rem;
+        gap: $space-4;
     }
 
     &__conclusion {
         font-size: 1.3rem;
         text-align: center;
         color: var(--color-primary-dark);
-        margin: 3rem 0 0;
+        margin: $space-12 0 0;
         line-height: 1.6;
 
         :deep(strong) {
             color: var(--color-primary);
-            font-weight: 600;
+            font-weight: $fw-semibold;
         }
     }
 }
@@ -613,11 +613,11 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
 .check-item {
     display: flex;
     align-items: flex-start;
-    gap: 1rem;
-    padding: 1.5rem;
+    gap: $space-4;
+    padding: $space-6;
     background: var(--color-bg);
-    border-radius: 0.75rem;
-    transition: all 0.3s ease;
+    border-radius: $space-3;
+    transition: $transition-slow;
 
     &:hover {
         transform: translateX(5px);
@@ -630,7 +630,7 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
         height: 24px;
         background: var(--color-primary);
         color: var(--color-white);
-        border-radius: 50%;
+        border-radius: $radius-full;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -648,18 +648,18 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
 
 // ========== BENEFITS ==========
 .benefits {
-    padding: 6rem 2rem;
+    padding: $space-24 $space-8;
     background: linear-gradient(180deg, #f0f4f8 0%, var(--color-white) 100%);
 
     &__container {
-        max-width: 1200px;
+        max-width: $max-width;
         margin: 0 auto;
     }
 
     &__title {
         font-size: 2.5rem;
         text-align: center;
-        margin: 0 auto 4rem;
+        margin: 0 auto $space-16;
         color: var(--color-primary);
         max-width: 900px;
         display: block;
@@ -668,27 +668,27 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
     &__grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-        gap: 2rem;
-        margin-bottom: 3rem;
+        gap: $space-8;
+        margin-bottom: $space-12;
     }
 
     &__footer {
         font-size: 1.2rem;
         text-align: center;
         color: var(--color-primary-dark);
-        margin: 3rem 0 0;
-        font-weight: 500;
+        margin: $space-12 0 0;
+        font-weight: $fw-medium;
     }
 }
 
 .benefit-card {
     background: var(--color-white);
-    padding: 2rem;
-    border-radius: 1rem;
+    padding: $space-8;
+    border-radius: $radius-lg;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
+    transition: $transition-slow;
     display: flex;
-    gap: 1rem;
+    gap: $space-4;
 
     &:hover {
         transform: translateY(-5px);
@@ -697,11 +697,11 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
 
     .benefit-number {
         flex-shrink: 0;
-        width: 40px;
-        height: 40px;
+        width: $space-10;
+        height: $space-10;
         background: $gradient-cta;
         color: var(--color-white);
-        border-radius: 50%;
+        border-radius: $radius-full;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -719,7 +719,7 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
 
 // ========== CONTENT ==========
 .content {
-    padding: 6rem 2rem;
+    padding: $space-24 $space-8;
     background: linear-gradient(180deg, #f0f4f8 0%, var(--color-white) 100%);
 
     &__container {
@@ -730,31 +730,31 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
     &__title {
         font-size: 2.5rem;
         text-align: center;
-        margin: 0 0 4rem;
+        margin: 0 0 $space-16;
         color: var(--color-primary);
     }
 
     &__blocks {
         display: flex;
         flex-direction: column;
-        gap: 2rem;
+        gap: $space-8;
     }
 
     &__footer {
         font-size: 1.2rem;
         text-align: center;
         color: var(--color-primary-dark);
-        margin: 3rem 0 0;
-        font-weight: 500;
+        margin: $space-12 0 0;
+        font-weight: $fw-medium;
     }
 }
 
 .content-block {
     background: var(--color-white);
-    padding: 2rem;
-    border-radius: 1rem;
+    padding: $space-8;
+    border-radius: $radius-lg;
     border-left: 4px solid var(--color-primary);
-    transition: all 0.3s ease;
+    transition: $transition-slow;
 
     &:hover {
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
@@ -764,8 +764,8 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
     &__header {
         display: flex;
         align-items: center;
-        gap: 1rem;
-        margin-bottom: 1rem;
+        gap: $space-4;
+        margin-bottom: $space-4;
     }
 
     &__number {
@@ -774,7 +774,7 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
         height: 36px;
         background: var(--color-primary);
         color: var(--color-white);
-        border-radius: 50%;
+        border-radius: $radius-full;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -795,23 +795,23 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
     }
 
     &__patterns {
-        margin-top: 1.5rem;
+        margin-top: $space-6;
         display: flex;
         flex-direction: column;
-        gap: 1rem;
-        padding-left: 1rem;
+        gap: $space-4;
+        padding-left: $space-4;
     }
 }
 
 .pattern-item {
-    padding: 1rem;
+    padding: $space-4;
     background: var(--color-bg);
-    border-radius: 0.5rem;
+    border-radius: $space-2;
 
     strong {
         display: block;
         color: var(--color-primary-light);
-        margin-bottom: 0.5rem;
+        margin-bottom: $space-2;
         font-size: 1.05rem;
     }
 
@@ -825,7 +825,7 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
 
 // ========== INCLUDES ==========
 .includes {
-    padding: 6rem 2rem;
+    padding: $space-24 $space-8;
     background: var(--color-white);
 
     &__container {
@@ -836,15 +836,15 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
     &__title {
         font-size: 2.5rem;
         text-align: center;
-        margin: 0 0 4rem;
+        margin: 0 0 $space-16;
         color: var(--color-primary);
     }
 
     &__grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 2rem;
-        margin-bottom: 3rem;
+        gap: $space-8;
+        margin-bottom: $space-12;
     }
 
     &__cta {
@@ -854,10 +854,10 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
 
 .include-card {
     background: var(--color-bg);
-    padding: 2rem;
-    border-radius: 1rem;
+    padding: $space-8;
+    border-radius: $radius-lg;
     text-align: center;
-    transition: all 0.3s ease;
+    transition: $transition-slow;
 
     &:hover {
         transform: translateY(-5px);
@@ -865,20 +865,20 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
     }
 
     .include-icon {
-        font-size: 3rem;
+        font-size: $space-12;
         display: block;
-        margin-bottom: 1rem;
+        margin-bottom: $space-4;
     }
 
     h4 {
-        margin: 0 0 0.5rem;
+        margin: 0 0 $space-2;
         font-size: 1.2rem;
         color: var(--color-primary);
     }
 
     p {
         margin: 0;
-        font-size: 1rem;
+        font-size: $text-base;
         color: var(--color-primary-dark);
         line-height: 1.5;
     }
@@ -886,7 +886,7 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
 
 // ========== TARGET ==========
 .target {
-    padding: 6rem 2rem;
+    padding: $space-24 $space-8;
     background: linear-gradient(180deg, var(--color-white) 0%, #f0f4f8 100%);
 
     &__container {
@@ -894,31 +894,31 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
         margin: 0 auto;
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-        gap: 3rem;
+        gap: $space-12;
     }
 
     &__subtitle {
-        font-size: 2rem;
+        font-size: $space-8;
         color: var(--color-primary);
-        margin: 0 0 2rem;
+        margin: 0 0 $space-8;
         text-align: center;
     }
 
     &__list {
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        gap: $space-4;
     }
 }
 
 .target-item {
     display: flex;
     align-items: flex-start;
-    gap: 1rem;
-    padding: 1.5rem;
+    gap: $space-4;
+    padding: $space-6;
     background: var(--color-white);
-    border-radius: 0.75rem;
-    transition: all 0.3s ease;
+    border-radius: $space-3;
+    transition: $transition-slow;
 
     &:hover {
         transform: translateX(5px);
@@ -929,7 +929,7 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
         flex-shrink: 0;
         width: 28px;
         height: 28px;
-        border-radius: 50%;
+        border-radius: $radius-full;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -957,7 +957,7 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
 
 // ========== FACILITATOR ==========
 .facilitator {
-    padding: 6rem 2rem;
+    padding: $space-24 $space-8;
     background: var(--color-white);
 
     &__container {
@@ -968,32 +968,32 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
     &__title {
         font-size: 2.5rem;
         text-align: center;
-        margin: 0 0 4rem;
+        margin: 0 0 $space-16;
         color: var(--color-primary);
     }
 
     &__content {
         display: grid;
         grid-template-columns: 300px 1fr;
-        gap: 3rem;
+        gap: $space-12;
         align-items: start;
     }
 
     &__photo img {
         width: 100%;
         height: auto;
-        border-radius: 1rem;
+        border-radius: $radius-lg;
         box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
     }
 
     &__info {
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        gap: $space-4;
     }
 
     &__name {
-        font-size: 2rem;
+        font-size: $space-8;
         color: var(--color-primary);
         margin: 0;
     }
@@ -1002,24 +1002,24 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
         font-size: 1.2rem;
         color: var(--color-secondary-dark);
         margin: 0;
-        font-weight: 500;
+        font-weight: $fw-medium;
     }
 
     &__bio {
         font-size: 1.05rem;
         color: var(--color-primary-dark);
         line-height: 1.7;
-        margin: 1rem 0;
+        margin: $space-4 0;
     }
 
     &__instagram {
         display: inline-flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: $space-2;
         color: var(--color-primary);
         text-decoration: none;
-        font-weight: 500;
-        transition: all 0.3s ease;
+        font-weight: $fw-medium;
+        transition: $transition-slow;
 
         &:hover {
             color: var(--color-secondary);
@@ -1030,7 +1030,7 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
 
 // ========== PROCESS ==========
 .process {
-    padding: 6rem 2rem;
+    padding: $space-24 $space-8;
     background: linear-gradient(180deg, #f0f4f8 0%, var(--color-white) 100%);
 
     &__container {
@@ -1041,15 +1041,15 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
     &__title {
         font-size: 2.5rem;
         text-align: center;
-        margin: 0 0 4rem;
+        margin: 0 0 $space-16;
         color: var(--color-primary);
     }
 
     &__steps {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 2rem;
-        margin-bottom: 3rem;
+        gap: $space-8;
+        margin-bottom: $space-12;
     }
 
     &__cta {
@@ -1059,10 +1059,10 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
 
 .step {
     background: var(--color-white);
-    padding: 2rem;
-    border-radius: 1rem;
+    padding: $space-8;
+    border-radius: $radius-lg;
     text-align: center;
-    transition: all 0.3s ease;
+    transition: $transition-slow;
 
     &:hover {
         transform: translateY(-5px);
@@ -1077,21 +1077,21 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
         height: 60px;
         background: $gradient-cta;
         color: var(--color-white);
-        border-radius: 50%;
-        font-size: 2rem;
+        border-radius: $radius-full;
+        font-size: $space-8;
         font-weight: bold;
-        margin-bottom: 1.5rem;
+        margin-bottom: $space-6;
     }
 
     &__title {
-        margin: 0 0 1rem;
+        margin: 0 0 $space-4;
         font-size: 1.3rem;
         color: var(--color-primary);
     }
 
     &__description {
         margin: 0;
-        font-size: 1rem;
+        font-size: $text-base;
         color: var(--color-primary-dark);
         line-height: 1.6;
     }
@@ -1099,7 +1099,7 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
 
 // ========== LOGISTICS ==========
 .logistics {
-    padding: 6rem 2rem;
+    padding: $space-24 $space-8;
     background: var(--color-white);
 
     &__container {
@@ -1110,24 +1110,24 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
     &__title {
         font-size: 2.5rem;
         text-align: center;
-        margin: 0 0 3rem;
+        margin: 0 0 $space-12;
         color: var(--color-primary);
     }
 
     &__grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 2rem;
-        margin-bottom: 4rem;
+        gap: $space-8;
+        margin-bottom: $space-16;
     }
 }
 
 .logistics-card {
     background: var(--color-bg);
-    padding: 2rem;
-    border-radius: 1rem;
+    padding: $space-8;
+    border-radius: $radius-lg;
     text-align: center;
-    transition: all 0.3s ease;
+    transition: $transition-slow;
 
     &:hover {
         transform: translateY(-5px);
@@ -1135,20 +1135,20 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
     }
 
     .logistics-icon {
-        font-size: 3rem;
+        font-size: $space-12;
         display: block;
-        margin-bottom: 1rem;
+        margin-bottom: $space-4;
     }
 
     h4 {
-        margin: 0 0 0.5rem;
+        margin: 0 0 $space-2;
         font-size: 1.2rem;
         color: var(--color-primary);
     }
 
     p {
         margin: 0;
-        font-size: 1rem;
+        font-size: $text-base;
         color: var(--color-primary-dark);
     }
 }
@@ -1156,51 +1156,51 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
 // ========== PRICING ==========
 .pricing {
     background: $gradient-hero;
-    padding: 4rem;
-    border-radius: 1.5rem;
+    padding: $space-16;
+    border-radius: $space-6;
     box-shadow: 0 8px 40px rgba(30, 86, 160, 0.3);
 
     &__title {
-        font-size: 2rem;
+        font-size: $space-8;
         text-align: center;
-        margin: 0 0 2rem;
+        margin: 0 0 $space-8;
         color: var(--color-white);
     }
 
     &__content {
-        margin-bottom: 3rem;
+        margin-bottom: $space-12;
     }
 
     &__options {
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 3rem;
+        gap: $space-12;
         flex-wrap: wrap;
     }
 
     &__ctas {
         display: flex;
-        gap: 1.5rem;
+        gap: $space-6;
         justify-content: center;
         flex-wrap: wrap;
-        margin-bottom: 2rem;
+        margin-bottom: $space-8;
     }
 
     &__full {
         text-align: center;
-        margin-bottom: 2rem;
+        margin-bottom: $space-8;
 
         .full-message {
             font-size: 1.3rem;
             color: var(--color-white);
-            margin-bottom: 1.5rem;
+            margin-bottom: $space-6;
         }
     }
 
     &__security {
         display: flex;
-        gap: 2rem;
+        gap: $space-8;
         justify-content: center;
         flex-wrap: wrap;
         font-size: 0.95rem;
@@ -1212,19 +1212,19 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
+    gap: $space-2;
 }
 
 .pricing-label {
-    font-size: 1rem;
+    font-size: $text-base;
     color: rgba(255, 255, 255, 0.9);
 }
 
 .pricing-value {
-    font-size: 3rem;
-    font-weight: 700;
+    font-size: $space-12;
+    font-weight: $fw-bold;
     color: var(--color-white);
-    font-family: 'Playfair Display', serif;
+    font-family: $font-title;
 
     &--accent {
         color: var(--color-secondary);
@@ -1237,14 +1237,14 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
 }
 
 .pricing-separator {
-    font-size: 1.5rem;
+    font-size: $space-6;
     color: rgba(255, 255, 255, 0.6);
-    font-weight: 300;
+    font-weight: $fw-light;
 }
 
 // ========== FAQ ==========
 .faq {
-    padding: 6rem 2rem;
+    padding: $space-24 $space-8;
     background: var(--color-bg);
 
     &__container {
@@ -1255,23 +1255,23 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
     &__title {
         font-size: 2.5rem;
         text-align: center;
-        margin: 0 0 3rem;
+        margin: 0 0 $space-12;
         color: var(--color-primary);
     }
 
     &__list {
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        gap: $space-4;
     }
 }
 
 .faq-item {
     background: var(--color-white);
-    border-radius: 0.75rem;
+    border-radius: $space-3;
     overflow: hidden;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: $transition-slow;
 
     &:hover {
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
@@ -1281,31 +1281,31 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 1.5rem 2rem;
-        gap: 1rem;
+        padding: $space-6 $space-8;
+        gap: $space-4;
 
         h4 {
             margin: 0;
             font-size: 1.1rem;
             color: var(--color-primary-dark);
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 500;
+            font-family: $font-body;
+            font-weight: $fw-medium;
         }
     }
 
     &__icon {
         flex-shrink: 0;
-        width: 32px;
-        height: 32px;
+        width: $space-8;
+        height: $space-8;
         background: var(--color-primary);
         color: var(--color-white);
-        border-radius: 50%;
+        border-radius: $radius-full;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.5rem;
-        font-weight: 300;
-        transition: all 0.3s ease;
+        font-size: $space-6;
+        font-weight: $fw-light;
+        transition: $transition-slow;
     }
 
     &--open &__icon {
@@ -1313,11 +1313,11 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
     }
 
     &__answer {
-        padding: 0 2rem 1.5rem;
+        padding: 0 $space-8 $space-6;
 
         p {
             margin: 0;
-            font-size: 1rem;
+            font-size: $text-base;
             color: var(--color-primary-dark);
             line-height: 1.7;
         }
@@ -1326,7 +1326,7 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
 
 .faq-slide-enter-active,
 .faq-slide-leave-active {
-    transition: all 0.3s ease;
+    transition: $transition-slow;
 }
 
 .faq-slide-enter-from,
@@ -1337,7 +1337,7 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
 
 // ========== FINAL CTA ==========
 .final-cta {
-    padding: 6rem 2rem;
+    padding: $space-24 $space-8;
     background: $gradient-hero;
     position: relative;
 
@@ -1362,39 +1362,39 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
     &__title {
         font-size: 2.5rem;
         color: var(--color-white);
-        margin: 0 0 2rem;
+        margin: 0 0 $space-8;
     }
 
     &__text {
         font-size: 1.4rem;
         color: rgba(255, 255, 255, 0.95);
-        margin: 0 0 2rem;
+        margin: 0 0 $space-8;
         line-height: 1.6;
 
         :deep(strong) {
             color: var(--color-secondary);
-            font-weight: 600;
+            font-weight: $fw-semibold;
         }
     }
 
     &__examples {
         font-size: 1.2rem;
         color: rgba(255, 255, 255, 0.9);
-        margin: 0 0 2rem;
+        margin: 0 0 $space-8;
         line-height: 1.8;
     }
 
     &__urgency {
         font-size: 1.3rem;
         color: var(--color-white);
-        margin: 0 0 3rem;
-        font-weight: 500;
+        margin: 0 0 $space-12;
+        font-weight: $fw-medium;
     }
 
     &__buttons {
         display: flex;
         justify-content: center;
-        margin-bottom: 1.5rem;
+        margin-bottom: $space-6;
     }
 
     &__note {
@@ -1407,10 +1407,10 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
 }
 
 // ========== RESPONSIVE ==========
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: $bp-lg) {
     .facilitator__content {
         grid-template-columns: 1fr;
-        gap: 2rem;
+        gap: $space-8;
 
         .facilitator__photo {
             max-width: 300px;
@@ -1428,9 +1428,9 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
     }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: $bp-md) {
     .hero {
-        padding: 6rem 1.5rem 3rem;
+        padding: $space-24 $space-6 $space-12;
         box-sizing: border-box;
 
         &__headline {
@@ -1454,7 +1454,7 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
 
         &__info {
             flex-direction: column;
-            gap: 0.5rem;
+            gap: $space-2;
         }
     }
 
@@ -1466,11 +1466,11 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
     }
 
     .pricing {
-        padding: 2rem 1.5rem;
+        padding: $space-8 $space-6;
 
         &__options {
             flex-direction: column;
-            gap: 2rem;
+            gap: $space-8;
         }
 
         &__ctas {
@@ -1486,10 +1486,10 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
     }
 
     .final-cta {
-        padding: 4rem 1.5rem;
+        padding: $space-16 $space-6;
 
         &__title {
-            font-size: 2rem;
+            font-size: $space-8;
         }
 
         &__text,
@@ -1499,11 +1499,11 @@ $gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-se
     }
 
     section {
-        padding: 4rem 1.5rem;
+        padding: $space-16 $space-6;
     }
 
     h2 {
-        font-size: 2rem !important;
+        font-size: $space-8 !important;
     }
 }
 </style>
