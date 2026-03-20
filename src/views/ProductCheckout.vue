@@ -224,35 +224,21 @@ const removeProof = () => {
 
 // Procesar pago
 const handleFreePayment = async () => {
-    const success = await order_store.create_offline_order({ product_id: product.value._id })
-    if (success) {
-        router.push(`/productos/${product.value.slug}`)
-    }
+    const result = await order_store.create_offline_order({ product_id: product.value._id })
+    if (result) router.push(`/productos/${product.value.slug}`)
 }
 
 const handlePayment = async () => {
     if (!canProceed.value) return
 
     if (selectedMethod.value === 'paypal') {
-        // Iniciar checkout de PayPal
         await order_store.init_paypal_checkout(product.value._id)
     } else if (selectedMethod.value === 'offline') {
-        // NOTA: Aquí falta subir la imagen a Cloudinary primero
-        // Por simplicidad, asumimos que ya tienes una función para eso
-
-        // Crear orden offline
-        const success = await order_store.create_offline_order({
+        const result = await order_store.create_offline_order({
             product_id: product.value._id,
-            payment_proof: {
-                public_id: 'temp_id', // Reemplazar con el ID de Cloudinary
-                secure_url: uploadedProof.value.base64 // Reemplazar con URL de Cloudinary
-            }
+            file: uploadedProof.value?.file ?? null
         })
-
-        if (success) {
-            // Redirigir a confirmación o al producto
-            router.push(`/productos/${product.value.slug}`)
-        }
+        if (result) router.push(`/productos/${product.value.slug}`)
     }
 }
 

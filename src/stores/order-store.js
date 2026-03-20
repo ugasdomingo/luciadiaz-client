@@ -55,17 +55,18 @@ export const useOrderStore = defineStore('order', () => {
         }
     }
 
-    const create_offline_order = async (order_data) => {
+    const create_offline_order = async ({ product_id, file = null }) => {
         try {
             util_store.set_loading(true)
-            const payload = {
-                ...order_data,
-                payment_method: 'offline'
-            }
-            const response = await api.post('/orders/offline', payload)
+            const form_data = new FormData()
+            form_data.append('product_id', product_id)
+            if (file) form_data.append('payment_proof', file)
+
+            const response = await api.post('/orders/offline', form_data, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            })
 
             util_store.set_message(response.data.message, 'success')
-
             await auth_store.refresh()
 
             return response.data.data
