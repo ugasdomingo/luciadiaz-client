@@ -79,19 +79,19 @@ const handle_search = (value) => {
 <style scoped lang="scss">
 .product-filters {
     background: var(--color-white);
-    padding: 1.5rem;
+    padding: $space-6;
     border-radius: var(--radius-md);
     border: 1px solid var(--color-border-light);
 }
 
 .filters__title {
-    font-size: 1.1rem;
-    margin: 0 0 1.25rem;
+    font-size: $text-lg;
+    margin: 0 0 $space-5;
     color: var(--color-text-heading);
 }
 
 .filter-group {
-    margin-bottom: 1.25rem;
+    margin-bottom: $space-5;
 
     &:last-of-type {
         margin-bottom: 0;
@@ -101,20 +101,20 @@ const handle_search = (value) => {
 .filter-label {
     display: block;
     font-size: 0.85rem;
-    font-weight: 600;
-    font-family: 'Montserrat', sans-serif;
+    font-weight: $fw-semibold;
+    font-family: $font-body;
     color: var(--color-text);
-    margin-bottom: 0.5rem;
+    margin-bottom: $space-2;
 }
 
 .filter-select,
 .filter-input {
     width: 100%;
-    padding: 0.625rem 0.75rem;
+    padding: 0.625rem $space-3;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-sm);
     font-size: 0.9rem;
-    font-family: 'Montserrat', sans-serif;
+    font-family: $font-body;
     background: var(--color-white);
     transition: border-color 0.25s ease;
     box-sizing: border-box;
@@ -138,14 +138,14 @@ const handle_search = (value) => {
 .filter-clear {
     width: 100%;
     padding: 0.625rem;
-    margin-top: 1.25rem;
+    margin-top: $space-5;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-sm);
     background: transparent;
     color: var(--color-text-muted);
     font-size: 0.85rem;
-    font-weight: 500;
-    font-family: 'Montserrat', sans-serif;
+    font-weight: $fw-medium;
+    font-family: $font-body;
     cursor: pointer;
     transition: all 0.25s ease;
 

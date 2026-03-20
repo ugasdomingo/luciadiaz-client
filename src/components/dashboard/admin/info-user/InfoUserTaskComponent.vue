@@ -41,8 +41,8 @@ const create_task = async () => {
 .new-task-container {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    padding: 1rem 0;
+    gap: $space-4;
+    padding: $space-4 0;
 
     button {
         width: fit-content;

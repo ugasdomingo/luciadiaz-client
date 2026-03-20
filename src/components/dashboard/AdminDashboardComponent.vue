@@ -68,21 +68,23 @@ watch(() => show_component.value, async (new_value) => {
 <style scoped lang="scss">
 .admin__dashboard {
     h2 {
-        margin: 0 0 2rem;
+        margin: 0 0 $space-8;
         text-align: center;
     }
 
     &__actions {
         display: flex;
-        gap: 1rem;
+        gap: $space-4;
+        flex-wrap: wrap;
 
         button {
             flex: 1;
+            min-width: 140px;
         }
     }
 
     &__component__displayer {
-        margin-top: 2rem;
+        margin-top: $space-8;
     }
 
     .loading {
@@ -93,11 +95,11 @@ watch(() => show_component.value, async (new_value) => {
     }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: $bp-md) {
     .admin__dashboard {
         &__actions {
             flex-direction: column;
-            padding-bottom: 1rem;
+            padding-bottom: $space-4;
             border-bottom: 2px solid var(--color-primary);
         }
     }

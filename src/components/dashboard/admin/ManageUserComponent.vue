@@ -70,12 +70,12 @@ watch(text_filter, () => {
     table {
         width: 100%;
         border-collapse: collapse;
-        margin-top: 2rem;
+        margin-top: $space-8;
     }
 
     th,
     td {
-        padding: 0.5rem;
+        padding: $space-2;
         text-align: left;
         border-bottom: 1px solid var(--color-disable);
     }
@@ -86,7 +86,7 @@ watch(text_filter, () => {
 
     .actions {
         display: flex;
-        gap: 0.5rem;
+        gap: $space-2;
 
         .action-btn {
             max-width: fit-content;
@@ -99,7 +99,7 @@ watch(text_filter, () => {
     }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: $bp-md) {
     .manage__users__container {
         h2 {
             text-align: center;

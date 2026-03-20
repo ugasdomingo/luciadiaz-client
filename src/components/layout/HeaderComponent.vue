@@ -76,15 +76,15 @@ onMounted(() => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.75rem 4rem;
+    padding: $space-3 $space-16;
     margin: 0 auto;
     position: fixed;
-    top: 0.5rem;
+    top: $space-2;
     left: 0;
     right: 0;
     z-index: 100;
     box-sizing: border-box;
-    height: 4rem;
+    height: $header-height;
 
     &--hidden { display: none; }
 
@@ -104,42 +104,38 @@ onMounted(() => {
     &__menu {
         display: flex;
         align-items: center;
-        gap: 0.75rem;
+        gap: $space-3;
         flex-shrink: 0;
     }
 
-    // "Agendar consulta terapéutica" / "Agendar"
     &__agendar {
         white-space: nowrap;
     }
 }
 
-// Textos adaptativos
 .text--long  { display: inline; }
 .text--short { display: none; }
 
-// Botón logout
 .logout-btn {
     background: none;
     border: 1px solid var(--color-border-light);
-    border-radius: 6px;
+    border-radius: $radius-sm;
     cursor: pointer;
     color: var(--color-text-muted);
-    font-size: 0.82rem;
-    padding: 0.35rem 0.75rem;
+    font-size: $text-sm;
+    padding: $space-1 $space-3;
     white-space: nowrap;
-    transition: color 0.2s, border-color 0.2s;
+    transition: color $transition-fast, border-color $transition-fast;
     flex-shrink: 0;
 
     &:hover { color: var(--color-error); border-color: var(--color-error); }
 }
 
-// Hamburguesa animada
 .hamburger {
     background: none;
     border: none;
     cursor: pointer;
-    padding: 0.4rem;
+    padding: $space-1;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -155,8 +151,8 @@ onMounted(() => {
             display: block;
             height: 2px;
             background: var(--color-text);
-            border-radius: 2px;
-            transition: all 0.25s ease;
+            border-radius: $radius-xs;
+            transition: $transition;
             transform-origin: center;
         }
 
@@ -168,18 +164,15 @@ onMounted(() => {
     }
 }
 
-// Visibilidad del navbar global
 .navbar--visible { display: block; }
 .navbar--hidden  { display: none; }
 
-// ─── Responsive ────────────────────────────────────────────────────────────
-@media (max-width: 720px) {
-    .header { padding: 0.75rem 1rem; }
+@media (max-width: $bp-md) {
+    .header { padding: $space-3 $space-4; }
 
-    // Texto largo → corto
     .text--long  { display: none; }
     .text--short { display: inline; }
 
-    .logout-btn { font-size: 0.95rem; padding: 0.35rem 0.5rem; }
+    .logout-btn { font-size: $text-base; padding: $space-1 $space-2; }
 }
 </style>

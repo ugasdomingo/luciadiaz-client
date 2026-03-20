@@ -139,7 +139,7 @@ const handle_update = async () => {
 .section__container {
     width: 100%;
     margin: 0;
-    padding: 0 4rem;
+    padding: 0 $space-16;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
@@ -149,7 +149,7 @@ const handle_update = async () => {
         justify-content: space-between;
         align-items: center;
         margin: 0;
-        padding: 2rem 0.5rem;
+        padding: $space-8 $space-2;
         cursor: pointer;
         color: var(--color-text);
 
@@ -164,11 +164,11 @@ const handle_update = async () => {
         width: 100%;
         display: flex;
         flex-direction: column;
-        gap: 1.5rem;
-        padding: 2rem;
+        gap: $space-6;
+        padding: $space-8;
 
         button {
-            margin-top: 2rem;
+            margin-top: $space-8;
         }
     }
 
@@ -177,12 +177,12 @@ const handle_update = async () => {
         display: flex;
         justify-content: space-between;
         flex-wrap: wrap;
-        gap: 1.5rem;
-        padding: 2rem;
+        gap: $space-6;
+        padding: $space-8;
 
         &__actions {
             display: flex;
-            gap: 1rem;
+            gap: $space-4;
         }
     }
 }

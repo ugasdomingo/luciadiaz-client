@@ -70,7 +70,7 @@ const handle_submit = async () => {
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: $space-4;
 
     .action-btn {
         width: fit-content;
@@ -80,13 +80,13 @@ const handle_submit = async () => {
         width: 100%;
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        gap: $space-4;
 
         form {
             width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: $space-4;
         }
     }
 
@@ -94,13 +94,13 @@ const handle_submit = async () => {
         width: 100%;
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        gap: $space-4;
 
         .note-item {
             width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: $space-4;
             padding: 0;
             margin: 0;
             box-sizing: border-box;
@@ -108,7 +108,7 @@ const handle_submit = async () => {
             .note-title {
                 display: flex;
                 align-items: center;
-                gap: 1rem;
+                gap: $space-4;
                 padding: 0;
                 margin: 0;
                 box-sizing: border-box;
@@ -125,11 +125,11 @@ const handle_submit = async () => {
 
                 .arrow {
                     transition: transform 0.25s;
-                    font-size: 1.5rem;
+                    font-size: $text-2xl;
 
                     img {
-                        width: 1rem;
-                        height: 1rem;
+                        width: $space-4;
+                        height: $space-4;
                     }
 
                     &.rotated {
@@ -142,7 +142,7 @@ const handle_submit = async () => {
             .answer-container {
                 display: flex;
                 flex-direction: column;
-                gap: 0.5rem;
+                gap: $space-2;
 
                 .note-reson {
                     padding: 0;
@@ -150,9 +150,9 @@ const handle_submit = async () => {
                 }
 
                 .note-notes {
-                    padding: 1rem;
+                    padding: $space-4;
                     margin: 0;
-                    border-radius: 1rem;
+                    border-radius: $space-4;
                     box-shadow: var(--shadow-sm);
                 }
             }

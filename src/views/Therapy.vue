@@ -17,17 +17,17 @@ import TherapyCardComponent from '../components/common/cards/TherapyCardComponen
     width: 100%;
     min-height: 100vh;
     margin: 0;
-    padding: 6rem 4rem 4rem;
+    padding: $space-24 $space-16 $space-16;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2rem;
+    gap: $space-8;
     position: relative;
     box-sizing: border-box;
 
     h2 {
         text-align: center;
-        margin: 1rem 0;
+        margin: $space-4 0;
     }
 
     &__content {
@@ -35,18 +35,18 @@ import TherapyCardComponent from '../components/common/cards/TherapyCardComponen
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         justify-items: center;
-        gap: 2rem;
+        gap: $space-8;
         box-sizing: border-box;
     }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: $bp-md) {
     .therapy {
-        padding: 5rem 1rem 3rem;
+        padding: $space-20 $space-4 $space-12;
 
         &__content {
             grid-template-columns: 1fr;
-            gap: 1rem;
+            gap: $space-4;
         }
     }
 }

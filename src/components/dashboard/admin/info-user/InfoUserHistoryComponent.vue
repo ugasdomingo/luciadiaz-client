@@ -44,14 +44,14 @@ const toggle_answers = (history_id) => {
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: $space-4;
 }
 
 .history-item {
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: $space-4;
     padding: 0;
     margin: 0;
     box-sizing: border-box;
@@ -59,7 +59,7 @@ const toggle_answers = (history_id) => {
     .history-title {
         display: flex;
         align-items: center;
-        gap: 1rem;
+        gap: $space-4;
         padding: 0;
         margin: 0;
         box-sizing: border-box;
@@ -76,11 +76,11 @@ const toggle_answers = (history_id) => {
 
         .arrow {
             transition: transform 0.25s;
-            font-size: 1.5rem;
+            font-size: $text-2xl;
 
             img {
-                width: 1rem;
-                height: 1rem;
+                width: $space-4;
+                height: $space-4;
             }
 
             &.rotated {

@@ -100,25 +100,25 @@ const get_file_icon = (file_type) => {
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: $space-8;
 
     &__header {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 1rem;
+        gap: $space-4;
         flex-wrap: wrap;
 
         h2 {
             margin: 0;
-            font-size: 2rem;
+            font-size: $space-8;
             color: var(--color-primary);
         }
     }
 
     &__description {
         margin: 0;
-        font-size: 1rem;
+        font-size: $text-base;
         color: var(--color-text-dark);
         line-height: 1.6;
     }
@@ -126,21 +126,21 @@ const get_file_icon = (file_type) => {
     &__list {
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        gap: $space-4;
     }
 }
 
 .download-all-btn {
-    padding: 0.75rem 1.5rem;
+    padding: $space-3 $space-6;
     background: var(--color-primary);
     color: var(--color-white);
     border: none;
-    border-radius: 0.75rem;
+    border-radius: $space-3;
     font-family: 'Text';
-    font-size: 1rem;
-    font-weight: 600;
+    font-size: $text-base;
+    font-weight: $fw-semibold;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: $transition-slow;
 
     &:hover {
         background: var(--color-secondary);
@@ -152,13 +152,13 @@ const get_file_icon = (file_type) => {
 .downloadable-item {
     display: grid;
     grid-template-columns: 60px 1fr auto;
-    gap: 1.5rem;
-    padding: 1.5rem;
+    gap: $space-6;
+    padding: $space-6;
     background: var(--color-white);
     border: 2px solid var(--color-disable);
-    border-radius: 1rem;
+    border-radius: $space-4;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: $transition-slow;
     align-items: center;
 
     &:hover {
@@ -173,7 +173,7 @@ const get_file_icon = (file_type) => {
     }
 
     &__icon {
-        font-size: 3rem;
+        font-size: $space-12;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -182,15 +182,15 @@ const get_file_icon = (file_type) => {
     &__info {
         display: flex;
         flex-direction: column;
-        gap: 0.5rem;
+        gap: $space-2;
     }
 
     &__name {
         margin: 0;
-        font-size: 1.2rem;
+        font-size: $text-xl;
         color: var(--color-black);
         font-family: 'Text';
-        font-weight: 600;
+        font-weight: $fw-semibold;
         line-height: 1.3;
     }
 
@@ -203,18 +203,18 @@ const get_file_icon = (file_type) => {
 
     &__meta {
         display: flex;
-        gap: 0.75rem;
+        gap: $space-3;
         flex-wrap: wrap;
 
         .meta-tag,
         .meta-size {
-            padding: 0.25rem 0.75rem;
+            padding: $space-1 $space-3;
             background: var(--color-border-light);
             color: var(--color-text-dark);
-            border-radius: 0.5rem;
+            border-radius: $space-2;
             font-family: 'Text';
-            font-size: 0.75rem;
-            font-weight: 600;
+            font-size: $text-xs;
+            font-weight: $fw-semibold;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
@@ -227,16 +227,16 @@ const get_file_icon = (file_type) => {
 }
 
 .download-btn {
-    padding: 0.75rem 1.5rem;
+    padding: $space-3 $space-6;
     background: transparent;
     color: var(--color-primary);
     border: 2px solid var(--color-primary);
-    border-radius: 0.75rem;
+    border-radius: $space-3;
     font-family: 'Text';
     font-size: 0.95rem;
-    font-weight: 600;
+    font-weight: $fw-semibold;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: $transition-slow;
     white-space: nowrap;
 
     &:hover {
@@ -244,7 +244,7 @@ const get_file_icon = (file_type) => {
     }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: $bp-md) {
     .downloadables {
         &__header {
             flex-direction: column;
@@ -262,11 +262,11 @@ const get_file_icon = (file_type) => {
 
     .downloadable-item {
         grid-template-columns: 50px 1fr;
-        gap: 1rem;
-        padding: 1rem;
+        gap: $space-4;
+        padding: $space-4;
 
         &__icon {
-            font-size: 2.5rem;
+            font-size: $space-10;
         }
 
         &__action {

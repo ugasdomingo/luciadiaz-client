@@ -254,10 +254,10 @@ onMounted(() => {
 .checkout {
     min-height: 80vh;
     background: var(--color-bg);
-    padding: 40px 20px;
+    padding: $space-10 20px;
 
-    @media (max-width: 768px) {
-        padding: 20px 16px;
+    @media (max-width: $bp-md) {
+        padding: $space-5 $space-4;
     }
 }
 
@@ -269,53 +269,53 @@ onMounted(() => {
 .checkout-content {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 40px;
+    gap: $space-10;
 
     @media (max-width: 968px) {
         grid-template-columns: 1fr;
-        gap: 24px;
+        gap: $space-6;
     }
 }
 
 .checkout-summary {
     background: var(--color-bg-card);
-    padding: 32px;
-    border-radius: 16px;
+    padding: $space-8;
+    border-radius: $radius-lg;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
     height: fit-content;
 
-    @media (max-width: 768px) {
-        padding: 24px;
+    @media (max-width: $bp-md) {
+        padding: $space-6;
     }
 }
 
 .checkout-title {
     font-size: 28px;
-    font-weight: 800;
-    margin: 0 0 24px;
+    font-weight: $fw-extrabold;
+    margin: 0 0 $space-6;
     color: var(--color-text-heading);
 }
 
 .product-summary {
-    margin-bottom: 32px;
+    margin-bottom: $space-8;
 }
 
 .product-image {
     width: 100%;
     height: auto;
-    border-radius: 12px;
-    margin-bottom: 20px;
+    border-radius: $radius-md;
+    margin-bottom: $space-5;
 }
 
 .product-title {
-    font-size: 20px;
-    font-weight: 700;
-    margin: 0 0 8px;
+    font-size: $text-xl;
+    font-weight: $fw-bold;
+    margin: 0 0 $space-2;
     color: var(--color-text);
 }
 
 .product-description {
-    font-size: 14px;
+    font-size: $text-sm;
     color: var(--color-text-muted);
     line-height: 1.6;
     margin: 0;
@@ -323,43 +323,43 @@ onMounted(() => {
 
 .price-summary {
     border-top: 2px solid var(--color-border-light);
-    padding-top: 20px;
+    padding-top: $space-5;
 }
 
 .price-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 12px;
-    font-size: 16px;
+    margin-bottom: $space-3;
+    font-size: $text-base;
     color: var(--color-text-muted);
 
     &--total {
-        font-size: 24px;
-        font-weight: 800;
+        font-size: $text-2xl;
+        font-weight: $fw-extrabold;
         color: var(--color-text-heading);
         margin-bottom: 0;
     }
 }
 
 .price-value {
-    font-weight: 700;
+    font-weight: $fw-bold;
 }
 
 .checkout-payment {
     background: var(--color-bg-card);
-    padding: 32px;
-    border-radius: 16px;
+    padding: $space-8;
+    border-radius: $radius-lg;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 
-    @media (max-width: 768px) {
-        padding: 24px;
+    @media (max-width: $bp-md) {
+        padding: $space-6;
     }
 
     h2 {
-        font-size: 24px;
-        font-weight: 700;
-        margin: 0 0 24px;
+        font-size: $text-2xl;
+        font-weight: $fw-bold;
+        margin: 0 0 $space-6;
         color: var(--color-text-heading);
     }
 }
@@ -367,16 +367,16 @@ onMounted(() => {
 .payment-methods {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    margin-bottom: 24px;
+    gap: $space-4;
+    margin-bottom: $space-6;
 }
 
 .payment-method {
     border: 2px solid var(--color-border);
-    border-radius: 12px;
-    padding: 20px;
+    border-radius: $radius-md;
+    padding: $space-5;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: $transition;
 
     &:hover {
         border-color: var(--color-primary);
@@ -395,52 +395,52 @@ onMounted(() => {
 .method-content {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: $space-4;
 }
 
 .method-icon {
-    font-size: 32px;
+    font-size: $space-8;
 }
 
 .method-info {
     flex: 1;
 
     h3 {
-        font-size: 16px;
-        font-weight: 700;
-        margin: 0 0 4px;
+        font-size: $text-base;
+        font-weight: $fw-bold;
+        margin: 0 0 $space-1;
         color: var(--color-text);
     }
 
     p {
-        font-size: 14px;
+        font-size: $text-sm;
         color: var(--color-text-muted);
         margin: 0;
     }
 }
 
 .offline-form {
-    margin-bottom: 24px;
+    margin-bottom: $space-6;
 }
 
 .bank-info {
     background: var(--color-bg);
-    padding: 20px;
-    border-radius: 12px;
-    margin-bottom: 20px;
+    padding: $space-5;
+    border-radius: $radius-md;
+    margin-bottom: $space-5;
 
     h3 {
-        font-size: 16px;
-        font-weight: 700;
-        margin: 0 0 8px;
+        font-size: $text-base;
+        font-weight: $fw-bold;
+        margin: 0 0 $space-2;
         color: var(--color-text);
     }
 
     &__description {
-        font-size: 14px;
+        font-size: $text-sm;
         color: var(--color-text-muted);
         line-height: 1.5;
-        margin: 0 0 16px;
+        margin: 0 0 $space-4;
     }
 }
 
@@ -450,15 +450,15 @@ onMounted(() => {
     justify-content: center;
     gap: 10px;
     width: 100%;
-    padding: 14px 20px;
+    padding: 14px $space-5;
     border: 2px solid var(--color-primary);
     border-radius: var(--radius-md);
     background: transparent;
     color: var(--color-primary);
     font-size: 15px;
-    font-weight: 600;
+    font-weight: $fw-semibold;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: $transition;
 
     &:hover {
         background: var(--color-primary);
@@ -469,11 +469,11 @@ onMounted(() => {
 .proof-upload {
     input[type="file"] {
         width: 100%;
-        padding: 12px;
+        padding: $space-3;
         border: 2px dashed var(--color-border);
-        border-radius: 8px;
+        border-radius: $radius-sm;
         cursor: pointer;
-        font-size: 14px;
+        font-size: $text-sm;
 
         &:hover {
             border-color: var(--color-primary);
@@ -483,16 +483,16 @@ onMounted(() => {
 
 .upload-label {
     display: block;
-    font-size: 14px;
-    font-weight: 600;
+    font-size: $text-sm;
+    font-weight: $fw-semibold;
     color: var(--color-text);
-    margin-bottom: 8px;
+    margin-bottom: $space-2;
 }
 
 .proof-preview {
     position: relative;
-    margin-top: 16px;
-    border-radius: 8px;
+    margin-top: $space-4;
+    border-radius: $radius-sm;
     overflow: hidden;
 
     img {
@@ -503,18 +503,18 @@ onMounted(() => {
 
     .btn-remove {
         position: absolute;
-        top: 8px;
-        right: 8px;
-        width: 32px;
-        height: 32px;
+        top: $space-2;
+        right: $space-2;
+        width: $space-8;
+        height: $space-8;
         display: flex;
         align-items: center;
         justify-content: center;
         border: none;
         background: rgba(255, 255, 255, 0.9);
-        border-radius: 50%;
+        border-radius: $radius-full;
         cursor: pointer;
-        font-size: 16px;
+        font-size: $text-base;
 
         &:hover {
             background: var(--color-bg-card);
@@ -524,16 +524,16 @@ onMounted(() => {
 
 .btn-pay {
     width: 100%;
-    padding: 16px;
+    padding: $space-4;
     border: none;
-    border-radius: 12px;
+    border-radius: $radius-md;
     background: var(--color-primary);
     color: var(--color-bg-card);
-    font-size: 18px;
-    font-weight: 700;
+    font-size: $text-lg;
+    font-weight: $fw-bold;
     cursor: pointer;
-    transition: all 0.3s ease;
-    margin-bottom: 16px;
+    transition: $transition-slow;
+    margin-bottom: $space-4;
 
     &:hover:not(.btn-pay--disabled) {
         background: var(--color-primary-dark);
@@ -565,25 +565,25 @@ onMounted(() => {
 
 .checkout-error {
     text-align: center;
-    padding: 80px 20px;
+    padding: $space-20 20px;
     background: var(--color-bg-card);
-    border-radius: 16px;
+    border-radius: $radius-lg;
 
     h2 {
         font-size: 28px;
-        font-weight: 700;
-        margin: 0 0 24px;
+        font-weight: $fw-bold;
+        margin: 0 0 $space-6;
         color: var(--color-text);
     }
 
     .btn-back {
         display: inline-block;
-        padding: 14px 32px;
+        padding: 14px $space-8;
         border-radius: 10px;
         background: var(--color-primary);
         color: var(--color-bg-card);
         text-decoration: none;
-        font-weight: 600;
+        font-weight: $fw-semibold;
     }
 }
 </style>

@@ -33,7 +33,7 @@ const cancel_action = () => {
     height: 100vh;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: $space-4;
     justify-content: center;
     align-items: center;
     padding: 0;
@@ -47,15 +47,15 @@ const cancel_action = () => {
     &__content {
         width: 100%;
         max-width: 30rem;
-        padding: 1rem;
+        padding: $space-4;
         background-color: var(--color-white);
-        border-radius: 0.5rem;
-        
+        border-radius: $space-2;
+
         h2 {
             margin: 0;
             padding: 0;
         }
-        
+
         &__buttons {
             display: flex;
             justify-content: space-between;

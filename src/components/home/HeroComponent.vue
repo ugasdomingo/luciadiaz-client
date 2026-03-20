@@ -49,7 +49,6 @@
         }
     }
 
-    // Velo luminoso — deja ver la imagen, no la ahoga
     &__veil {
         position: absolute;
         inset: 0;
@@ -60,13 +59,12 @@
                 rgba(255, 255, 255, 0.3) 100%);
     }
 
-    // Transición suave al siguiente bloque
     &__fade {
         position: absolute;
         bottom: 0;
         left: 0;
         right: 0;
-        height: 6rem;
+        height: $space-24;
         background: linear-gradient(to bottom, transparent, var(--color-white));
         z-index: 2;
     }
@@ -75,7 +73,7 @@
         position: relative;
         z-index: 1;
         max-width: 50%;
-        padding: 0 4rem;
+        padding: 0 $space-16;
         margin-top: 0;
         display: flex;
         flex-direction: column;
@@ -85,47 +83,47 @@
     }
 
     &__greeting {
-        font-family: 'Montserrat', sans-serif;
-        font-size: 0.85rem;
-        font-weight: 500;
+        font-family: $font-body;
+        font-size: $text-sm;
+        font-weight: $fw-medium;
         letter-spacing: 0.15em;
         text-transform: uppercase;
         color: var(--color-primary);
         opacity: 0.7;
-        margin-bottom: 1rem;
+        margin-bottom: $space-4;
     }
 
     &__content h2 {
         font-size: clamp(1.75rem, 3.5vw, 3.25rem);
         color: var(--color-primary-dark);
-        margin-bottom: 1.5rem;
+        margin-bottom: $space-6;
         line-height: 1.15;
         text-shadow: none;
     }
 
     &__body {
-        font-size: 1.15rem;
+        font-size: $text-lg;
         color: var(--color-text);
         max-width: 520px;
-        font-weight: 400;
+        font-weight: $fw-regular;
         line-height: 1.7;
-        margin-bottom: 2.5rem;
+        margin-bottom: $space-10;
     }
 
     &__cta {
         display: inline-flex;
         align-items: center;
-        padding: 0.875rem 2.25rem;
+        padding: $space-3 $space-10;
         background: var(--color-secondary);
         color: var(--color-white);
-        font-family: 'Montserrat', sans-serif;
-        font-size: 0.95rem;
-        font-weight: 600;
+        font-family: $font-body;
+        font-size: $text-base;
+        font-weight: $fw-semibold;
         letter-spacing: 0.02em;
-        border-radius: var(--radius-sm);
+        border-radius: $radius-sm;
         border: none;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: $transition-slow;
 
         &:hover {
             background: var(--color-secondary-dark);
@@ -135,7 +133,7 @@
     }
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: $bp-lg) {
     .hero {
         height: auto;
         min-height: 100svh;
@@ -155,30 +153,30 @@
             z-index: 2;
             max-width: 100%;
             width: 100%;
-            padding: 2rem 1.5rem 4rem;
+            padding: $space-8 $space-6 $space-16;
             margin-top: 0;
             background: linear-gradient(to bottom, transparent, var(--color-white) 15%);
         }
 
         &__body {
-            font-size: 1rem;
+            font-size: $text-base;
             max-width: 100%;
         }
 
         &__greeting {
-            font-size: 0.75rem;
+            font-size: $text-xs;
         }
     }
 }
 
-@media screen and (max-width: 480px) {
+@media screen and (max-width: $bp-xs) {
     .hero {
         &__image {
             height: 48vh;
         }
 
         &__content {
-            padding: 2rem 1.25rem 3.5rem;
+            padding: $space-8 $space-5 $space-12;
         }
     }
 }

@@ -115,11 +115,11 @@ const handle_submit = async () => {
     width: 60%;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: $space-4;
     margin: 0 auto;
     box-shadow: var(--shadow-md);
-    padding: 1rem;
-    border-radius: 0.5rem;
+    padding: $space-4;
+    border-radius: $space-2;
     box-sizing: border-box;
 
     h2 {
@@ -131,17 +131,17 @@ const handle_submit = async () => {
     }
 
     .question__container {
-        margin: 2.5rem 0;
+        margin: $space-10 0;
 
         &__enum {
-            margin-bottom: 0.5rem;
-            font-weight: 700;
+            margin-bottom: $space-2;
+            font-weight: $fw-bold;
         }
 
         &__options {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: $space-2;
 
         }
 
@@ -150,17 +150,17 @@ const handle_submit = async () => {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
+            gap: $space-2;
 
             &__input {
-                width: 1rem;
-                height: 1rem;
+                width: $space-4;
+                height: $space-4;
             }
         }
     }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: $bp-md) {
     .archetype__form {
         max-width: 100%;
     }

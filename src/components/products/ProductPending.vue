@@ -200,10 +200,10 @@ const goToProducts = () => {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 40px 20px;
+    padding: $space-10 20px;
 
-    @media (max-width: 768px) {
-        padding: 20px 16px;
+    @media (max-width: $bp-md) {
+        padding: $space-5 $space-4;
     }
 }
 
@@ -211,19 +211,19 @@ const goToProducts = () => {
     max-width: 600px;
     width: 100%;
     background: var(--color-white);
-    padding: 60px 40px;
-    border-radius: 16px;
+    padding: 60px $space-10;
+    border-radius: $radius-lg;
     box-shadow: var(--shadow-md);
     text-align: center;
 
     @media (max-width: 568px) {
-        padding: 40px 24px;
+        padding: $space-10 $space-6;
     }
 }
 
 .pending-icon {
     font-size: 72px;
-    margin-bottom: 24px;
+    margin-bottom: $space-6;
     animation: pulse 2s ease-in-out infinite;
 }
 
@@ -240,9 +240,9 @@ const goToProducts = () => {
 }
 
 .pending-title {
-    font-size: 32px;
-    font-weight: 800;
-    margin: 0 0 16px;
+    font-size: $text-4xl;
+    font-weight: $fw-extrabold;
+    margin: 0 0 $space-4;
     color: var(--color-text-heading);
 
     @media (max-width: 568px) {
@@ -251,22 +251,22 @@ const goToProducts = () => {
 }
 
 .pending-message {
-    font-size: 18px;
+    font-size: $text-lg;
     line-height: 1.6;
     color: var(--color-text-muted);
-    margin: 0 0 40px;
+    margin: 0 0 $space-10;
 
     strong {
         color: var(--color-text);
-        font-weight: 600;
+        font-weight: $fw-semibold;
     }
 }
 
 .pending-info {
     background: var(--color-bg);
-    border-radius: 12px;
-    padding: 24px;
-    margin-bottom: 40px;
+    border-radius: $radius-md;
+    padding: $space-6;
+    margin-bottom: $space-10;
     text-align: left;
 }
 
@@ -274,7 +274,7 @@ const goToProducts = () => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 0;
+    padding: $space-3 0;
     border-bottom: 1px solid var(--color-border-light);
 
     &:last-child {
@@ -283,15 +283,15 @@ const goToProducts = () => {
 }
 
 .info-label {
-    font-size: 14px;
+    font-size: $text-sm;
     color: var(--color-text-muted);
-    font-weight: 600;
+    font-weight: $fw-semibold;
 }
 
 .info-value {
-    font-size: 16px;
+    font-size: $text-base;
     color: var(--color-text);
-    font-weight: 600;
+    font-weight: $fw-semibold;
 
     &--pending {
         color: var(--color-warning);
@@ -299,13 +299,13 @@ const goToProducts = () => {
 }
 
 .pending-timeline {
-    margin-bottom: 40px;
+    margin-bottom: $space-10;
     text-align: left;
 
     h3 {
-        font-size: 20px;
-        font-weight: 700;
-        margin: 0 0 20px;
+        font-size: $text-xl;
+        font-weight: $fw-bold;
+        margin: 0 0 $space-5;
         color: var(--color-text-heading);
     }
 
@@ -320,7 +320,7 @@ const goToProducts = () => {
         counter-increment: step-counter;
         position: relative;
         padding-left: 60px;
-        margin-bottom: 24px;
+        margin-bottom: $space-6;
 
         &:last-child {
             margin-bottom: 0;
@@ -331,29 +331,29 @@ const goToProducts = () => {
             position: absolute;
             left: 0;
             top: 0;
-            width: 40px;
-            height: 40px;
+            width: $space-10;
+            height: $space-10;
             display: flex;
             align-items: center;
             justify-content: center;
             background: var(--color-primary);
             color: var(--color-white);
-            border-radius: 50%;
-            font-weight: 700;
-            font-size: 18px;
+            border-radius: $radius-full;
+            font-weight: $fw-bold;
+            font-size: $text-lg;
         }
 
         strong {
             display: block;
-            font-size: 16px;
-            font-weight: 700;
+            font-size: $text-base;
+            font-weight: $fw-bold;
             color: var(--color-text);
-            margin-bottom: 4px;
+            margin-bottom: $space-1;
         }
 
         span {
             display: block;
-            font-size: 14px;
+            font-size: $text-sm;
             color: var(--color-text-muted);
             line-height: 1.5;
         }
@@ -362,15 +362,15 @@ const goToProducts = () => {
 
 /* ── Reupload Section ── */
 .reupload-section {
-    margin-bottom: 32px;
+    margin-bottom: $space-8;
 }
 
 .btn-reupload-toggle {
     background: none;
     border: none;
     color: var(--color-primary);
-    font-size: 14px;
-    font-weight: 600;
+    font-size: $text-sm;
+    font-weight: $fw-semibold;
     cursor: pointer;
     text-decoration: underline;
     text-underline-offset: 3px;
@@ -382,35 +382,35 @@ const goToProducts = () => {
 
 .reupload-form {
     background: var(--color-bg);
-    border-radius: 12px;
-    padding: 24px;
+    border-radius: $radius-md;
+    padding: $space-6;
     text-align: left;
 
     h3 {
-        font-size: 16px;
-        font-weight: 700;
-        margin: 0 0 8px;
+        font-size: $text-base;
+        font-weight: $fw-bold;
+        margin: 0 0 $space-2;
         color: var(--color-text-heading);
     }
 
     > p {
-        font-size: 14px;
+        font-size: $text-sm;
         color: var(--color-text-muted);
         line-height: 1.5;
-        margin: 0 0 16px;
+        margin: 0 0 $space-4;
     }
 }
 
 .proof-upload {
-    margin-bottom: 16px;
+    margin-bottom: $space-4;
 
     input[type="file"] {
         width: 100%;
-        padding: 12px;
+        padding: $space-3;
         border: 2px dashed var(--color-border);
-        border-radius: 8px;
+        border-radius: $radius-sm;
         cursor: pointer;
-        font-size: 14px;
+        font-size: $text-sm;
 
         &:hover {
             border-color: var(--color-primary);
@@ -420,16 +420,16 @@ const goToProducts = () => {
 
 .upload-label {
     display: block;
-    font-size: 14px;
-    font-weight: 600;
+    font-size: $text-sm;
+    font-weight: $fw-semibold;
     color: var(--color-text);
-    margin-bottom: 8px;
+    margin-bottom: $space-2;
 }
 
 .proof-preview {
     position: relative;
-    margin-top: 12px;
-    border-radius: 8px;
+    margin-top: $space-3;
+    border-radius: $radius-sm;
     overflow: hidden;
 
     img {
@@ -440,18 +440,18 @@ const goToProducts = () => {
 
     .btn-remove {
         position: absolute;
-        top: 8px;
-        right: 8px;
-        width: 32px;
-        height: 32px;
+        top: $space-2;
+        right: $space-2;
+        width: $space-8;
+        height: $space-8;
         display: flex;
         align-items: center;
         justify-content: center;
         border: none;
         background: var(--overlay-white-85);
-        border-radius: 50%;
+        border-radius: $radius-full;
         cursor: pointer;
-        font-size: 16px;
+        font-size: $text-base;
 
         &:hover {
             background: var(--color-white);
@@ -461,7 +461,7 @@ const goToProducts = () => {
 
 .reupload-actions {
     display: flex;
-    gap: 12px;
+    gap: $space-3;
     justify-content: flex-end;
 }
 
@@ -469,9 +469,9 @@ const goToProducts = () => {
     padding: 10px 20px;
     border: 1px solid var(--color-border);
     background: var(--color-white);
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
+    border-radius: $radius-sm;
+    font-size: $text-sm;
+    font-weight: $fw-semibold;
     color: var(--color-text-muted);
     cursor: pointer;
 
@@ -485,9 +485,9 @@ const goToProducts = () => {
     border: none;
     background: var(--color-primary);
     color: var(--color-white);
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
+    border-radius: $radius-sm;
+    font-size: $text-sm;
+    font-weight: $fw-semibold;
     cursor: pointer;
 
     &:hover:not(:disabled) {
@@ -504,8 +504,8 @@ const goToProducts = () => {
 /* ── Actions ── */
 .pending-actions {
     display: flex;
-    gap: 16px;
-    margin-bottom: 32px;
+    gap: $space-4;
+    margin-bottom: $space-8;
 
     @media (max-width: 568px) {
         flex-direction: column;
@@ -515,13 +515,13 @@ const goToProducts = () => {
 .btn-primary,
 .btn-secondary {
     flex: 1;
-    padding: 14px 24px;
+    padding: 14px $space-6;
     border: none;
     border-radius: 10px;
-    font-size: 16px;
-    font-weight: 700;
+    font-size: $text-base;
+    font-weight: $fw-bold;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: $transition;
 
     @media (max-width: 568px) {
         width: 100%;
@@ -548,7 +548,7 @@ const goToProducts = () => {
 }
 
 .pending-note {
-    font-size: 14px;
+    font-size: $text-sm;
     color: var(--color-text-muted);
     margin: 0;
 }

@@ -67,7 +67,7 @@ const format_date = (date) => new Date(date).toLocaleDateString('es-ES', {
 <style scoped lang="scss">
 .product-info {
     display: flex;
-    gap: 12px;
+    gap: $space-3;
     align-items: center;
     min-width: 250px;
 }
@@ -75,7 +75,7 @@ const format_date = (date) => new Date(date).toLocaleDateString('es-ES', {
 .product-image {
     width: 60px;
     height: 60px;
-    border-radius: 8px;
+    border-radius: $radius-sm;
     overflow: hidden;
     flex-shrink: 0;
 
@@ -92,9 +92,9 @@ const format_date = (date) => new Date(date).toLocaleDateString('es-ES', {
 }
 
 .product-name {
-    font-size: 14px;
-    font-weight: 600;
-    margin: 0 0 4px;
+    font-size: $text-sm;
+    font-weight: $fw-semibold;
+    margin: 0 0 $space-1;
     color: var(--color-text);
     white-space: nowrap;
     overflow: hidden;
@@ -102,17 +102,17 @@ const format_date = (date) => new Date(date).toLocaleDateString('es-ES', {
 }
 
 .product-slug {
-    font-size: 12px;
+    font-size: $text-xs;
     color: var(--color-text-muted);
 }
 
 .type-badge,
 .status-badge {
     display: inline-block;
-    padding: 4px 12px;
-    border-radius: 12px;
-    font-size: 12px;
-    font-weight: 600;
+    padding: $space-1 $space-3;
+    border-radius: $radius-md;
+    font-size: $text-xs;
+    font-weight: $fw-semibold;
     white-space: nowrap;
 }
 
@@ -155,7 +155,7 @@ const format_date = (date) => new Date(date).toLocaleDateString('es-ES', {
 }
 
 .product-price {
-    font-weight: 600;
+    font-weight: $fw-semibold;
     color: var(--color-text);
     white-space: nowrap;
 }
@@ -167,18 +167,18 @@ const format_date = (date) => new Date(date).toLocaleDateString('es-ES', {
 
 .product-actions {
     display: flex;
-    gap: 8px;
+    gap: $space-2;
     white-space: nowrap;
 }
 
 .btn-action {
-    padding: 8px 12px;
+    padding: $space-2 $space-3;
     border: none;
-    border-radius: 6px;
+    border-radius: $radius-xs;
     background: var(--color-bg);
-    font-size: 16px;
+    font-size: $text-base;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: $transition;
 
     &:hover {
         transform: scale(1.1);

@@ -164,52 +164,52 @@ onMounted(() => load_products())
 .manage-products {
     background: var(--color-bg);
     min-height: 100vh;
-    padding: 40px 20px;
+    padding: $space-10 $space-5;
 }
 
 .manage-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 32px;
+    margin-bottom: $space-8;
 
-    @media (max-width: 768px) {
+    @media (max-width: $bp-md) {
         flex-direction: column;
-        gap: 16px;
+        gap: $space-4;
         align-items: stretch;
     }
 }
 
 .manage-title {
-    font-size: 32px;
-    font-weight: 800;
+    font-size: $text-4xl;
+    font-weight: $fw-extrabold;
     margin: 0;
     color: var(--color-text);
 
-    @media (max-width: 768px) {
-        font-size: 24px;
+    @media (max-width: $bp-md) {
+        font-size: $text-2xl;
     }
 }
 
 .manage-filters {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    margin-bottom: 32px;
+    gap: $space-4;
+    margin-bottom: $space-8;
 
-    @media (max-width: 768px) {
+    @media (max-width: $bp-md) {
         grid-template-columns: 1fr;
     }
 }
 
 .filter-select,
 .filter-input {
-    padding: 12px 16px;
+    padding: $space-3 $space-4;
     border: 2px solid var(--color-border);
-    border-radius: 8px;
-    font-size: 14px;
+    border-radius: $radius-sm;
+    font-size: $text-sm;
     background: var(--color-white);
-    transition: border-color 0.2s ease;
+    transition: border-color $transition;
     width: 100%;
     box-sizing: border-box;
 
@@ -225,7 +225,7 @@ onMounted(() => load_products())
 
 .products-table-wrapper {
     background: var(--color-white);
-    border-radius: 12px;
+    border-radius: $radius-md;
     overflow: hidden;
     box-shadow: var(--shadow-sm);
 }
@@ -243,10 +243,10 @@ onMounted(() => load_products())
         background: var(--color-bg);
 
         th {
-            padding: 16px;
+            padding: $space-4;
             text-align: left;
-            font-size: 14px;
-            font-weight: 700;
+            font-size: $text-sm;
+            font-weight: $fw-bold;
             color: var(--color-text);
             white-space: nowrap;
         }
@@ -255,7 +255,7 @@ onMounted(() => load_products())
     tbody {
         :deep(tr) {
             border-bottom: 1px solid var(--color-border);
-            transition: background 0.2s ease;
+            transition: background $transition;
 
             &:hover {
                 background: var(--color-bg);
@@ -267,8 +267,8 @@ onMounted(() => load_products())
         }
 
         :deep(td) {
-            padding: 16px;
-            font-size: 14px;
+            padding: $space-4;
+            font-size: $text-sm;
             color: var(--color-text);
             vertical-align: middle;
         }
@@ -277,26 +277,26 @@ onMounted(() => load_products())
 
 .empty-state {
     background: var(--color-white);
-    border-radius: 12px;
-    padding: 80px 40px;
+    border-radius: $radius-md;
+    padding: $space-20 $space-10;
     text-align: center;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 
     .empty-icon {
-        font-size: 64px;
-        margin-bottom: 16px;
+        font-size: $text-4xl;
+        margin-bottom: $space-4;
     }
 
     h3 {
-        font-size: 24px;
-        font-weight: 700;
-        margin: 0 0 8px;
+        font-size: $text-2xl;
+        font-weight: $fw-bold;
+        margin: 0 0 $space-2;
         color: var(--color-text);
     }
 
     p {
-        font-size: 16px;
-        margin: 0 0 32px;
+        font-size: $text-base;
+        margin: 0 0 $space-8;
         color: var(--color-text-muted);
     }
 }
@@ -313,12 +313,12 @@ onMounted(() => load_products())
     align-items: center;
     justify-content: center;
     z-index: 1000;
-    padding: 20px;
+    padding: $space-5;
 }
 
 .modal-content {
     background: var(--color-white);
-    border-radius: 16px;
+    border-radius: $radius-lg;
     width: 100%;
     max-width: 800px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
@@ -332,13 +332,13 @@ onMounted(() => load_products())
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 24px 32px;
+    padding: $space-6 $space-8;
     border-bottom: 1px solid var(--color-border);
 }
 
 .modal-title {
-    font-size: 24px;
-    font-weight: 700;
+    font-size: $text-2xl;
+    font-weight: $fw-bold;
     margin: 0;
     color: var(--color-text);
 }
@@ -349,9 +349,9 @@ onMounted(() => load_products())
     border: none;
     background: var(--color-bg);
     border-radius: 50%;
-    font-size: 20px;
+    font-size: $text-xl;
     cursor: pointer;
-    transition: background 0.2s ease;
+    transition: background $transition;
 
     &:hover {
         background: var(--color-border);
@@ -359,10 +359,10 @@ onMounted(() => load_products())
 }
 
 .modal-body {
-    padding: 32px;
+    padding: $space-8;
 
     p {
-        margin: 0 0 16px;
+        margin: 0 0 $space-4;
         color: var(--color-text);
 
         &:last-child {
@@ -372,29 +372,29 @@ onMounted(() => load_products())
 }
 
 .warning-text {
-    font-size: 14px;
+    font-size: $text-sm;
     color: var(--color-text-muted);
     font-style: italic;
 }
 
 .modal-footer {
     display: flex;
-    gap: 12px;
+    gap: $space-3;
     justify-content: flex-end;
-    padding: 24px 32px;
+    padding: $space-6 $space-8;
     border-top: 1px solid var(--color-border);
 }
 
 .btn-primary,
 .btn-secondary,
 .btn-danger {
-    padding: 12px 24px;
+    padding: $space-3 $space-6;
     border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 600;
+    border-radius: $radius-sm;
+    font-size: $text-base;
+    font-weight: $fw-semibold;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: $transition;
 
     &:disabled {
         opacity: 0.5;

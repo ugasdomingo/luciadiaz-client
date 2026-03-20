@@ -74,23 +74,23 @@ const { src: cover_src, on_error } = useImageFallback(
     }
 
     &__body {
-        padding: 1.25rem;
+        padding: $space-5;
         display: flex;
         flex-direction: column;
-        gap: 0.5rem;
+        gap: $space-2;
         flex: 1;
     }
 
     &__title {
-        font-size: var(--text-base);
+        font-size: $text-base;
         margin: 0;
         color: var(--color-primary);
         line-height: 1.35;
-        font-family: 'Playfair Display', serif;
+        font-family: $font-title;
     }
 
     &__brief {
-        font-size: var(--text-sm);
+        font-size: $text-sm;
         margin: 0;
         color: var(--color-text-muted);
         line-height: 1.5;
@@ -101,11 +101,11 @@ const { src: cover_src, on_error } = useImageFallback(
     }
 
     &__cta {
-        margin-top: 0.5rem;
-        font-size: var(--text-sm);
-        font-weight: 500;
+        margin-top: $space-2;
+        font-size: $text-sm;
+        font-weight: $fw-medium;
         color: var(--color-primary);
-        transition: color 0.25s ease;
+        transition: $transition-fast;
     }
 }
 </style>

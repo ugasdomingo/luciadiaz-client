@@ -85,13 +85,13 @@ const handleComplete = async () => {
     display: flex;
     flex-direction: column;
     background: var(--color-white);
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-bottom: 1rem;
+    border-radius: $radius-md;
+    padding: $space-6;
+    margin-bottom: $space-4;
     box-shadow: var(--shadow-sm);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border-left: 4px solid var(--color-primary);
-    gap: 1rem;
+    gap: $space-4;
 
     &:hover {
         transform: translateY(-4px);
@@ -116,18 +116,18 @@ const handleComplete = async () => {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        gap: 1rem;
+        gap: $space-4;
     }
 
     &__status {
         display: inline-block;
-        padding: 0.4rem 0.9rem;
-        border-radius: 20px;
-        font-size: 0.75rem;
-        font-weight: 700;
+        padding: $space-1 $space-3;
+        border-radius: $radius-full;
+        font-size: $text-xs;
+        font-weight: $fw-bold;
         text-transform: uppercase;
         letter-spacing: 0.5px;
-        font-family: 'Text', sans-serif;
+        font-family: $font-body;
 
         &.status-pending {
             background: color-mix(in srgb, var(--color-warning) 15%, transparent);
@@ -146,50 +146,50 @@ const handleComplete = async () => {
     }
 
     &__date {
-        font-size: 0.85rem;
+        font-size: $text-sm;
         color: var(--color-text);
         opacity: 0.7;
-        font-family: 'Text', sans-serif;
+        font-family: $font-body;
     }
 
     &__content {
         display: flex;
         flex-direction: column;
-        gap: 0.75rem;
+        gap: $space-3;
     }
 
     &__title {
         margin: 0;
-        font-size: 1.15rem;
-        font-weight: 600;
+        font-size: $text-lg;
+        font-weight: $fw-semibold;
         color: var(--color-black);
-        font-family: 'Title', serif;
+        font-family: $font-title;
         line-height: 1.4;
     }
 
     &__observations {
         margin: 0;
-        font-size: 0.95rem;
+        font-size: $text-base;
         line-height: 1.6;
         color: var(--color-text);
-        font-family: 'Text', sans-serif;
+        font-family: $font-body;
     }
 
     &__footer {
-        padding-top: 0.5rem;
+        padding-top: $space-2;
         border-top: 1px solid var(--color-disable);
     }
 
     &__button {
         width: fit-content;
-        padding: 0.75rem 1.5rem;
+        padding: $space-3 $space-6;
         border: none;
-        border-radius: 8px;
-        font-size: 0.95rem;
-        font-weight: 600;
-        font-family: 'Text', sans-serif;
+        border-radius: $radius-sm;
+        font-size: $text-base;
+        font-weight: $fw-semibold;
+        font-family: $font-body;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: $transition-slow;
         box-shadow: var(--shadow-md);
 
         &:hover {
@@ -210,21 +210,17 @@ const handleComplete = async () => {
     }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: $bp-md) {
     .task-card {
-        padding: 1.25rem;
+        padding: $space-5;
 
         &__title {
-            font-size: 1.05rem;
-        }
-
-        &__observations {
-            font-size: 0.9rem;
+            font-size: $text-base;
         }
 
         &__button {
-            font-size: 0.9rem;
-            padding: 0.7rem 1.25rem;
+            font-size: $text-sm;
+            padding: $space-3 $space-5;
         }
     }
 }

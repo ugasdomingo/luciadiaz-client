@@ -50,11 +50,11 @@ const handle_submit = async () => {
     max-width: 60%;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: $space-4;
     margin: 0 auto;
     box-shadow: var(--shadow-sm);
-    padding: 1rem;
-    border-radius: 0.5rem;
+    padding: $space-4;
+    border-radius: $space-2;
     box-sizing: border-box;
 
     h2 {
@@ -78,15 +78,15 @@ const handle_submit = async () => {
         width: 100%;
         display: flex;
         flex-direction: column;
-        gap: 2rem;
+        gap: $space-8;
 
         div {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: $space-2;
             box-shadow: var(--shadow-sm);
-            padding: 1rem;
-            border-radius: 0.5rem;
+            padding: $space-4;
+            border-radius: $space-2;
             box-sizing: border-box;
             transition: all 0.25s;
 
@@ -101,7 +101,7 @@ const handle_submit = async () => {
     }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: $bp-md) {
     .anamnesis__form {
         max-width: 100%;
     }

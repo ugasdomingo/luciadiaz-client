@@ -102,53 +102,53 @@ const sorted_orders = computed(() => {
 
 <style scoped lang="scss">
 .user-orders {
-    padding: 1rem;
+    padding: $space-4;
 }
 
 .section-title {
     font-family: 'Title', serif;
     font-size: 2.2rem;
     color: var(--color-primary);
-    margin-bottom: 2rem;
+    margin-bottom: $space-8;
 }
 
 .loading-state {
     text-align: center;
-    padding: 3rem;
+    padding: $space-12;
     color: var(--color-text-muted);
 }
 
 .empty-state {
     background: var(--color-bg-card);
     border-radius: var(--radius-md);
-    padding: 4rem 2rem;
+    padding: $space-16 $space-8;
     text-align: center;
     box-shadow: var(--shadow-sm);
 
     .icon {
-        font-size: 3rem;
+        font-size: $space-12;
         display: block;
-        margin-bottom: 1rem;
+        margin-bottom: $space-4;
     }
 
     h3 {
-        font-size: 1.5rem;
-        margin-bottom: 1rem;
+        font-size: $text-2xl;
+        margin-bottom: $space-4;
     }
 
     p {
         color: var(--color-text-muted);
-        margin-bottom: 2rem;
+        margin-bottom: $space-8;
     }
 
     .btn-primary {
         display: inline-block;
-        padding: 0.8rem 2rem;
+        padding: 0.8rem $space-8;
         background: var(--color-secondary);
         color: var(--color-white);
         text-decoration: none;
         border-radius: var(--radius-full);
-        transition: transform 0.2s;
+        transition: transform $transition;
 
         &:hover {
             transform: translateY(-2px);
@@ -159,13 +159,13 @@ const sorted_orders = computed(() => {
 .orders-list {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: $space-4;
 }
 
 .order-card {
     background: var(--color-bg-card);
     border-radius: var(--radius-md);
-    padding: 24px;
+    padding: $space-6;
     box-shadow: var(--shadow-sm);
     border: 1px solid var(--color-border-light);
 }
@@ -174,34 +174,34 @@ const sorted_orders = computed(() => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 16px;
-    padding-bottom: 12px;
+    margin-bottom: $space-4;
+    padding-bottom: $space-3;
     border-bottom: 1px solid var(--color-border-light);
 }
 
 .order-meta {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: $space-3;
 }
 
 .order-date {
-    font-size: 14px;
+    font-size: $text-sm;
     color: var(--color-text-muted);
 }
 
 .order-method {
-    font-size: 12px;
-    padding: 2px 8px;
+    font-size: $text-xs;
+    padding: 2px $space-2;
     background: var(--color-border-light);
-    border-radius: 4px;
+    border-radius: $radius-xs;
     color: var(--color-text-muted);
 }
 
 .status-badge {
     font-size: 13px;
-    font-weight: 600;
-    padding: 4px 12px;
+    font-weight: $fw-semibold;
+    padding: $space-1 $space-3;
     border-radius: var(--radius-full);
 
     &.pending {
@@ -228,8 +228,8 @@ const sorted_orders = computed(() => {
 .order-product {
     display: flex;
     align-items: center;
-    gap: 16px;
-    padding: 12px 0;
+    gap: $space-4;
+    padding: $space-3 0;
 }
 
 .product-thumb {
@@ -244,7 +244,7 @@ const sorted_orders = computed(() => {
         align-items: center;
         justify-content: center;
         background: var(--color-border-light);
-        font-size: 24px;
+        font-size: $space-6;
     }
 }
 
@@ -256,7 +256,7 @@ const sorted_orders = computed(() => {
 .product-name {
     display: block;
     font-size: 15px;
-    font-weight: 600;
+    font-weight: $fw-semibold;
     color: var(--color-text);
     text-decoration: none;
     white-space: nowrap;
@@ -275,8 +275,8 @@ const sorted_orders = computed(() => {
 }
 
 .product-price {
-    font-size: 16px;
-    font-weight: 700;
+    font-size: $text-base;
+    font-weight: $fw-bold;
     color: var(--color-text-heading);
     flex-shrink: 0;
 }
@@ -285,8 +285,8 @@ const sorted_orders = computed(() => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 12px;
-    padding-top: 12px;
+    margin-top: $space-3;
+    padding-top: $space-3;
     border-top: 1px solid var(--color-border-light);
 }
 
@@ -302,12 +302,12 @@ const sorted_orders = computed(() => {
 
 .btn-access,
 .btn-pending {
-    font-size: 14px;
-    font-weight: 600;
-    padding: 8px 16px;
+    font-size: $text-sm;
+    font-weight: $fw-semibold;
+    padding: $space-2 $space-4;
     border-radius: var(--radius-sm);
     text-decoration: none;
-    transition: all 0.2s ease;
+    transition: $transition;
 }
 
 .btn-access {

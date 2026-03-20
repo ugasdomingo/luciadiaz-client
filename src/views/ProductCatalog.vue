@@ -88,12 +88,12 @@ onMounted(async () => {
 <style scoped lang="scss">
 .product-catalog {
     min-height: 80vh;
-    padding-top: 6rem;
+    padding-top: $space-24;
 }
 
 .catalog-header {
     text-align: center;
-    margin-bottom: 2.5rem;
+    margin-bottom: $space-10;
 
     h1 {
         margin: 0;
@@ -101,7 +101,7 @@ onMounted(async () => {
     }
 
     p {
-        font-size: 1.05rem;
+        font-size: $text-lg;
         color: var(--color-text-muted);
         max-width: 500px;
         margin: 0 auto;
@@ -109,21 +109,21 @@ onMounted(async () => {
 }
 
 .catalog-layout {
-    max-width: 1200px;
+    max-width: $max-width;
     width: 100%;
     display: grid;
-    grid-template-columns: 260px 1fr;
-    gap: 2rem;
+    grid-template-columns: $sidebar-width 1fr;
+    gap: $space-8;
     margin: 0 auto;
     align-items: start;
 
-    @media (max-width: 1024px) {
+    @media (max-width: $bp-lg) {
         grid-template-columns: 1fr;
     }
 }
 
 .catalog-sidebar {
-    @media (max-width: 1024px) {
+    @media (max-width: $bp-lg) {
         display: none;
     }
 }
@@ -135,24 +135,24 @@ onMounted(async () => {
 .filters-toggle {
     display: none;
     width: 100%;
-    padding: 0.75rem;
-    margin-bottom: 1.5rem;
+    padding: $space-3;
+    margin-bottom: $space-6;
     border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
+    border-radius: $radius-sm;
     background: var(--color-white);
-    font-size: 0.95rem;
-    font-weight: 500;
-    font-family: 'Montserrat', sans-serif;
+    font-size: $text-base;
+    font-weight: $fw-medium;
+    font-family: $font-body;
     color: var(--color-text);
     cursor: pointer;
-    transition: all 0.25s ease;
+    transition: $transition;
 
     &:hover {
         border-color: var(--color-primary);
         color: var(--color-primary);
     }
 
-    @media (max-width: 1024px) {
+    @media (max-width: $bp-lg) {
         display: block;
     }
 }
@@ -166,31 +166,31 @@ onMounted(async () => {
 
 .catalog-empty {
     text-align: center;
-    padding: 4rem 1rem;
+    padding: $space-16 $space-4;
 
     h3 {
-        font-size: 1.25rem;
-        margin: 0 0 0.75rem;
+        font-size: $text-xl;
+        margin: 0 0 $space-3;
         color: var(--color-text);
     }
 
     p {
-        font-size: 0.95rem;
+        font-size: $text-base;
         color: var(--color-text-muted);
-        margin: 0 0 2rem;
+        margin: 0 0 $space-8;
     }
 
     .btn-clear {
-        padding: 0.75rem 2rem;
+        padding: $space-3 $space-8;
         border: 1px solid var(--color-primary);
-        border-radius: var(--radius-sm);
+        border-radius: $radius-sm;
         background: transparent;
         color: var(--color-primary);
-        font-size: 0.95rem;
-        font-weight: 500;
-        font-family: 'Montserrat', sans-serif;
+        font-size: $text-base;
+        font-weight: $fw-medium;
+        font-family: $font-body;
         cursor: pointer;
-        transition: all 0.25s ease;
+        transition: $transition;
 
         &:hover {
             background: var(--color-primary);
@@ -202,23 +202,22 @@ onMounted(async () => {
 .catalog-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
+    gap: $space-6;
+    margin-bottom: $space-8;
 
-    @media (max-width: 768px) {
+    @media (max-width: $bp-md) {
         grid-template-columns: 1fr;
-        gap: 1rem;
+        gap: $space-4;
     }
 }
 
 .catalog-count {
     text-align: center;
-    font-size: 0.85rem;
+    font-size: $text-sm;
     color: var(--color-text-muted);
-    padding: 1.5rem;
+    padding: $space-6;
 }
 
-// Modal de filtros móvil
 .filters-modal {
     position: fixed;
     inset: 0;
@@ -238,8 +237,8 @@ onMounted(async () => {
         right: 0;
         max-height: 85vh;
         background: var(--color-white);
-        border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-        padding: 1.5rem;
+        border-radius: $radius-lg $radius-lg 0 0;
+        padding: $space-6;
         overflow-y: auto;
         animation: slideUp 0.3s ease;
     }
@@ -248,23 +247,23 @@ onMounted(async () => {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 1.5rem;
+        margin-bottom: $space-6;
 
         h2 {
-            font-size: 1.25rem;
+            font-size: $text-xl;
             margin: 0;
         }
 
         .btn-close {
-            width: 2rem;
-            height: 2rem;
+            width: $space-8;
+            height: $space-8;
             display: flex;
             align-items: center;
             justify-content: center;
             border: none;
             background: var(--color-bg);
-            border-radius: 50%;
-            font-size: 1.1rem;
+            border-radius: $radius-full;
+            font-size: $text-lg;
             cursor: pointer;
             color: var(--color-text-muted);
 
@@ -276,17 +275,17 @@ onMounted(async () => {
 
     &__apply {
         width: 100%;
-        padding: 0.875rem;
-        margin-top: 1.5rem;
+        padding: $space-3;
+        margin-top: $space-6;
         border: none;
-        border-radius: var(--radius-sm);
+        border-radius: $radius-sm;
         background: var(--color-primary);
         color: var(--color-white);
-        font-size: 0.95rem;
-        font-weight: 600;
-        font-family: 'Montserrat', sans-serif;
+        font-size: $text-base;
+        font-weight: $fw-semibold;
+        font-family: $font-body;
         cursor: pointer;
-        transition: background 0.25s ease;
+        transition: $transition-fast;
 
         &:hover {
             background: var(--color-primary-dark);
@@ -295,12 +294,7 @@ onMounted(async () => {
 }
 
 @keyframes slideUp {
-    from {
-        transform: translateY(100%);
-    }
-
-    to {
-        transform: translateY(0);
-    }
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
 }
 </style>

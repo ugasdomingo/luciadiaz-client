@@ -91,49 +91,49 @@ const user_name = computed(() => auth_store.user_data?.user?.name?.split(' ')[0]
 
 <style scoped lang="scss">
 .user-courses {
-    padding: 1rem;
+    padding: $space-4;
 }
 
 .section-title {
     font-family: 'Title', serif;
     font-size: 2.2rem;
     color: var(--color-primary);
-    margin-bottom: 2rem;
+    margin-bottom: $space-8;
 }
 
 .subsection-title {
     font-size: 1.2rem;
     color: var(--color-text-muted);
-    margin-bottom: 1rem;
-    margin-top: 2rem;
+    margin-bottom: $space-4;
+    margin-top: $space-8;
     text-transform: uppercase;
     letter-spacing: 1px;
     font-size: 0.9rem;
     border-bottom: 1px solid var(--color-border-light);
-    padding-bottom: 0.5rem;
+    padding-bottom: $space-2;
 }
 
 .empty-state {
     background: var(--color-bg-card);
     border-radius: var(--radius-md);
-    padding: 4rem 2rem;
+    padding: $space-16 $space-8;
     text-align: center;
     box-shadow: var(--shadow-sm);
 
     .icon {
-        font-size: 3rem;
+        font-size: $space-12;
         display: block;
-        margin-bottom: 1rem;
+        margin-bottom: $space-4;
     }
 
     h3 {
-        font-size: 1.5rem;
-        margin-bottom: 1rem;
+        font-size: $text-2xl;
+        margin-bottom: $space-4;
     }
 
     p {
         color: var(--color-text-muted);
-        margin-bottom: 2rem;
+        margin-bottom: $space-8;
         max-width: 500px;
         margin-left: auto;
         margin-right: auto;
@@ -141,12 +141,12 @@ const user_name = computed(() => auth_store.user_data?.user?.name?.split(' ')[0]
 
     .btn-primary {
         display: inline-block;
-        padding: 0.8rem 2rem;
+        padding: 0.8rem $space-8;
         background: var(--color-secondary);
         color: var(--color-white);
         text-decoration: none;
         border-radius: var(--radius-full);
-        transition: transform 0.2s;
+        transition: transform $transition;
 
         &:hover {
             transform: translateY(-2px);
@@ -157,7 +157,7 @@ const user_name = computed(() => auth_store.user_data?.user?.name?.split(' ')[0]
 .courses-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 2rem;
+    gap: $space-8;
 }
 
 .completed-section {

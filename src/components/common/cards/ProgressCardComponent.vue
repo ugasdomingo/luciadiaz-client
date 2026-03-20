@@ -97,7 +97,7 @@ const go_to_course = () => {
     display: grid;
     grid-template-columns: 1fr;
     background: var(--color-white);
-    border-radius: 1rem;
+    border-radius: $radius-lg;
     box-shadow: var(--shadow-sm);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
@@ -133,13 +133,13 @@ const go_to_course = () => {
 
     &__type {
         position: absolute;
-        top: 1rem;
-        right: 1rem;
-        padding: 0.4rem 0.9rem;
-        border-radius: 2rem;
-        font-family: 'Text';
-        font-size: 0.75rem;
-        font-weight: 600;
+        top: $space-4;
+        right: $space-4;
+        padding: $space-1 $space-3;
+        border-radius: $radius-full;
+        font-family: $font-body;
+        font-size: $text-xs;
+        font-weight: $fw-semibold;
         text-transform: uppercase;
         letter-spacing: 0.5px;
         color: var(--color-white);
@@ -148,55 +148,55 @@ const go_to_course = () => {
 
     &__completed {
         position: absolute;
-        top: 1rem;
-        left: 1rem;
-        padding: 0.5rem 1rem;
+        top: $space-4;
+        left: $space-4;
+        padding: $space-2 $space-4;
         background: rgba(90, 158, 125, 0.95);
         color: var(--color-white);
-        border-radius: 2rem;
-        font-family: 'Text';
-        font-size: 0.85rem;
-        font-weight: 600;
+        border-radius: $radius-full;
+        font-family: $font-body;
+        font-size: $text-sm;
+        font-weight: $fw-semibold;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         display: flex;
         align-items: center;
-        gap: 0.3rem;
+        gap: $space-1;
     }
 
     &__content {
-        padding: 1.5rem;
+        padding: $space-6;
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        gap: $space-4;
     }
 
     &__title {
         margin: 0;
-        font-size: 1.3rem;
+        font-size: $text-2xl;
         line-height: 1.3;
         color: var(--color-black);
-        font-family: 'Title';
-        font-weight: 600;
+        font-family: $font-title;
+        font-weight: $fw-semibold;
     }
 
     &__progress {
         display: flex;
         flex-direction: column;
-        gap: 0.5rem;
+        gap: $space-2;
 
         .progress-info {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-family: 'Text';
-            font-size: 0.9rem;
+            font-family: $font-body;
+            font-size: $text-sm;
 
             .progress-label {
                 color: var(--color-text-dark);
             }
 
             .progress-percentage {
-                font-weight: 600;
+                font-weight: $fw-semibold;
                 color: var(--color-primary);
             }
         }
@@ -205,12 +205,12 @@ const go_to_course = () => {
             width: 100%;
             height: 8px;
             background: var(--color-disable);
-            border-radius: 10px;
+            border-radius: $radius-full;
             overflow: hidden;
 
             &__fill {
                 height: 100%;
-                border-radius: 10px;
+                border-radius: $radius-full;
                 transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
             }
         }
@@ -219,30 +219,30 @@ const go_to_course = () => {
     &__meta {
         display: flex;
         flex-direction: column;
-        gap: 0.3rem;
-        font-family: 'Text';
-        font-size: 0.85rem;
+        gap: $space-1;
+        font-family: $font-body;
+        font-size: $text-sm;
         color: var(--color-text-dark);
 
         .meta-item {
             display: flex;
             align-items: center;
-            gap: 0.3rem;
+            gap: $space-1;
         }
     }
 
     &__cta {
         width: 100%;
-        padding: 0.75rem 1.5rem;
+        padding: $space-3 $space-6;
         border: 2px solid var(--color-primary);
         background: transparent;
         color: var(--color-primary);
-        border-radius: 0.5rem;
-        font-family: 'Text';
-        font-size: 0.95rem;
-        font-weight: 600;
+        border-radius: $radius-sm;
+        font-family: $font-body;
+        font-size: $text-base;
+        font-weight: $fw-semibold;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: $transition-slow;
         margin-top: auto;
 
         &:hover {
@@ -251,8 +251,7 @@ const go_to_course = () => {
     }
 }
 
-// Responsive: Desktop horizontal
-@media screen and (min-width: 769px) {
+@media screen and (min-width: $bp-md) {
     .course-card {
         grid-template-columns: 280px 1fr;
 
@@ -262,20 +261,20 @@ const go_to_course = () => {
         }
 
         &__content {
-            padding: 2rem;
+            padding: $space-8;
         }
     }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: $bp-md) {
     .course-card {
         &__title {
-            font-size: 1.2rem;
+            font-size: $text-xl;
         }
 
         &__cta {
-            font-size: 0.9rem;
-            padding: 0.7rem 1.2rem;
+            font-size: $text-sm;
+            padding: $space-3 $space-5;
         }
     }
 }

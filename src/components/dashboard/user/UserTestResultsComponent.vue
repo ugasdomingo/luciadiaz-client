@@ -85,7 +85,7 @@ onMounted(async () => {
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: $space-4;
     padding: 0;
     margin: 0;
     box-sizing: border-box;
@@ -94,7 +94,7 @@ onMounted(async () => {
         width: 100%;
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        gap: $space-4;
         padding: 0;
         margin: 0;
         box-sizing: border-box;
@@ -102,16 +102,16 @@ onMounted(async () => {
         &__title {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: $space-4;
             cursor: pointer;
 
             .arrow {
                 transition: transform 0.25s;
-                font-size: 1.5rem;
+                font-size: $text-2xl;
 
                 img {
-                    width: 1rem;
-                    height: 1rem;
+                    width: $text-base;
+                    height: $text-base;
                 }
 
                 &.rotated {

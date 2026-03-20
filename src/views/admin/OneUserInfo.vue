@@ -85,10 +85,10 @@ onMounted(async () => {
         width: 35%;
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        gap: $space-4;
         position: absolute;
-        top: 4rem;
-        left: 4rem;
+        top: $space-16;
+        left: $space-16;
 
         h2 {
             margin-bottom: 0;
@@ -102,11 +102,11 @@ onMounted(async () => {
             li {
                 display: flex;
                 align-items: center;
-                gap: 1rem;
+                gap: $space-4;
                 margin: 0;
 
                 img {
-                    width: 2rem;
+                    width: $space-8;
                 }
             }
         }
@@ -116,19 +116,19 @@ onMounted(async () => {
         width: 65%;
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        gap: $space-4;
         margin: 0 0 0 auto;
 
         .content__navegation {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.5rem;
+            gap: $space-2;
             justify-content: center;
         }
     }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: $bp-md) {
     .pages {
         .basic__info {
             width: 100%;
@@ -137,7 +137,7 @@ onMounted(async () => {
 
         .content {
             width: 100%;
-            padding-top: 2rem;
+            padding-top: $space-8;
 
             .content__navegation {
                 justify-content: center;

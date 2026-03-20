@@ -305,7 +305,7 @@ onMounted(() => {
 .manage-orders {
     background: var(--color-bg);
     min-height: 100vh;
-    padding: 40px 20px;
+    padding: $space-10 $space-5;
 }
 
 // HEADER
@@ -313,36 +313,36 @@ onMounted(() => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 32px;
+    margin-bottom: $space-8;
 
-    @media (max-width: 768px) {
+    @media (max-width: $bp-md) {
         flex-direction: column;
-        gap: 16px;
+        gap: $space-4;
         align-items: stretch;
     }
 }
 
 .manage-title {
-    font-size: 32px;
-    font-weight: 800;
+    font-size: $text-4xl;
+    font-weight: $fw-extrabold;
     margin: 0;
     color: var(--color-text);
 
-    @media (max-width: 768px) {
-        font-size: 24px;
+    @media (max-width: $bp-md) {
+        font-size: $text-2xl;
     }
 }
 
 .btn-refresh {
-    padding: 12px 24px;
+    padding: $space-3 $space-6;
     border: 2px solid var(--color-border);
-    border-radius: 8px;
+    border-radius: $radius-sm;
     background: var(--color-white);
-    font-size: 16px;
-    font-weight: 600;
+    font-size: $text-base;
+    font-weight: $fw-semibold;
     color: var(--color-text);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: $transition;
 
     &:hover {
         border-color: var(--color-primary);
@@ -353,25 +353,25 @@ onMounted(() => {
 // ESTADO VACÍO
 .empty-state {
     background: var(--color-white);
-    border-radius: 16px;
-    padding: 80px 40px;
+    border-radius: $radius-lg;
+    padding: $space-20 $space-10;
     text-align: center;
     box-shadow: var(--shadow-sm);
 
     .empty-icon {
-        font-size: 64px;
-        margin-bottom: 16px;
+        font-size: $text-4xl;
+        margin-bottom: $space-4;
     }
 
     h3 {
-        font-size: 24px;
-        font-weight: 700;
-        margin: 0 0 8px;
+        font-size: $text-2xl;
+        font-weight: $fw-bold;
+        margin: 0 0 $space-2;
         color: var(--color-text);
     }
 
     p {
-        font-size: 16px;
+        font-size: $text-base;
         margin: 0;
         color: var(--color-text-light);
     }
@@ -381,17 +381,17 @@ onMounted(() => {
 .orders-list {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: $space-6;
 }
 
 .order-card {
     background: var(--color-white);
-    border-radius: 16px;
-    padding: 32px;
+    border-radius: $radius-lg;
+    padding: $space-8;
     box-shadow: var(--shadow-sm);
 
-    @media (max-width: 768px) {
-        padding: 20px;
+    @media (max-width: $bp-md) {
+        padding: $space-5;
     }
 }
 
@@ -400,13 +400,13 @@ onMounted(() => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-bottom: 24px;
+    padding-bottom: $space-6;
     border-bottom: 2px solid var(--color-border);
-    margin-bottom: 24px;
+    margin-bottom: $space-6;
 
-    @media (max-width: 768px) {
+    @media (max-width: $bp-md) {
         flex-direction: column;
-        gap: 12px;
+        gap: $space-3;
         align-items: flex-start;
     }
 }
@@ -414,24 +414,24 @@ onMounted(() => {
 .order-id {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: $space-1;
 
     strong {
-        font-size: 18px;
+        font-size: $text-lg;
         color: var(--color-text);
     }
 }
 
 .order-date {
-    font-size: 14px;
+    font-size: $text-sm;
     color: var(--color-text-light);
 }
 
 .order-badge {
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-size: 14px;
-    font-weight: 600;
+    padding: $space-2 $space-4;
+    border-radius: $radius-full;
+    font-size: $text-sm;
+    font-weight: $fw-semibold;
 
     &--pending {
         background: rgba(245, 158, 11, 0.12);
@@ -443,70 +443,70 @@ onMounted(() => {
 .order-content {
     display: flex;
     flex-direction: column;
-    gap: 24px;
-    margin-bottom: 24px;
+    gap: $space-6;
+    margin-bottom: $space-6;
 }
 
 .order-section {
     background: var(--color-bg);
-    border-radius: 12px;
-    padding: 20px;
+    border-radius: $radius-md;
+    padding: $space-5;
 }
 
 .section-title {
-    font-size: 16px;
-    font-weight: 700;
-    margin: 0 0 16px;
+    font-size: $text-base;
+    font-weight: $fw-bold;
+    margin: 0 0 $space-4;
     color: var(--color-text);
 }
 
 .info-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px;
+    gap: $space-4;
 }
 
 .info-item {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: $space-1;
 }
 
 .info-label {
-    font-size: 12px;
-    font-weight: 600;
+    font-size: $text-xs;
+    font-weight: $fw-semibold;
     color: var(--color-text-light);
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
 .info-value {
-    font-size: 14px;
+    font-size: $text-sm;
     color: var(--color-text);
-    font-weight: 500;
+    font-weight: $fw-medium;
 }
 
 // PRODUCTOS
 .products-list {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    margin-bottom: 16px;
+    gap: $space-3;
+    margin-bottom: $space-4;
 }
 
 .product-item {
     display: flex;
-    gap: 12px;
+    gap: $space-3;
     align-items: center;
-    padding: 12px;
+    padding: $space-3;
     background: var(--color-white);
-    border-radius: 8px;
+    border-radius: $radius-sm;
 }
 
 .product-image {
     width: 60px;
     height: 60px;
-    border-radius: 8px;
+    border-radius: $radius-sm;
     overflow: hidden;
     flex-shrink: 0;
 
@@ -523,9 +523,9 @@ onMounted(() => {
 }
 
 .product-name {
-    font-size: 14px;
-    font-weight: 600;
-    margin: 0 0 4px;
+    font-size: $text-sm;
+    font-weight: $fw-semibold;
+    margin: 0 0 $space-1;
     color: var(--color-text);
     white-space: nowrap;
     overflow: hidden;
@@ -533,8 +533,8 @@ onMounted(() => {
 }
 
 .product-price {
-    font-size: 14px;
-    font-weight: 600;
+    font-size: $text-sm;
+    font-weight: $fw-semibold;
     color: var(--color-primary);
 }
 
@@ -542,19 +542,19 @@ onMounted(() => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-top: 16px;
+    padding-top: $space-4;
     border-top: 2px solid var(--color-border);
 }
 
 .total-label {
-    font-size: 16px;
-    font-weight: 700;
+    font-size: $text-base;
+    font-weight: $fw-bold;
     color: var(--color-text);
 }
 
 .total-amount {
-    font-size: 20px;
-    font-weight: 800;
+    font-size: $text-xl;
+    font-weight: $fw-extrabold;
     color: var(--color-primary);
 }
 
@@ -562,16 +562,16 @@ onMounted(() => {
 .payment-proof {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: $space-3;
 }
 
 .proof-image {
     width: 100%;
     max-width: 400px;
     height: auto;
-    border-radius: 8px;
+    border-radius: $radius-sm;
     cursor: pointer;
-    transition: transform 0.2s ease;
+    transition: transform $transition;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 
     &:hover {
@@ -580,22 +580,22 @@ onMounted(() => {
 }
 
 .proof-date {
-    font-size: 12px;
+    font-size: $text-xs;
     color: var(--color-text-light);
     margin: 0;
 }
 
 .btn-view-full {
     width: fit-content;
-    padding: 8px 16px;
+    padding: $space-2 $space-4;
     border: 2px solid var(--color-border);
-    border-radius: 6px;
+    border-radius: $radius-xs;
     background: var(--color-white);
-    font-size: 14px;
-    font-weight: 600;
+    font-size: $text-sm;
+    font-weight: $fw-semibold;
     color: var(--color-text);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: $transition;
 
     &:hover {
         border-color: var(--color-primary);
@@ -604,27 +604,27 @@ onMounted(() => {
 }
 
 .no-proof {
-    padding: 20px;
+    padding: $space-5;
     background: rgba(239, 68, 68, 0.08);
-    border-radius: 8px;
+    border-radius: $radius-sm;
     text-align: center;
 
     p {
         margin: 0;
-        font-size: 14px;
+        font-size: $text-sm;
         color: var(--color-error);
-        font-weight: 600;
+        font-weight: $fw-semibold;
     }
 }
 
 // ACCIONES
 .order-actions {
     display: flex;
-    gap: 12px;
-    padding-top: 24px;
+    gap: $space-3;
+    padding-top: $space-6;
     border-top: 2px solid var(--color-border);
 
-    @media (max-width: 768px) {
+    @media (max-width: $bp-md) {
         flex-direction: column;
     }
 }
@@ -632,13 +632,13 @@ onMounted(() => {
 .btn-approve,
 .btn-reject {
     flex: 1;
-    padding: 14px 24px;
+    padding: 14px $space-6;
     border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 600;
+    border-radius: $radius-sm;
+    font-size: $text-base;
+    font-weight: $fw-semibold;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: $transition;
 
     &:disabled {
         opacity: 0.5;
@@ -676,12 +676,12 @@ onMounted(() => {
     align-items: center;
     justify-content: center;
     z-index: 1000;
-    padding: 20px;
+    padding: $space-5;
 }
 
 .modal-content {
     background: var(--color-white);
-    border-radius: 16px;
+    border-radius: $radius-lg;
     width: 100%;
     max-width: 600px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
@@ -695,17 +695,17 @@ onMounted(() => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 24px 32px;
+    padding: $space-6 $space-8;
     border-bottom: 1px solid var(--color-border);
 
-    @media (max-width: 768px) {
-        padding: 20px;
+    @media (max-width: $bp-md) {
+        padding: $space-5;
     }
 }
 
 .modal-title {
-    font-size: 20px;
-    font-weight: 700;
+    font-size: $text-xl;
+    font-weight: $fw-bold;
     margin: 0;
     color: var(--color-text);
 }
@@ -716,9 +716,9 @@ onMounted(() => {
     border: none;
     background: var(--color-bg);
     border-radius: 50%;
-    font-size: 20px;
+    font-size: $text-xl;
     cursor: pointer;
-    transition: background 0.2s ease;
+    transition: background $transition;
 
     &:hover {
         background: var(--color-border);
@@ -726,15 +726,15 @@ onMounted(() => {
 }
 
 .modal-body {
-    padding: 32px;
+    padding: $space-8;
 
-    @media (max-width: 768px) {
-        padding: 20px;
+    @media (max-width: $bp-md) {
+        padding: $space-5;
     }
 
     p {
-        margin: 0 0 12px;
-        font-size: 14px;
+        margin: 0 0 $space-3;
+        font-size: $text-sm;
         color: var(--color-text);
 
         &:last-child {
@@ -742,36 +742,36 @@ onMounted(() => {
         }
 
         strong {
-            font-weight: 600;
+            font-weight: $fw-semibold;
             color: var(--color-text-dark);
         }
     }
 }
 
 .info-text {
-    padding: 12px;
+    padding: $space-3;
     background: rgba(30, 86, 160, 0.08);
-    border-radius: 8px;
-    margin-top: 16px;
+    border-radius: $radius-sm;
+    margin-top: $space-4;
 }
 
 .warning-text {
-    padding: 12px;
+    padding: $space-3;
     background: rgba(239, 68, 68, 0.08);
-    border-radius: 8px;
+    border-radius: $radius-sm;
     color: var(--color-error);
-    margin-top: 16px;
+    margin-top: $space-4;
 }
 
 .modal-footer {
     display: flex;
-    gap: 12px;
+    gap: $space-3;
     justify-content: flex-end;
-    padding: 24px 32px;
+    padding: $space-6 $space-8;
     border-top: 1px solid var(--color-border);
 
-    @media (max-width: 768px) {
-        padding: 20px;
+    @media (max-width: $bp-md) {
+        padding: $space-5;
         flex-direction: column;
     }
 }
@@ -785,7 +785,7 @@ onMounted(() => {
     img {
         width: 100%;
         height: auto;
-        border-radius: 12px;
+        border-radius: $radius-md;
         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
     }
 
@@ -800,15 +800,15 @@ onMounted(() => {
 
 // BOTONES
 .btn-secondary {
-    padding: 12px 24px;
+    padding: $space-3 $space-6;
     border: 2px solid var(--color-border);
-    border-radius: 8px;
+    border-radius: $radius-sm;
     background: var(--color-white);
-    font-size: 16px;
-    font-weight: 600;
+    font-size: $text-base;
+    font-weight: $fw-semibold;
     color: var(--color-text);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: $transition;
 
     &:hover {
         border-color: var(--color-primary);

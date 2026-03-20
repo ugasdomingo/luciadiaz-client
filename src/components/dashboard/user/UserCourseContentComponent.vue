@@ -141,11 +141,11 @@ const get_status_color = (status) => {
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: $space-8;
 
     h2 {
         margin: 0;
-        font-size: 2rem;
+        font-size: $space-8;
         color: var(--color-primary);
     }
 }
@@ -153,15 +153,15 @@ const get_status_color = (status) => {
 .modules-list {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: $space-4;
 }
 
 .module {
     background: var(--color-white);
     border: 2px solid var(--color-disable);
-    border-radius: 1rem;
+    border-radius: $space-4;
     overflow: hidden;
-    transition: all 0.3s ease;
+    transition: $transition-slow;
 
     &:hover {
         box-shadow: var(--shadow-md);
@@ -169,14 +169,14 @@ const get_status_color = (status) => {
 
     &__header {
         width: 100%;
-        padding: 1.5rem;
+        padding: $space-6;
         background: var(--color-bg);
         border: none;
         display: flex;
         align-items: center;
         justify-content: space-between;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: $transition-slow;
 
         &:hover {
             background: var(--color-border-light);
@@ -186,14 +186,14 @@ const get_status_color = (status) => {
     &__info {
         display: flex;
         flex-direction: column;
-        gap: 0.5rem;
+        gap: $space-2;
         text-align: left;
     }
 
     &__number {
         font-family: 'Text';
         font-size: 0.85rem;
-        font-weight: 600;
+        font-weight: $fw-semibold;
         color: var(--color-primary);
         text-transform: uppercase;
         letter-spacing: 0.5px;
@@ -207,9 +207,9 @@ const get_status_color = (status) => {
     }
 
     &__icon {
-        font-size: 1.2rem;
+        font-size: $text-xl;
         color: var(--color-primary);
-        transition: transform 0.3s ease;
+        transition: transform $transition-slow;
 
         &--open {
             transform: rotate(180deg);
@@ -226,11 +226,11 @@ const get_status_color = (status) => {
 .lesson {
     display: grid;
     grid-template-columns: 40px 1fr auto;
-    gap: 1rem;
-    padding: 1.25rem 1.5rem;
+    gap: $space-4;
+    padding: $space-5 $space-6;
     border-bottom: 1px solid var(--color-disable);
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: $transition-slow;
     position: relative;
 
     &:last-child {
@@ -257,22 +257,22 @@ const get_status_color = (status) => {
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.5rem;
+        font-size: $text-2xl;
         font-weight: bold;
     }
 
     &__info {
         display: flex;
         flex-direction: column;
-        gap: 0.25rem;
+        gap: $space-1;
     }
 
     &__title {
         margin: 0;
-        font-size: 1.1rem;
+        font-size: $text-lg;
         color: var(--color-black);
         font-family: 'Text';
-        font-weight: 600;
+        font-weight: $fw-semibold;
         line-height: 1.3;
     }
 
@@ -286,27 +286,27 @@ const get_status_color = (status) => {
     &__lock {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: $space-2;
         position: relative;
 
         .lock-icon {
-            font-size: 1.2rem;
+            font-size: $text-xl;
         }
 
         .lock-tooltip {
             position: absolute;
             right: 100%;
-            margin-right: 1rem;
-            padding: 0.5rem 1rem;
+            margin-right: $space-4;
+            padding: $space-2 $space-4;
             background: var(--color-black);
             color: var(--color-white);
-            border-radius: 0.5rem;
+            border-radius: $space-2;
             font-family: 'Text';
             font-size: 0.85rem;
             white-space: nowrap;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.3s ease;
+            transition: opacity $transition-slow;
         }
 
         &:hover .lock-tooltip {
@@ -318,7 +318,7 @@ const get_status_color = (status) => {
 // Transición slide
 .slide-enter-active,
 .slide-leave-active {
-    transition: all 0.3s ease;
+    transition: $transition-slow;
     max-height: 1000px;
 }
 
@@ -328,7 +328,7 @@ const get_status_color = (status) => {
     opacity: 0;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: $bp-md) {
     .course-content {
         h2 {
             font-size: 1.6rem;
@@ -337,21 +337,21 @@ const get_status_color = (status) => {
 
     .module {
         &__header {
-            padding: 1rem;
+            padding: $space-4;
         }
 
         &__title {
-            font-size: 1.1rem;
+            font-size: $text-lg;
         }
     }
 
     .lesson {
         grid-template-columns: 30px 1fr auto;
-        padding: 1rem;
-        gap: 0.75rem;
+        padding: $space-4;
+        gap: $space-3;
 
         &__title {
-            font-size: 1rem;
+            font-size: $text-base;
         }
 
         &__description {
@@ -363,7 +363,7 @@ const get_status_color = (status) => {
                 position: fixed;
                 right: auto;
                 left: 50%;
-                bottom: 2rem;
+                bottom: $space-8;
                 transform: translateX(-50%);
                 margin: 0;
                 z-index: 1000;

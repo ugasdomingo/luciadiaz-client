@@ -141,7 +141,7 @@ const copy_link = async () => {
 .blog-post {
     width: 100%;
     min-height: 100vh;
-    padding: 6rem 4rem 4rem;
+    padding: $space-24 $space-16 $space-16;
     margin: 0;
     box-sizing: border-box;
     animation: fade-in 0.6s ease-out;
@@ -159,17 +159,17 @@ const copy_link = async () => {
 
     &__breadcrumbs {
         max-width: 900px;
-        margin: 0 auto 2rem;
+        margin: 0 auto $space-8;
         display: flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: $space-2;
         font-size: 0.9rem;
         font-family: 'Text';
         color: var(--color-text-dark);
 
         a {
             color: var(--color-secondary);
-            transition: color 0.3s ease;
+            transition: color $transition-slow;
 
             &:hover {
                 color: var(--color-primary);
@@ -191,30 +191,30 @@ const copy_link = async () => {
 
     &__hero {
         max-width: 900px;
-        margin: 0 auto 4rem;
+        margin: 0 auto $space-16;
     }
 
     &__hero-content {
         text-align: center;
-        margin-bottom: 3rem;
+        margin-bottom: $space-12;
     }
 
     &__category {
         display: inline-block;
-        padding: 0.5rem 1.25rem;
+        padding: $space-2 $space-5;
         background: var(--color-soft-alert);
         color: var(--color-secondary);
-        border-radius: 2rem;
-        font-weight: 500;
+        border-radius: $space-8;
+        font-weight: $fw-medium;
         font-family: 'Text';
         font-size: 0.9rem;
         text-transform: capitalize;
-        margin-bottom: 1.5rem;
+        margin-bottom: $space-6;
     }
 
     &__title {
-        margin: 0 0 1.5rem;
-        font-size: 3rem;
+        margin: 0 0 $space-6;
+        font-size: $space-12;
         line-height: 1.2;
         color: var(--color-primary);
         font-family: 'Title';
@@ -224,7 +224,7 @@ const copy_link = async () => {
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 2rem;
+        gap: $space-8;
         font-size: 0.95rem;
         color: var(--color-text-dark);
         font-family: 'Text';
@@ -232,12 +232,12 @@ const copy_link = async () => {
         span {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: $space-2;
         }
 
         .icon {
-            width: 1rem;
-            height: 1rem;
+            width: $space-4;
+            height: $space-4;
             opacity: 0.7;
         }
     }
@@ -245,7 +245,7 @@ const copy_link = async () => {
     &__hero-image {
         width: 100%;
         height: 500px;
-        border-radius: 1rem;
+        border-radius: $space-4;
         overflow: hidden;
         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
 
@@ -258,61 +258,61 @@ const copy_link = async () => {
 
     &__content {
         max-width: 750px;
-        margin: 0 auto 4rem;
+        margin: 0 auto $space-16;
         font-family: 'Text';
         font-size: 1.1rem;
         line-height: 1.8;
         color: var(--color-text);
 
         :deep(h2) {
-            font-size: 2rem;
-            margin: 3rem 0 1.5rem;
+            font-size: $space-8;
+            margin: $space-12 0 $space-6;
             color: var(--color-primary);
             font-family: 'Title';
         }
 
         :deep(h3) {
-            font-size: 1.5rem;
-            margin: 2.5rem 0 1.25rem;
+            font-size: $space-6;
+            margin: $space-10 0 $space-5;
             color: var(--color-secondary);
             font-family: 'Title';
         }
 
         :deep(p) {
-            margin: 1.5rem 0;
+            margin: $space-6 0;
             line-height: 1.8;
             text-align: justify;
         }
 
         :deep(ul),
         :deep(ol) {
-            margin: 1.5rem 0;
-            padding-left: 2rem;
+            margin: $space-6 0;
+            padding-left: $space-8;
 
             li {
-                margin: 0.75rem 0;
+                margin: $space-3 0;
             }
         }
 
         :deep(blockquote) {
-            margin: 2.5rem 0;
-            padding: 1.5rem 2rem;
+            margin: $space-10 0;
+            padding: $space-6 $space-8;
             border-left: 4px solid var(--color-primary);
             background: var(--color-soft-alert);
-            border-radius: 0 0.5rem 0.5rem 0;
+            border-radius: 0 $space-2 $space-2 0;
             font-style: italic;
             color: var(--color-text-dark);
         }
 
         :deep(strong) {
             color: var(--color-black);
-            font-weight: 600;
+            font-weight: $fw-semibold;
         }
 
         :deep(a) {
             color: var(--color-secondary);
             text-decoration: underline;
-            transition: color 0.3s ease;
+            transition: color $transition-slow;
 
             &:hover {
                 color: var(--color-primary);
@@ -322,37 +322,37 @@ const copy_link = async () => {
         :deep(img) {
             width: 100%;
             height: auto;
-            border-radius: 0.5rem;
-            margin: 2rem 0;
+            border-radius: $space-2;
+            margin: $space-8 0;
         }
     }
 
     &__tags {
         max-width: 750px;
-        margin: 0 auto 3rem;
+        margin: 0 auto $space-12;
         display: flex;
         align-items: center;
         flex-wrap: wrap;
-        gap: 0.75rem;
-        padding-top: 2rem;
+        gap: $space-3;
+        padding-top: $space-8;
         border-top: 1px solid var(--color-disable);
     }
 
     &__tags-label {
-        font-weight: 500;
+        font-weight: $fw-medium;
         color: var(--color-text-dark);
         font-family: 'Text';
     }
 
     &__tag {
-        padding: 0.4rem 1rem;
+        padding: 0.4rem $space-4;
         background: var(--color-white);
         border: 1px solid var(--color-disable);
         color: var(--color-secondary);
-        border-radius: 2rem;
+        border-radius: $space-8;
         font-size: 0.85rem;
         font-family: 'Text';
-        transition: all 0.3s ease;
+        transition: $transition-slow;
 
         &:hover {
             background: var(--color-soft-alert);
@@ -362,16 +362,16 @@ const copy_link = async () => {
 
     &__share {
         max-width: 750px;
-        margin: 0 auto 3rem;
-        padding: 2rem;
+        margin: 0 auto $space-12;
+        padding: $space-8;
         background: var(--color-soft-alert);
-        border-radius: 1rem;
+        border-radius: $space-4;
         text-align: center;
 
         p {
-            margin: 0 0 1.5rem;
+            margin: 0 0 $space-6;
             font-size: 1.1rem;
-            font-weight: 500;
+            font-weight: $fw-medium;
             color: var(--color-secondary);
             font-family: 'Text';
         }
@@ -380,19 +380,19 @@ const copy_link = async () => {
     &__share-buttons {
         display: flex;
         justify-content: center;
-        gap: 1rem;
+        gap: $space-4;
         flex-wrap: wrap;
     }
 
     .share-btn {
-        padding: 0.75rem 1.5rem;
+        padding: $space-3 $space-6;
         border: none;
-        border-radius: 0.5rem;
+        border-radius: $space-2;
         font-family: 'Text';
         font-size: 0.9rem;
-        font-weight: 500;
+        font-weight: $fw-medium;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: $transition-slow;
 
         &.twitter {
             background: #1DA1F2;
@@ -440,19 +440,19 @@ const copy_link = async () => {
         margin: 0 auto;
         display: flex;
         justify-content: center;
-        padding-top: 2rem;
+        padding-top: $space-8;
         border-top: 1px solid var(--color-disable);
     }
 
     &__back {
-        padding: 0.75rem 2rem;
+        padding: $space-3 $space-8;
         background: var(--color-white);
         color: var(--color-secondary);
         border: 2px solid var(--color-secondary);
-        border-radius: 2rem;
+        border-radius: $space-8;
         font-family: 'Text';
-        font-weight: 500;
-        transition: all 0.3s ease;
+        font-weight: $fw-medium;
+        transition: $transition-slow;
 
         &:hover {
             background: var(--color-secondary);
@@ -474,9 +474,9 @@ const copy_link = async () => {
     }
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: $bp-lg) {
     .blog-post {
-        padding: 5rem 2rem 3rem;
+        padding: $space-20 $space-8 $space-12;
 
         &__title {
             font-size: 2.5rem;
@@ -488,9 +488,9 @@ const copy_link = async () => {
     }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: $bp-md) {
     .blog-post {
-        padding: 5rem 1rem 2rem;
+        padding: $space-20 $space-4 $space-8;
 
         &__breadcrumbs {
             font-size: 0.8rem;
@@ -501,12 +501,12 @@ const copy_link = async () => {
         }
 
         &__title {
-            font-size: 2rem;
+            font-size: $space-8;
         }
 
         &__meta {
             flex-direction: column;
-            gap: 0.75rem;
+            gap: $space-3;
         }
 
         &__hero-image {
@@ -514,7 +514,7 @@ const copy_link = async () => {
         }
 
         &__content {
-            font-size: 1rem;
+            font-size: $space-4;
 
             :deep(h2) {
                 font-size: 1.6rem;
@@ -526,10 +526,10 @@ const copy_link = async () => {
         }
 
         &__share {
-            padding: 1.5rem;
+            padding: $space-6;
 
             p {
-                font-size: 1rem;
+                font-size: $space-4;
             }
         }
 

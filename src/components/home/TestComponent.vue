@@ -26,21 +26,21 @@ use_scroll_reveal()
         width: 100%;
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 2rem;
+        gap: $space-8;
         justify-items: center;
     }
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: $bp-lg) {
     .test__grid {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
-@media screen and (max-width: 720px) {
+@media screen and (max-width: $bp-md) {
     .test__grid {
         grid-template-columns: 1fr;
-        gap: 1.5rem;
+        gap: $space-6;
     }
 }
 </style>

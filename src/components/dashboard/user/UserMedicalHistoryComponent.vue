@@ -101,7 +101,7 @@ onMounted(() => {
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: $space-4;
     padding: 0;
     margin-right: 0;
     box-sizing: border-box;
@@ -117,7 +117,7 @@ onMounted(() => {
             margin: 0;
 
             span {
-                font-weight: 500;
+                font-weight: $fw-medium;
             }
         }
     }
@@ -126,7 +126,7 @@ onMounted(() => {
         width: 100%;
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        gap: $space-4;
         padding: 0;
         margin: 0;
         box-sizing: border-box;
@@ -135,7 +135,7 @@ onMounted(() => {
             width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: $space-4;
             padding: 0;
             margin: 0;
             box-sizing: border-box;
@@ -143,7 +143,7 @@ onMounted(() => {
             .history-title {
                 display: flex;
                 align-items: center;
-                gap: 1rem;
+                gap: $space-4;
                 padding: 0;
                 margin: 0;
                 box-sizing: border-box;
@@ -160,11 +160,11 @@ onMounted(() => {
 
                 .arrow {
                     transition: transform 0.25s;
-                    font-size: 1.5rem;
+                    font-size: $text-2xl;
 
                     img {
-                        width: 1rem;
-                        height: 1rem;
+                        width: $text-base;
+                        height: $text-base;
                     }
 
                     &.rotated {
@@ -185,7 +185,7 @@ onMounted(() => {
         width: 100%;
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        gap: $space-4;
         padding: 0;
         margin: 0;
         box-sizing: border-box;
@@ -195,9 +195,9 @@ onMounted(() => {
             display: flex;
             flex-direction: column;
             gap: 0.1rem;
-            padding: 0.5rem 1rem;
-            margin: 0 0 0 1rem;
-            border-radius: 1rem;
+            padding: $space-2 $space-4;
+            margin: 0 0 0 $space-4;
+            border-radius: $space-4;
             box-shadow: var(--shadow-sm);
             box-sizing: border-box;
         }

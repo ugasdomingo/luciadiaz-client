@@ -33,8 +33,8 @@ onMounted(() => {
 <style scoped lang="scss">
 footer {
     width: 100%;
-    height: 2rem;
-    padding: 0 1rem;
+    height: $space-8;
+    padding: 0 $space-4;
     text-align: center;
     display: flex;
     justify-content: center;
@@ -42,10 +42,10 @@ footer {
 
     .whatsapp-link {
         position: fixed;
-        bottom: 3rem;
-        right: 2rem;
-        width: 3rem;
-        height: 3rem;
+        bottom: $space-12;
+        right: $space-8;
+        width: $space-12;
+        height: $space-12;
         display: flex;
         justify-content: center;
         align-items: center;

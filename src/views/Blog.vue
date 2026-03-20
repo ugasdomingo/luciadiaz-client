@@ -30,71 +30,61 @@ onBeforeMount(async () => {
 .blog-page {
     width: 100%;
     min-height: 100vh;
-    padding: 8rem 4rem 4rem;
+    padding: $space-32 $space-16 $space-16;
     margin: 0;
     box-sizing: border-box;
 
     &__header {
         text-align: center;
-        margin-bottom: 4rem;
+        margin-bottom: $space-16;
 
         h1 {
-            margin: 0 0 1rem;
-            font-size: 3.5rem;
-            color: var(--color-primary);
+            margin: 0 0 $space-4;
         }
     }
 
     &__subtitle {
-        font-size: 1.2rem;
+        font-size: $text-lg;
         color: var(--color-text-dark);
-        font-weight: 300;
+        font-weight: $fw-light;
         margin: 0;
     }
 
     &__grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 2.5rem;
-        max-width: 1200px;
+        gap: $space-10;
+        max-width: $max-width;
         margin: 0 auto;
     }
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: $bp-lg) {
     .blog-page {
-        padding: 7rem 2rem 3rem;
-
-        &__header h1 {
-            font-size: 2.5rem;
-        }
+        padding: $space-28 $space-8 $space-12;
 
         &__grid {
             grid-template-columns: repeat(2, 1fr);
-            gap: 2rem;
+            gap: $space-8;
         }
     }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: $bp-md) {
     .blog-page {
-        padding: 6rem 1rem 2rem;
+        padding: $space-24 $space-4 $space-8;
 
         &__header {
-            margin-bottom: 3rem;
-
-            h1 {
-                font-size: 2rem;
-            }
+            margin-bottom: $space-12;
         }
 
         &__subtitle {
-            font-size: 1rem;
+            font-size: $text-base;
         }
 
         &__grid {
             grid-template-columns: 1fr;
-            gap: 1.5rem;
+            gap: $space-6;
         }
     }
 }

@@ -126,13 +126,13 @@ const handle_purchase = () => {
 
 <style scoped lang="scss">
 .product-public {
-    max-width: 1200px;
+    max-width: $max-width;
     margin: 0 auto;
-    padding: 40px 20px;
+    padding: $space-10 20px;
     padding-bottom: 100px; // Espacio para CTA móvil
 
-    @media (max-width: 768px) {
-        padding: 20px 16px 100px;
+    @media (max-width: $bp-md) {
+        padding: $space-5 $space-4 100px;
     }
 }
 
@@ -148,7 +148,7 @@ const handle_purchase = () => {
     }
 
     &__image {
-        border-radius: 16px;
+        border-radius: $radius-lg;
         overflow: hidden;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
 
@@ -168,43 +168,43 @@ const handle_purchase = () => {
 
 .product-badge {
     display: inline-block;
-    padding: 6px 16px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 700;
+    padding: 6px $space-4;
+    border-radius: $radius-full;
+    font-size: $text-xs;
+    font-weight: $fw-bold;
     text-transform: uppercase;
     background: var(--color-bg);
     color: var(--color-primary);
-    margin-bottom: 16px;
+    margin-bottom: $space-4;
 }
 
 .product-title {
     font-size: 42px;
-    font-weight: 800;
+    font-weight: $fw-extrabold;
     line-height: 1.2;
-    margin: 0 0 16px;
+    margin: 0 0 $space-4;
     color: var(--color-text-heading);
 
-    @media (max-width: 768px) {
-        font-size: 32px;
+    @media (max-width: $bp-md) {
+        font-size: $text-4xl;
     }
 }
 
 .product-description {
-    font-size: 18px;
+    font-size: $text-lg;
     line-height: 1.6;
     color: var(--color-text-muted);
-    margin: 0 0 24px;
+    margin: 0 0 $space-6;
 }
 
 .product-meta {
     display: flex;
-    gap: 20px;
-    margin-bottom: 32px;
+    gap: $space-5;
+    margin-bottom: $space-8;
     flex-wrap: wrap;
 
     .meta-item {
-        font-size: 14px;
+        font-size: $text-sm;
         color: var(--color-text-muted);
     }
 }
@@ -212,7 +212,7 @@ const handle_purchase = () => {
 .product-cta {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: $space-5;
 
     @media (max-width: 568px) {
         flex-direction: column;
@@ -222,22 +222,22 @@ const handle_purchase = () => {
 
 .product-price {
     .price-amount {
-        font-size: 36px;
-        font-weight: 800;
+        font-size: $text-4xl;
+        font-weight: $fw-extrabold;
         color: var(--color-text-heading);
     }
 }
 
 .btn-primary {
-    padding: 16px 48px;
+    padding: $space-4 $space-12;
     border: none;
-    border-radius: 12px;
+    border-radius: $radius-md;
     background: var(--color-secondary);
     color: var(--color-bg-card);
-    font-size: 16px;
-    font-weight: 700;
+    font-size: $text-base;
+    font-weight: $fw-bold;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: $transition-slow;
 
     &:hover {
         background: var(--color-secondary-dark);
@@ -255,8 +255,8 @@ const handle_purchase = () => {
 
     h2 {
         font-size: 28px;
-        font-weight: 700;
-        margin: 0 0 24px;
+        font-weight: $fw-bold;
+        margin: 0 0 $space-6;
         color: var(--color-text-heading);
     }
 }
@@ -264,15 +264,15 @@ const handle_purchase = () => {
 .curriculum-list {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: $space-4;
 }
 
 .curriculum-item {
     background: var(--color-bg);
-    border-radius: 12px;
-    padding: 20px;
+    border-radius: $radius-md;
+    padding: $space-5;
     border: 2px solid transparent;
-    transition: all 0.2s ease;
+    transition: $transition;
 
     &--free {
         background: var(--color-bg-card);
@@ -282,38 +282,38 @@ const handle_purchase = () => {
     &__header {
         display: flex;
         align-items: center;
-        gap: 16px;
+        gap: $space-4;
     }
 }
 
 .curriculum-number {
-    width: 32px;
-    height: 32px;
+    width: $space-8;
+    height: $space-8;
     display: flex;
     align-items: center;
     justify-content: center;
     background: var(--color-border);
-    border-radius: 50%;
-    font-weight: 700;
-    font-size: 14px;
+    border-radius: $radius-full;
+    font-weight: $fw-bold;
+    font-size: $text-sm;
     flex-shrink: 0;
 }
 
 .curriculum-title {
     flex: 1;
-    font-size: 16px;
-    font-weight: 600;
+    font-size: $text-base;
+    font-weight: $fw-semibold;
     margin: 0;
     color: var(--color-text);
 }
 
 .curriculum-badge {
-    font-size: 12px;
-    padding: 4px 12px;
-    border-radius: 6px;
+    font-size: $text-xs;
+    padding: $space-1 $space-3;
+    border-radius: $radius-xs;
     background: var(--color-success);
     color: var(--color-bg-card);
-    font-weight: 600;
+    font-weight: $fw-semibold;
 
     &--locked {
         background: var(--color-border);
@@ -322,10 +322,10 @@ const handle_purchase = () => {
 }
 
 .curriculum-notes {
-    margin-top: 12px;
-    padding-top: 12px;
+    margin-top: $space-3;
+    padding-top: $space-3;
     border-top: 1px solid var(--color-border-light);
-    font-size: 14px;
+    font-size: $text-sm;
     color: var(--color-text-muted);
     line-height: 1.6;
 }
@@ -333,8 +333,8 @@ const handle_purchase = () => {
 .product-info {
     h2 {
         font-size: 28px;
-        font-weight: 700;
-        margin: 0 0 24px;
+        font-weight: $fw-bold;
+        margin: 0 0 $space-6;
         color: var(--color-text-heading);
     }
 }
@@ -344,14 +344,14 @@ const handle_purchase = () => {
     padding: 0;
     margin: 0;
     display: grid;
-    gap: 16px;
+    gap: $space-4;
 
     li {
-        font-size: 16px;
+        font-size: $text-base;
         color: var(--color-text);
-        padding: 16px 20px;
+        padding: $space-4 $space-5;
         background: var(--color-bg);
-        border-radius: 8px;
+        border-radius: $radius-sm;
     }
 }
 
@@ -362,19 +362,19 @@ const handle_purchase = () => {
     left: 0;
     right: 0;
     background: var(--color-bg-card);
-    padding: 16px 20px;
+    padding: $space-4 $space-5;
     box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
     z-index: 100;
     align-items: center;
-    gap: 16px;
+    gap: $space-4;
 
-    @media (max-width: 768px) {
+    @media (max-width: $bp-md) {
         display: flex;
     }
 
     &__price {
-        font-size: 24px;
-        font-weight: 800;
+        font-size: $text-2xl;
+        font-weight: $fw-extrabold;
         color: var(--color-text-heading);
     }
 
@@ -385,8 +385,8 @@ const handle_purchase = () => {
         border-radius: 10px;
         background: var(--color-secondary);
         color: var(--color-bg-card);
-        font-size: 16px;
-        font-weight: 700;
+        font-size: $text-base;
+        font-weight: $fw-bold;
         cursor: pointer;
     }
 }

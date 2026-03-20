@@ -101,31 +101,31 @@ onMounted(() => {
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 40px 20px;
+    padding: $space-10 20px;
 
     h2 {
-        font-size: 32px;
-        font-weight: 800;
-        margin: 0 0 16px;
+        font-size: $text-4xl;
+        font-weight: $fw-extrabold;
+        margin: 0 0 $space-4;
         color: var(--color-text-heading);
     }
 
     p {
-        font-size: 18px;
+        font-size: $text-lg;
         color: var(--color-text-muted);
-        margin: 0 0 32px;
+        margin: 0 0 $space-8;
     }
 
     .btn-back {
         display: inline-block;
-        padding: 14px 32px;
+        padding: 14px $space-8;
         border-radius: 10px;
         background: var(--color-primary);
         color: var(--color-bg-card);
-        font-size: 16px;
-        font-weight: 600;
+        font-size: $text-base;
+        font-weight: $fw-semibold;
         text-decoration: none;
-        transition: all 0.2s ease;
+        transition: $transition;
 
         &:hover {
             background: var(--color-primary-dark);

@@ -238,11 +238,11 @@ onMounted(async () => {
 .product-private {
     background: var(--color-text-light);
     min-height: 100vh;
-    font-family: 'Montserrat', sans-serif;
+    font-family: $font-body;
 }
 
 .container {
-    max-width: 1200px;
+    max-width: $max-width;
     margin: 0 auto;
     padding: 0 20px;
 }
@@ -253,8 +253,8 @@ onMounted(async () => {
     color: var(--color-white);
     padding: 60px 0;
 
-    @media (max-width: 768px) {
-        padding: 40px 0;
+    @media (max-width: $bp-md) {
+        padding: $space-10 0;
     }
 }
 
@@ -264,61 +264,61 @@ onMounted(async () => {
 
 .course-badge {
     display: inline-block;
-    padding: 6px 16px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 700;
+    padding: 6px $space-4;
+    border-radius: $radius-full;
+    font-size: $text-xs;
+    font-weight: $fw-bold;
     text-transform: uppercase;
     background: rgba(255, 255, 255, 0.2);
-    margin-bottom: 16px;
+    margin-bottom: $space-4;
 }
 
 .course-title {
     font-size: 42px;
-    font-weight: 800;
+    font-weight: $fw-extrabold;
     line-height: 1.2;
-    margin: 0 0 16px;
-    font-family: 'Playfair Display', serif;
+    margin: 0 0 $space-4;
+    font-family: $font-title;
 
-    @media (max-width: 768px) {
-        font-size: 32px;
+    @media (max-width: $bp-md) {
+        font-size: $text-4xl;
     }
 }
 
 .course-description {
-    font-size: 18px;
+    font-size: $text-lg;
     line-height: 1.6;
     opacity: 0.95;
-    margin: 0 0 32px;
-    font-weight: 300;
+    margin: 0 0 $space-8;
+    font-weight: $fw-light;
 }
 
 // Barra de progreso
 .progress-bar {
     background: rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    padding: 20px;
+    border-radius: $radius-md;
+    padding: $space-5;
 
     &__label {
         display: flex;
         justify-content: space-between;
-        margin-bottom: 12px;
-        font-size: 14px;
-        font-weight: 600;
+        margin-bottom: $space-3;
+        font-size: $text-sm;
+        font-weight: $fw-semibold;
     }
 
     &__track {
         height: 8px;
         background: rgba(255, 255, 255, 0.2);
-        border-radius: 4px;
+        border-radius: $radius-xs;
         overflow: hidden;
     }
 
     &__fill {
         height: 100%;
         background: var(--color-white);
-        border-radius: 4px;
-        transition: width 0.3s ease;
+        border-radius: $radius-xs;
+        transition: width $transition-slow;
     }
 }
 
@@ -327,26 +327,26 @@ onMounted(async () => {
     padding: 60px 0;
 
     h2 {
-        font-size: 32px;
-        font-weight: 700;
-        margin: 0 0 32px;
+        font-size: $text-4xl;
+        font-weight: $fw-bold;
+        margin: 0 0 $space-8;
         color: var(--color-primary);
-        font-family: 'Playfair Display', serif;
+        font-family: $font-title;
     }
 }
 
 .curriculum {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: $space-4;
 }
 
 .curriculum-item {
     background: var(--color-white);
-    border-radius: 12px;
+    border-radius: $radius-md;
     overflow: hidden;
     box-shadow: var(--shadow-sm);
-    transition: all 0.2s ease;
+    transition: $transition;
 
     &:hover {
         box-shadow: var(--shadow-md);
@@ -357,7 +357,7 @@ onMounted(async () => {
     }
 
     &__header {
-        padding: 20px;
+        padding: $space-5;
         cursor: pointer;
         display: flex;
         justify-content: space-between;
@@ -372,28 +372,28 @@ onMounted(async () => {
     &__title {
         display: flex;
         align-items: center;
-        gap: 16px;
+        gap: $space-4;
         flex: 1;
 
         h3 {
-            font-size: 18px;
-            font-weight: 600;
+            font-size: $text-lg;
+            font-weight: $fw-semibold;
             margin: 0;
             color: var(--color-text);
-            font-family: 'Montserrat', sans-serif;
+            font-family: $font-body;
         }
     }
 
     &__status {
         display: flex;
         align-items: center;
-        gap: 16px;
+        gap: $space-4;
     }
 
     &__content {
-        padding: 0 20px 20px;
+        padding: 0 $space-5 $space-5;
         border-top: 1px solid var(--color-disable);
-        animation: slideDown 0.3s ease;
+        animation: slideDown $transition-slow;
     }
 }
 
@@ -401,33 +401,33 @@ onMounted(async () => {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
+    width: $space-8;
+    height: $space-8;
+    border-radius: $radius-full;
     background: var(--color-secondary);
     color: var(--color-white);
-    font-weight: 700;
-    font-size: 14px;
+    font-weight: $fw-bold;
+    font-size: $text-sm;
     flex-shrink: 0;
 }
 
 .status-completed {
     color: var(--color-secondary);
-    font-weight: 600;
-    font-size: 14px;
+    font-weight: $fw-semibold;
+    font-size: $text-sm;
 }
 
 .status-pending {
     color: var(--color-text);
     opacity: 0.5;
-    font-size: 14px;
+    font-size: $text-sm;
 }
 
 .expand-icon {
     color: var(--color-text);
     opacity: 0.5;
-    font-size: 12px;
-    transition: transform 0.3s ease;
+    font-size: $text-xs;
+    transition: transform $transition-slow;
 
     &.expanded {
         transform: rotate(180deg);
@@ -436,12 +436,12 @@ onMounted(async () => {
 
 // Video de la lección
 .lesson-video {
-    margin: 20px 0;
+    margin: $space-5 0;
     position: relative;
     padding-bottom: 56.25%; // 16:9 aspect ratio
     height: 0;
     overflow: hidden;
-    border-radius: 8px;
+    border-radius: $radius-sm;
 
     iframe {
         position: absolute;
@@ -454,42 +454,42 @@ onMounted(async () => {
 
 // Notas de la lección
 .lesson-notes {
-    margin: 20px 0;
-    padding: 16px;
+    margin: $space-5 0;
+    padding: $space-4;
     background: var(--color-text-light);
-    border-radius: 8px;
+    border-radius: $radius-sm;
     border-left: 4px solid var(--color-secondary);
 
     h4 {
-        font-size: 14px;
-        font-weight: 700;
-        margin: 0 0 8px;
+        font-size: $text-sm;
+        font-weight: $fw-bold;
+        margin: 0 0 $space-2;
         color: var(--color-text);
-        font-family: 'Montserrat', sans-serif;
+        font-family: $font-body;
     }
 
     p {
-        font-size: 14px;
+        font-size: $text-sm;
         line-height: 1.6;
         color: var(--color-text);
         margin: 0;
-        font-weight: 300;
+        font-weight: $fw-light;
     }
 }
 
 // Botón completar
 .btn-complete {
-    margin-top: 16px;
-    padding: 12px 24px;
+    margin-top: $space-4;
+    padding: $space-3 $space-6;
     border: none;
-    border-radius: 8px;
+    border-radius: $radius-sm;
     background: var(--color-secondary);
     color: var(--color-white);
-    font-size: 14px;
-    font-weight: 700;
+    font-size: $text-sm;
+    font-weight: $fw-bold;
     cursor: pointer;
-    transition: all 0.2s ease;
-    font-family: 'Montserrat', sans-serif;
+    transition: $transition;
+    font-family: $font-body;
 
     &:hover:not(:disabled) {
         background: var(--color-secondary-dark);
@@ -509,21 +509,21 @@ onMounted(async () => {
 
 .download-card {
     background: var(--color-white);
-    border-radius: 16px;
-    padding: 40px;
+    border-radius: $radius-lg;
+    padding: $space-10;
     display: flex;
     align-items: center;
-    gap: 32px;
+    gap: $space-8;
     box-shadow: var(--shadow-sm);
 
-    @media (max-width: 768px) {
+    @media (max-width: $bp-md) {
         flex-direction: column;
         text-align: center;
-        padding: 32px 24px;
+        padding: $space-8 $space-6;
     }
 
     &__icon {
-        font-size: 64px;
+        font-size: $space-16;
         flex-shrink: 0;
     }
 
@@ -531,35 +531,35 @@ onMounted(async () => {
         flex: 1;
 
         h3 {
-            font-size: 24px;
-            font-weight: 700;
-            margin: 0 0 8px;
+            font-size: $text-2xl;
+            font-weight: $fw-bold;
+            margin: 0 0 $space-2;
             color: var(--color-primary);
-            font-family: 'Playfair Display', serif;
+            font-family: $font-title;
         }
 
         p {
-            font-size: 16px;
+            font-size: $text-base;
             color: var(--color-text);
             margin: 0;
-            font-weight: 300;
+            font-weight: $fw-light;
         }
     }
 }
 
 .btn-download {
-    padding: 14px 32px;
+    padding: 14px $space-8;
     border-radius: 10px;
     background: var(--color-secondary);
     color: var(--color-white);
-    font-size: 16px;
-    font-weight: 700;
+    font-size: $text-base;
+    font-weight: $fw-bold;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    transition: all 0.2s ease;
-    font-family: 'Montserrat', sans-serif;
+    gap: $space-2;
+    transition: $transition;
+    font-family: $font-body;
 
     &:hover {
         background: var(--color-secondary-dark);
@@ -572,60 +572,60 @@ onMounted(async () => {
     padding: 60px 0;
 
     h2 {
-        font-size: 32px;
-        font-weight: 700;
-        margin: 0 0 16px;
+        font-size: $text-4xl;
+        font-weight: $fw-bold;
+        margin: 0 0 $space-4;
         color: var(--color-primary);
-        font-family: 'Playfair Display', serif;
+        font-family: $font-title;
     }
 }
 
 .bundle-note {
-    font-size: 16px;
+    font-size: $text-base;
     color: var(--color-text);
-    margin: 0 0 32px;
-    font-weight: 300;
+    margin: 0 0 $space-8;
+    font-weight: $fw-light;
 }
 
 .bundle-content {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
+    gap: $space-5;
 }
 
 .bundle-item {
     background: var(--color-white);
-    border-radius: 12px;
-    padding: 24px;
+    border-radius: $radius-md;
+    padding: $space-6;
     box-shadow: var(--shadow-sm);
 
     &__icon {
-        font-size: 32px;
+        font-size: $space-8;
         display: block;
-        margin-bottom: 12px;
+        margin-bottom: $space-3;
     }
 
     h4 {
-        font-size: 18px;
-        font-weight: 700;
-        margin: 0 0 8px;
+        font-size: $text-lg;
+        font-weight: $fw-bold;
+        margin: 0 0 $space-2;
         color: var(--color-primary);
-        font-family: 'Montserrat', sans-serif;
+        font-family: $font-body;
     }
 
     p {
-        font-size: 14px;
+        font-size: $text-sm;
         color: var(--color-text);
-        margin: 0 0 16px;
-        font-weight: 300;
+        margin: 0 0 $space-4;
+        font-weight: $fw-light;
     }
 
     &__link {
         color: var(--color-secondary);
-        font-weight: 600;
+        font-weight: $fw-semibold;
         text-decoration: none;
-        font-size: 14px;
-        font-family: 'Montserrat', sans-serif;
+        font-size: $text-sm;
+        font-family: $font-body;
 
         &:hover {
             text-decoration: underline;
@@ -636,43 +636,43 @@ onMounted(async () => {
 
 // Soporte
 .support-section {
-    padding: 60px 0 80px;
+    padding: 60px 0 $space-20;
 }
 
 .support-card {
     background: var(--color-soft-alert);
-    border-radius: 16px;
-    padding: 40px;
+    border-radius: $radius-lg;
+    padding: $space-10;
     text-align: center;
 
     h3 {
-        font-size: 24px;
-        font-weight: 700;
-        margin: 0 0 12px;
+        font-size: $text-2xl;
+        font-weight: $fw-bold;
+        margin: 0 0 $space-3;
         color: var(--color-primary);
-        font-family: 'Playfair Display', serif;
+        font-family: $font-title;
     }
 
     p {
-        font-size: 16px;
+        font-size: $text-base;
         color: var(--color-text);
-        margin: 0 0 24px;
-        font-weight: 300;
+        margin: 0 0 $space-6;
+        font-weight: $fw-light;
     }
 }
 
 .btn-support {
-    padding: 12px 32px;
+    padding: $space-3 $space-8;
     border-radius: 10px;
     background: var(--color-white);
     color: var(--color-primary);
-    font-size: 16px;
-    font-weight: 700;
+    font-size: $text-base;
+    font-weight: $fw-bold;
     text-decoration: none;
     display: inline-block;
     border: 2px solid var(--color-primary);
-    transition: all 0.2s ease;
-    font-family: 'Montserrat', sans-serif;
+    transition: $transition;
+    font-family: $font-body;
 
     &:hover {
         background: var(--color-primary);

@@ -48,18 +48,18 @@ nav {
     margin: 0;
     position: fixed;
     top: 4.25rem;
-    right: 2rem;
+    right: $space-8;
     z-index: 100;
     background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
-    border-radius: 1rem;
+    border-radius: $radius-lg;
 
     ul {
         list-style: none;
         display: flex;
         flex-direction: column;
-        padding: 0.5rem 1rem;
+        padding: $space-2 $space-4;
         margin: 0;
-        gap: 1rem;
+        gap: $space-4;
 
         li {
             padding: 0;
@@ -74,11 +74,10 @@ nav {
                 display: inline-block;
                 text-decoration: none;
                 color: var(--color-white);
-                transition: all 0.25s;
-                padding: 0.5rem 1.5rem;
+                padding: $space-2 $space-6;
                 margin: 0;
-                border-radius: 1rem;
-                transition: all 0.25s;
+                border-radius: $radius-lg;
+                transition: $transition;
 
                 &:hover {
                     scale: 1.15;
@@ -86,7 +85,6 @@ nav {
                 }
             }
         }
-
     }
 }
 </style>

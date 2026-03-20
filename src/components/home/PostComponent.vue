@@ -29,26 +29,26 @@ const common_store = useCommonStore()
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2.5rem;
+    gap: $space-10;
 
     &__grid {
         width: 100%;
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 2rem;
+        gap: $space-8;
         box-sizing: border-box;
     }
 
     &__link {
         display: inline-block;
-        padding: 0.75rem 1.75rem;
+        padding: $space-3 $space-6;
         color: var(--color-primary);
-        font-family: 'Montserrat', sans-serif;
-        font-size: 0.95rem;
-        font-weight: 500;
+        font-family: $font-body;
+        font-size: $text-base;
+        font-weight: $fw-medium;
         border: 1px solid var(--color-border);
-        border-radius: var(--radius-sm);
-        transition: all 0.3s ease;
+        border-radius: $radius-sm;
+        transition: $transition-slow;
         opacity: 0;
         transform: translateY(20px);
 
@@ -65,16 +65,16 @@ const common_store = useCommonStore()
     }
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: $bp-lg) {
     .post__grid {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
-@media screen and (max-width: 720px) {
+@media screen and (max-width: $bp-md) {
     .post__grid {
         grid-template-columns: 1fr;
-        gap: 1.5rem;
+        gap: $space-6;
     }
 }
 </style>

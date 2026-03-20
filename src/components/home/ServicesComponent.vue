@@ -32,15 +32,15 @@ use_scroll_reveal()
         width: 100%;
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        gap: 1.5rem;
+        gap: $space-6;
         box-sizing: border-box;
     }
 
     &__card {
         background: var(--color-white);
         border: 1px solid var(--color-border-light);
-        border-radius: var(--radius-md);
-        padding: 2rem 1.5rem 1.5rem;
+        border-radius: $radius-md;
+        padding: $space-8 $space-6 $space-6;
         display: flex;
         flex-direction: column;
         color: var(--color-text);
@@ -57,27 +57,27 @@ use_scroll_reveal()
         }
 
         &__icon {
-            width: 3rem;
-            height: 3rem;
-            margin-bottom: 1.25rem;
+            width: $space-12;
+            height: $space-12;
+            margin-bottom: $space-5;
 
             img {
                 width: 100%;
                 height: 100%;
                 object-fit: contain;
-                transition: transform 0.3s ease;
+                transition: $transition;
             }
         }
 
         h4 {
-            margin: 0 0 0.5rem;
-            font-size: 1.1rem;
+            margin: 0 0 $space-2;
+            font-size: $text-lg;
             color: var(--color-primary);
             line-height: 1.35;
         }
 
         p {
-            font-size: 0.9rem;
+            font-size: $text-sm;
             color: var(--color-text-muted);
             line-height: 1.55;
             margin: 0;
@@ -86,12 +86,12 @@ use_scroll_reveal()
 
         &__arrow {
             display: inline-block;
-            margin-top: 1.25rem;
-            font-size: 1.1rem;
+            margin-top: $space-5;
+            font-size: $text-lg;
             color: var(--color-primary);
             opacity: 0;
             transform: translateX(-4px);
-            transition: all 0.3s ease;
+            transition: $transition;
         }
 
         &:hover {
@@ -111,20 +111,20 @@ use_scroll_reveal()
     }
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: $bp-lg) {
     .services__grid {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
-@media screen and (max-width: 720px) {
+@media screen and (max-width: $bp-md) {
     .services__grid {
         grid-template-columns: 1fr;
-        gap: 1rem;
+        gap: $space-4;
     }
 
     .services__card {
-        padding: 1.5rem 1.25rem 1.25rem;
+        padding: $space-6 $space-5 $space-5;
     }
 }
 </style>

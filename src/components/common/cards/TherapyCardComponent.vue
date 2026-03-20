@@ -27,17 +27,16 @@ defineProps({
     display: flex;
     flex-direction: column;
     justify-content: end;
-    border-radius: 1rem;
+    border-radius: $radius-lg;
     position: relative;
-    transition: all 0.25s;
+    transition: $transition;
     box-sizing: border-box;
-
 
     img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        border-radius: 1rem;
+        border-radius: $radius-lg;
         position: absolute;
         top: 0;
         left: 0;
@@ -49,18 +48,18 @@ defineProps({
         max-width: 300px;
         position: relative;
         z-index: 3;
-        padding: 1rem 1rem 1rem;
-        border-radius: 1rem;
+        padding: $space-4;
+        border-radius: $radius-lg;
         box-sizing: border-box;
 
         &::before {
             content: '';
             position: absolute;
-            height: calc(100% + 3rem);
+            height: calc(100% + $space-12);
             width: 100%;
-            top: -3rem;
+            top: -$space-12;
             left: 0;
-            border-radius: 1rem;
+            border-radius: $radius-lg;
             background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.9) 100%);
             backdrop-filter: blur(4px) blur(10px);
             -webkit-backdrop-filter: blur(4px) blur(10px);
@@ -82,25 +81,24 @@ defineProps({
 
             .price {
                 margin: 0;
-                padding: 0.2rem 0.5rem;
+                padding: $space-1 $space-2;
                 color: var(--color-white);
                 background-color: rgb(from var(--color-black) r g b / 0.8);
-                border-radius: 0.5rem;
+                border-radius: $radius-sm;
             }
         }
 
         p {
-            margin: 0.5 0;
-            font-size: 0.8rem;
+            margin: $space-2 0;
+            font-size: $text-sm;
             color: var(--color-white);
         }
 
         .action-btn {
-            font-size: 0.8rem;
+            font-size: $text-sm;
             width: 100%;
             max-width: 200px;
         }
-
     }
 }
 </style>

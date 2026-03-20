@@ -82,17 +82,15 @@ const set_view = (view) => {
 </script>
 
 <style scoped lang="scss">
-// ─── Layout ────────────────────────────────────────────────────────────────
 .dashboard-layout {
     display: flex;
     min-height: 80vh;
 }
 
-// ─── Backdrop ──────────────────────────────────────────────────────────────
 .sidebar-backdrop {
     display: none;
 
-    @media (max-width: 768px) {
+    @media (max-width: $bp-md) {
         display: block;
         position: fixed;
         inset: 0;
@@ -101,23 +99,22 @@ const set_view = (view) => {
     }
 }
 
-// ─── Sidebar ───────────────────────────────────────────────────────────────
 .dashboard-sidebar {
-    width: 260px;
+    width: $sidebar-width;
     background: var(--color-bg-card);
-    padding: 2rem;
+    padding: $space-8;
     border-right: 1px solid var(--color-border-light);
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
 
-    @media (max-width: 768px) {
+    @media (max-width: $bp-md) {
         position: fixed;
         top: 0;
         left: 0;
         bottom: 0;
         z-index: 100;
-        padding-top: 1rem;
+        padding-top: $space-4;
         transform: translateX(-100%);
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3);
@@ -127,76 +124,74 @@ const set_view = (view) => {
     }
 }
 
-// Botón cerrar (solo móvil)
 .sidebar-close {
     display: none;
     align-self: flex-end;
     background: none;
     border: 1px solid var(--color-border-light);
-    border-radius: 6px;
-    width: 2rem;
-    height: 2rem;
+    border-radius: $radius-sm;
+    width: $space-8;
+    height: $space-8;
     cursor: pointer;
-    font-size: 0.85rem;
+    font-size: $text-sm;
     color: var(--color-text-muted);
-    margin-bottom: 1.5rem;
+    margin-bottom: $space-6;
     align-items: center;
     justify-content: center;
-    transition: color 0.2s;
+    transition: $transition-fast;
 
     &:hover { color: var(--color-text); }
 
-    @media (max-width: 768px) { display: flex; }
+    @media (max-width: $bp-md) { display: flex; }
 }
 
-// ─── User profile ──────────────────────────────────────────────────────────
 .user-profile {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: $space-8;
 
     .avatar {
         width: 68px;
         height: 68px;
         background: var(--color-primary);
         color: white;
-        border-radius: 50%;
+        border-radius: $radius-full;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.75rem;
-        font-weight: 700;
-        margin: 0 auto 0.75rem;
+        font-size: $text-2xl;
+        font-weight: $fw-bold;
+        margin: 0 auto $space-3;
     }
 
-    h3   { font-size: 0.95rem; margin: 0 0 0.25rem; }
-    .email { color: var(--color-text-muted); font-size: 0.8rem; margin: 0; }
+    h3    { font-size: $text-base; margin: 0 0 $space-1; }
+    .email { color: var(--color-text-muted); font-size: $text-xs; margin: 0; }
 
     .hc-badge {
         display: inline-block;
-        margin-top: 0.5rem;
+        margin-top: $space-2;
         background: var(--color-border-light);
-        padding: 0.2rem 0.5rem;
-        border-radius: 4px;
-        font-size: 0.72rem;
+        padding: $space-1 $space-2;
+        border-radius: $radius-xs;
+        font-size: $text-xs;
     }
 }
 
-// ─── Nav ───────────────────────────────────────────────────────────────────
 .dashboard-nav {
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
+    gap: $space-1;
 
     button, .nav-link {
         text-align: left;
         background: none;
         border: none;
-        padding: 0.7rem 1rem;
-        border-radius: 8px;
+        padding: $space-3 $space-4;
+        border-radius: $radius-sm;
         cursor: pointer;
         color: var(--color-text-muted);
-        font-size: 0.9rem;
-        transition: all 0.2s;
+        font-size: $text-sm;
+        font-family: $font-body;
+        transition: $transition-fast;
         text-decoration: none;
         display: block;
 
@@ -208,25 +203,24 @@ const set_view = (view) => {
         &.active {
             background: var(--overlay-primary-10);
             color: var(--color-primary);
-            font-weight: 600;
+            font-weight: $fw-semibold;
         }
     }
 
     .divider {
         height: 1px;
         background: var(--color-border-light);
-        margin: 0.75rem 0;
+        margin: $space-3 0;
     }
 }
 
-// ─── Content ───────────────────────────────────────────────────────────────
 .dashboard-content {
     flex: 1;
-    padding: 3rem;
+    padding: $space-12;
     min-width: 0;
 
-    @media (max-width: 768px) {
-        padding: 1.5rem 1rem 3rem;
+    @media (max-width: $bp-md) {
+        padding: $space-6 $space-4 $space-12;
     }
 }
 </style>

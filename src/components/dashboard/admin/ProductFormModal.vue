@@ -282,13 +282,13 @@ const handle_submit = async () => {
     align-items: center;
     justify-content: center;
     z-index: 1000;
-    padding: 20px;
+    padding: $space-5;
     overflow-y: auto;
 }
 
 .modal-content {
     background: var(--color-white);
-    border-radius: 16px;
+    border-radius: $radius-lg;
     width: 100%;
     max-width: 800px;
     max-height: 90vh;
@@ -300,22 +300,22 @@ const handle_submit = async () => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 24px 32px;
+    padding: $space-6 $space-8;
     border-bottom: 1px solid var(--color-border);
 
-    @media (max-width: 768px) {
-        padding: 20px;
+    @media (max-width: $bp-md) {
+        padding: $space-5;
     }
 }
 
 .modal-title {
-    font-size: 24px;
-    font-weight: 700;
+    font-size: $text-2xl;
+    font-weight: $fw-bold;
     margin: 0;
     color: var(--color-text);
 
-    @media (max-width: 768px) {
-        font-size: 20px;
+    @media (max-width: $bp-md) {
+        font-size: $text-xl;
     }
 }
 
@@ -325,9 +325,9 @@ const handle_submit = async () => {
     border: none;
     background: var(--color-bg);
     border-radius: 50%;
-    font-size: 20px;
+    font-size: $text-xl;
     cursor: pointer;
-    transition: background 0.2s ease;
+    transition: background $transition;
 
     &:hover {
         background: var(--color-border);
@@ -335,15 +335,15 @@ const handle_submit = async () => {
 }
 
 .product-form {
-    padding: 32px;
+    padding: $space-8;
 
-    @media (max-width: 768px) {
-        padding: 20px;
+    @media (max-width: $bp-md) {
+        padding: $space-5;
     }
 }
 
 .form-group {
-    margin-bottom: 24px;
+    margin-bottom: $space-6;
 
     &:last-child {
         margin-bottom: 0;
@@ -353,18 +353,18 @@ const handle_submit = async () => {
 .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px;
+    gap: $space-4;
 
-    @media (max-width: 768px) {
+    @media (max-width: $bp-md) {
         grid-template-columns: 1fr;
     }
 }
 
 .form-label {
     display: block;
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 8px;
+    font-size: $text-sm;
+    font-weight: $fw-semibold;
+    margin-bottom: $space-2;
     color: var(--color-text);
 }
 
@@ -372,13 +372,13 @@ const handle_submit = async () => {
 .form-select,
 .form-textarea {
     width: 100%;
-    padding: 12px 16px;
+    padding: $space-3 $space-4;
     border: 2px solid var(--color-border);
-    border-radius: 8px;
-    font-size: 14px;
+    border-radius: $radius-sm;
+    font-size: $text-sm;
     font-family: inherit;
     background: var(--color-white);
-    transition: border-color 0.2s ease;
+    transition: border-color $transition;
     box-sizing: border-box;
 
     &:focus {
@@ -397,9 +397,9 @@ const handle_submit = async () => {
 
 .form-hint {
     display: block;
-    font-size: 12px;
+    font-size: $text-xs;
     color: var(--color-text-muted);
-    margin-top: 4px;
+    margin-top: $space-1;
 }
 
 // IMAGE UPLOAD
@@ -417,7 +417,7 @@ const handle_submit = async () => {
     position: relative;
     width: 100%;
     max-width: 400px;
-    border-radius: 12px;
+    border-radius: $radius-md;
     overflow: hidden;
 
     img {
@@ -429,17 +429,17 @@ const handle_submit = async () => {
 
 .btn-remove-image {
     position: absolute;
-    top: 12px;
-    right: 12px;
-    padding: 8px 16px;
+    top: $space-3;
+    right: $space-3;
+    padding: $space-2 $space-4;
     border: none;
-    border-radius: 8px;
+    border-radius: $radius-sm;
     background: var(--color-error);
     color: var(--color-white);
-    font-size: 14px;
-    font-weight: 600;
+    font-size: $text-sm;
+    font-weight: $fw-semibold;
     cursor: pointer;
-    transition: opacity 0.2s ease;
+    transition: opacity $transition;
 
     &:hover {
         opacity: 0.8;
@@ -451,11 +451,11 @@ const handle_submit = async () => {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 60px 20px;
+    padding: 60px $space-5;
     border: 2px dashed var(--color-border);
-    border-radius: 12px;
+    border-radius: $radius-md;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: $transition;
 
     &:hover {
         border-color: var(--color-primary);
@@ -463,12 +463,12 @@ const handle_submit = async () => {
     }
 
     .placeholder-icon {
-        font-size: 48px;
-        margin-bottom: 12px;
+        font-size: $text-4xl;
+        margin-bottom: $space-3;
     }
 
     p {
-        font-size: 14px;
+        font-size: $text-sm;
         margin: 0;
         color: var(--color-text-muted);
     }
@@ -478,21 +478,21 @@ const handle_submit = async () => {
 .curriculum-editor {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: $space-4;
 }
 
 .curriculum-item {
-    padding: 16px;
+    padding: $space-4;
     border: 2px solid var(--color-border);
-    border-radius: 12px;
+    border-radius: $radius-md;
     background: var(--color-bg);
 }
 
 .lesson-header {
     display: flex;
-    gap: 12px;
+    gap: $space-3;
     align-items: center;
-    margin-bottom: 12px;
+    margin-bottom: $space-3;
 }
 
 .lesson-number {
@@ -504,17 +504,17 @@ const handle_submit = async () => {
     background: var(--color-primary);
     color: var(--color-white);
     border-radius: 50%;
-    font-size: 14px;
-    font-weight: 700;
+    font-size: $text-sm;
+    font-weight: $fw-bold;
     flex-shrink: 0;
 }
 
 .lesson-input {
     flex: 1;
-    padding: 8px 12px;
+    padding: $space-2 $space-3;
     border: 1px solid var(--color-border);
-    border-radius: 6px;
-    font-size: 14px;
+    border-radius: $radius-xs;
+    font-size: $text-sm;
     box-sizing: border-box;
 
     &:focus {
@@ -525,11 +525,11 @@ const handle_submit = async () => {
 
 .lesson-input-small {
     width: 100%;
-    padding: 8px 12px;
+    padding: $space-2 $space-3;
     border: 1px solid var(--color-border);
-    border-radius: 6px;
+    border-radius: $radius-xs;
     font-size: 13px;
-    margin-bottom: 8px;
+    margin-bottom: $space-2;
     box-sizing: border-box;
 
     &:focus {
@@ -540,13 +540,13 @@ const handle_submit = async () => {
 
 .lesson-textarea {
     width: 100%;
-    padding: 8px 12px;
+    padding: $space-2 $space-3;
     border: 1px solid var(--color-border);
-    border-radius: 6px;
+    border-radius: $radius-xs;
     font-size: 13px;
     font-family: inherit;
     resize: vertical;
-    margin-bottom: 8px;
+    margin-bottom: $space-2;
     box-sizing: border-box;
 
     &:focus {
@@ -558,7 +558,7 @@ const handle_submit = async () => {
 .lesson-checkbox {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: $space-2;
     font-size: 13px;
     color: var(--color-text);
     cursor: pointer;
@@ -575,10 +575,10 @@ const handle_submit = async () => {
     background: var(--color-error);
     color: var(--color-white);
     border-radius: 50%;
-    font-size: 16px;
+    font-size: $text-base;
     cursor: pointer;
     flex-shrink: 0;
-    transition: opacity 0.2s ease;
+    transition: opacity $transition;
 
     &:hover {
         opacity: 0.8;
@@ -586,15 +586,15 @@ const handle_submit = async () => {
 }
 
 .btn-add-lesson {
-    padding: 12px 24px;
+    padding: $space-3 $space-6;
     border: 2px dashed var(--color-border);
     background: transparent;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
+    border-radius: $radius-sm;
+    font-size: $text-sm;
+    font-weight: $fw-semibold;
     color: var(--color-primary);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: $transition;
 
     &:hover {
         border-color: var(--color-primary);
@@ -605,22 +605,22 @@ const handle_submit = async () => {
 // ACTIONS
 .form-actions {
     display: flex;
-    gap: 12px;
+    gap: $space-3;
     justify-content: flex-end;
-    margin-top: 32px;
-    padding-top: 24px;
+    margin-top: $space-8;
+    padding-top: $space-6;
     border-top: 1px solid var(--color-border);
 }
 
 .btn-primary,
 .btn-secondary {
-    padding: 12px 24px;
+    padding: $space-3 $space-6;
     border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 600;
+    border-radius: $radius-sm;
+    font-size: $text-base;
+    font-weight: $fw-semibold;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: $transition;
 
     &:disabled {
         opacity: 0.5;

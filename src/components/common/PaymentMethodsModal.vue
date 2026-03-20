@@ -108,7 +108,7 @@ const copyToClipboard = async (text) => {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: $space-5;
 }
 
 /* ── Panel ── */
@@ -120,10 +120,10 @@ const copyToClipboard = async (text) => {
     max-width: 520px;
     max-height: 85vh;
     overflow-y: auto;
-    padding: 32px;
+    padding: $space-8;
 
     @media (max-width: 600px) {
-        padding: 24px 20px;
+        padding: $space-6 $space-5;
         max-height: 90vh;
     }
 }
@@ -133,11 +133,11 @@ const copyToClipboard = async (text) => {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 8px;
+    margin-bottom: $space-2;
 
     h2 {
-        font-size: 20px;
-        font-weight: 700;
+        font-size: $text-xl;
+        font-weight: $fw-bold;
         color: var(--color-text-heading);
         margin: 0;
     }
@@ -154,7 +154,7 @@ const copyToClipboard = async (text) => {
     border-radius: var(--radius-sm);
     color: var(--color-text-muted);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: $transition;
     flex-shrink: 0;
 
     &:hover {
@@ -164,25 +164,25 @@ const copyToClipboard = async (text) => {
 }
 
 .modal-intro {
-    font-size: 14px;
+    font-size: $text-sm;
     color: var(--color-text-muted);
     line-height: 1.6;
-    margin: 0 0 24px;
+    margin: 0 0 $space-6;
 }
 
 /* ── Method Cards ── */
 .methods-list {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: $space-3;
 }
 
 .method-card {
     border: 2px solid var(--color-border);
     border-radius: var(--radius-md);
-    padding: 16px 20px;
+    padding: $space-4 $space-5;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: $transition;
 
     &:hover {
         border-color: var(--color-primary-light);
@@ -206,7 +206,7 @@ const copyToClipboard = async (text) => {
 
     &__name {
         font-size: 15px;
-        font-weight: 700;
+        font-weight: $fw-bold;
         color: var(--color-text);
         margin: 0;
     }
@@ -217,8 +217,8 @@ const copyToClipboard = async (text) => {
     }
 
     &__details {
-        margin-top: 16px;
-        padding-top: 16px;
+        margin-top: $space-4;
+        padding-top: $space-4;
         border-top: 1px solid var(--color-border-light);
         display: flex;
         flex-direction: column;
@@ -231,8 +231,8 @@ const copyToClipboard = async (text) => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 14px;
-    gap: 12px;
+    font-size: $text-sm;
+    gap: $space-3;
 
     &--concept {
         margin-top: 6px;
@@ -243,20 +243,20 @@ const copyToClipboard = async (text) => {
 
 .detail-label {
     color: var(--color-text-muted);
-    font-weight: 500;
+    font-weight: $fw-medium;
     flex-shrink: 0;
 }
 
 .detail-value {
     color: var(--color-text);
-    font-weight: 600;
+    font-weight: $fw-semibold;
     display: flex;
     align-items: center;
     gap: 6px;
     text-align: right;
 
     &--concept {
-        font-weight: 500;
+        font-weight: $fw-medium;
         font-style: italic;
         color: var(--color-primary);
     }
@@ -270,10 +270,10 @@ const copyToClipboard = async (text) => {
     height: 26px;
     border: 1px solid var(--color-border);
     background: var(--color-bg);
-    border-radius: 6px;
+    border-radius: $radius-xs;
     color: var(--color-text-muted);
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: $transition-fast;
     flex-shrink: 0;
 
     &:hover {
@@ -285,7 +285,7 @@ const copyToClipboard = async (text) => {
 
 /* ── Footer Note ── */
 .modal-footer-note {
-    margin: 20px 0 0;
+    margin: $space-5 0 0;
     font-size: 13px;
     color: var(--color-text-muted);
     line-height: 1.5;
@@ -314,7 +314,7 @@ const copyToClipboard = async (text) => {
 
 .expand-enter-active,
 .expand-leave-active {
-    transition: all 0.2s ease;
+    transition: $transition;
     overflow: hidden;
 }
 
