@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, defineAsyncComponent, markRaw } from 'vue'
+import { ref, computed, watch, defineAsyncComponent, markRaw } from 'vue'
 import { useAuthStore } from '../../stores/auth-store'
 import { useUtilStore } from '../../stores/util-store'
 
@@ -8,7 +8,8 @@ const util_store = useUtilStore()
 
 const show_component = ref('ManageUserComponent')
 const display_component = ref(null)
-const component_cache = ref({})
+const component_cache = {}
+const initial = computed(() => auth_store.user_data?.user?.name?.charAt(0)?.toUpperCase() || 'A')
 
 const nav_items = [
     { key: 'ManageUserComponent', label: 'Buscar usuarios' },
@@ -19,29 +20,14 @@ const nav_items = [
     { key: 'ManageLikesComponent', label: 'Ver últimos likes' },
 ]
 
-const load_component = async (component_name) => {
-    if (component_cache.value[component_name]) {
-        return component_cache.value[component_name]
-    }
-    try {
-        const component = defineAsyncComponent(() => import(`./admin/${component_name}.vue`))
-        component_cache.value[component_name] = markRaw(component)
-        return component_cache.value[component_name]
-    } catch (error) {
-        console.error(error)
-        return null
-    }
+const load_component = (component_name) => {
+    if (component_cache[component_name]) return component_cache[component_name]
+    component_cache[component_name] = markRaw(defineAsyncComponent(() => import(`./admin/${component_name}.vue`)))
+    return component_cache[component_name]
 }
 
-watch(() => show_component.value, async (new_value) => {
-    util_store.set_loading(true)
-    try {
-        display_component.value = await load_component(new_value)
-    } catch (error) {
-        console.error(error)
-    } finally {
-        util_store.set_loading(false)
-    }
+watch(show_component, (new_value) => {
+    display_component.value = load_component(new_value)
 }, { immediate: true })
 
 const set_view = (key) => {
@@ -67,7 +53,7 @@ const set_view = (key) => {
             </button>
 
             <div class="admin-profile">
-                <div class="avatar">L</div>
+                <div class="avatar">{{ initial }}</div>
                 <h3>{{ auth_store.user_data?.user?.name }}</h3>
                 <p class="role">Administradora</p>
             </div>

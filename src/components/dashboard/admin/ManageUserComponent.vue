@@ -1,29 +1,26 @@
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useAdminStore } from '../../../stores/admin-store'
 import { useUtilStore } from '../../../stores/util-store.js'
 import { RouterLink } from 'vue-router'
 
 const admin_store = useAdminStore()
 const util_store = useUtilStore()
-const users_to_show = ref([])
 const text_filter = ref('')
 const selected_user_id = ref(null)
+
+const users_to_show = computed(() => {
+    const f = text_filter.value.toLowerCase()
+    return admin_store.users.filter(user => (user.name || '').toLowerCase().includes(f))
+})
 
 onMounted(async () => {
     util_store.set_loading(true)
     await admin_store.get_all_users()
-    users_to_show.value = admin_store.users
     util_store.set_loading(false)
 })
 
-watch(text_filter, () => {
-    const filter = text_filter.value.toLowerCase()
-    users_to_show.value = admin_store.users.filter(user =>
-        (user.name || '').toLowerCase().includes(filter)
-    )
-    selected_user_id.value = null
-})
+watch(text_filter, () => { selected_user_id.value = null })
 
 const toggle_user = (id) => {
     selected_user_id.value = selected_user_id.value === id ? null : id
