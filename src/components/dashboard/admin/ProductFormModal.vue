@@ -21,6 +21,7 @@ const default_form = () => ({
     slug: '',
     type: '',
     price: 0,
+    presale_price: '',
     description: '',
     category: '',
     status: 'active',
@@ -41,6 +42,7 @@ watch(() => [props.is_open, props.product, props.mode], ([open]) => {
             slug: props.product.slug,
             type: props.product.type,
             price: props.product.price,
+            presale_price: props.product.presale_price ?? '',
             description: props.product.description,
             category: props.product.category || '',
             status: props.product.status,
@@ -168,6 +170,14 @@ const handle_submit = async () => {
                         </div>
                     </div>
 
+                    <!-- Precio de pre-venta -->
+                    <div v-if="form_data.status === 'pre_sale'" class="form-group">
+                        <label class="form-label">Precio de pre-venta ($)</label>
+                        <input v-model.number="form_data.presale_price" type="number" min="0" step="0.01"
+                            class="form-input" placeholder="0.00" />
+                        <span class="form-hint">Se cobrará este precio en lugar del precio normal mientras el producto esté en pre-venta.</span>
+                    </div>
+
                     <!-- Descripción -->
                     <div class="form-group">
                         <label class="form-label">Descripción *</label>
@@ -186,9 +196,10 @@ const handle_submit = async () => {
                             <label class="form-label">Estado</label>
                             <select v-model="form_data.status" class="form-select">
                                 <option value="active">Activo</option>
+                                <option value="pre_sale">Pre-venta</option>
+                                <option value="coming_soon">Próximamente</option>
                                 <option value="draft">Borrador</option>
                                 <option value="archived">Archivado</option>
-                                <option value="coming_soon">Próximamente</option>
                             </select>
                         </div>
                     </div>

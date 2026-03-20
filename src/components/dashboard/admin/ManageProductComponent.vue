@@ -80,9 +80,10 @@ onMounted(() => load_products())
 
             <select v-model="filters.status" @change="load_products" class="filter-select">
                 <option value="active">Activos</option>
+                <option value="pre_sale">Pre-venta</option>
+                <option value="coming_soon">Próximamente</option>
                 <option value="draft">Borradores</option>
                 <option value="archived">Archivados</option>
-                <option value="coming_soon">Próximamente</option>
                 <option value="">Todos los estados</option>
             </select>
 

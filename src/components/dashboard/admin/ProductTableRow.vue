@@ -16,7 +16,7 @@ const get_type_label = (type) => {
 }
 
 const get_status_label = (status) => {
-    const labels = { active: 'Activo', draft: 'Borrador', archived: 'Archivado', coming_soon: 'Próximamente' }
+    const labels = { active: 'Activo', draft: 'Borrador', archived: 'Archivado', coming_soon: 'Próximamente', pre_sale: 'Pre-venta' }
     return labels[status] || status
 }
 
@@ -151,6 +151,10 @@ const format_date = (date) => new Date(date).toLocaleDateString('es-ES', {
     &--coming_soon {
         background: rgba(30, 86, 160, 0.08);
         color: var(--color-primary-light);
+    }
+    &--pre_sale {
+        background: rgba(16, 185, 129, 0.12);
+        color: var(--color-success);
     }
 }
 

@@ -18,13 +18,21 @@
                     </div>
 
                     <div class="price-summary">
-                        <div class="price-row">
+                        <div v-if="is_presale" class="price-row price-row--presale">
+                            <span>Precio pre-venta:</span>
+                            <span class="price-value price-value--presale">{{ product.presale_price }}$</span>
+                        </div>
+                        <div v-if="is_presale" class="price-row">
+                            <span>Precio normal:</span>
+                            <span class="price-value price-value--striked">{{ product.price }}$</span>
+                        </div>
+                        <div v-else class="price-row">
                             <span>Subtotal:</span>
                             <span class="price-value">{{ product.price }}$</span>
                         </div>
                         <div class="price-row price-row--total">
                             <span>Total:</span>
-                            <span class="price-value">{{ product.price }}$</span>
+                            <span class="price-value">{{ effective_price }}$</span>
                         </div>
                     </div>
                 </section>
@@ -147,9 +155,13 @@ const selectedMethod = ref('paypal')
 const uploadedProof = ref(null)
 const fileInput = ref(null)
 const showPaymentModal = ref(false)
-const is_product_free = computed(() => {
-    return product.value?.price === 0
-})
+const is_presale = computed(() =>
+    product.value?.status === 'pre_sale' && product.value?.presale_price != null
+)
+const effective_price = computed(() =>
+    is_presale.value ? product.value.presale_price : product.value?.price
+)
+const is_product_free = computed(() => effective_price.value === 0)
 
 // Computed
 const truncatedDescription = computed(() => {
@@ -344,6 +356,21 @@ onMounted(() => {
 
 .price-value {
     font-weight: $fw-bold;
+
+    &--presale {
+        color: var(--color-success);
+    }
+
+    &--striked {
+        text-decoration: line-through;
+        color: var(--color-text-muted);
+        font-weight: $fw-regular;
+    }
+}
+
+.price-row--presale {
+    color: var(--color-success);
+    font-weight: $fw-semibold;
 }
 
 .checkout-payment {
