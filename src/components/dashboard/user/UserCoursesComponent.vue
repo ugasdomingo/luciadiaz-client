@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useAuthStore } from '../../../stores/auth-store.js'
 import { useProductStore } from '../../../stores/product-store.js'
 import ProgressCardComponent from '../../common/cards/ProgressCardComponent.vue'
@@ -7,6 +7,31 @@ import { RouterLink } from 'vue-router'
 
 const auth_store = useAuthStore()
 const product_store = useProductStore()
+
+// Descarga segura de guías
+const downloading = ref({})
+const download_guide = async (slug) => {
+    if (downloading.value[slug]) return
+    downloading.value[slug] = true
+    try {
+        const data = await product_store.get_download_url(slug)
+        // Abrir en nueva pestaña — el navegador forzará la descarga por el header attachment
+        window.open(data.download_url, '_blank')
+    } catch {
+        alert('No se pudo obtener el enlace de descarga. Inténtalo de nuevo.')
+    } finally {
+        downloading.value[slug] = false
+    }
+}
+
+// Guías/ebooks compradas (payment_status completed, type ebook o bundle)
+const purchased_guides = computed(() => {
+    const purchases = auth_store.user_data?.purchases || []
+    return purchases.filter(p =>
+        p.payment_status === 'completed' &&
+        (p.type === 'ebook' || p.type === 'bundle')
+    )
+})
 
 onMounted(async () => {
     // Asegurar datos actualizados
@@ -86,12 +111,93 @@ const user_name = computed(() => auth_store.user_data?.user?.name?.split(' ')[0]
                 </div>
             </div>
         </div>
+
+        <!-- Guías y Ebooks comprados -->
+        <div v-if="purchased_guides.length > 0" class="guides-section">
+            <h3 class="subsection-title">📄 Mis Guías</h3>
+            <div class="guides-list">
+                <div v-for="guide in purchased_guides" :key="guide.product_id" class="guide-item">
+                    <div class="guide-item__icon">📄</div>
+                    <div class="guide-item__info">
+                        <p class="guide-item__title">{{ guide.title }}</p>
+                        <span class="guide-item__badge">{{ guide.type === 'bundle' ? 'Pack' : 'Guía' }}</span>
+                    </div>
+                    <button
+                        class="action-btn guide-item__btn"
+                        @click="download_guide(guide.slug)"
+                        :disabled="downloading[guide.slug]">
+                        {{ downloading[guide.slug] ? '...' : '⬇ Descargar' }}
+                    </button>
+                </div>
+            </div>
+        </div>
     </section>
 </template>
 
 <style scoped lang="scss">
 .user-courses {
     padding: $space-4;
+}
+
+.guides-section {
+    margin-top: $space-10;
+}
+
+.guides-list {
+    display: flex;
+    flex-direction: column;
+    gap: $space-3;
+    margin-top: $space-4;
+}
+
+.guide-item {
+    display: grid;
+    grid-template-columns: 44px 1fr auto;
+    align-items: center;
+    gap: $space-4;
+    padding: $space-4 $space-5;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border-light);
+    border-radius: $radius-md;
+    transition: $transition-fast;
+
+    &:hover {
+        border-color: var(--color-primary);
+        box-shadow: var(--shadow-sm);
+    }
+
+    &__icon {
+        font-size: $text-2xl;
+        text-align: center;
+    }
+
+    &__info {
+        display: flex;
+        flex-direction: column;
+        gap: $space-1;
+    }
+
+    &__title {
+        font-size: $text-sm;
+        font-weight: $fw-semibold;
+        color: var(--color-text);
+        margin: 0;
+    }
+
+    &__badge {
+        font-size: $text-xs;
+        color: var(--color-text-muted);
+    }
+
+    &__btn {
+        flex-shrink: 0;
+    }
+
+    @media (max-width: $bp-sm) {
+        grid-template-columns: 36px 1fr;
+
+        &__btn { grid-column: 1 / -1; width: 100%; }
+    }
 }
 
 .section-title {

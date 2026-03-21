@@ -162,6 +162,15 @@ export const useProductStore = defineStore('product', () => {
         }, 'Producto eliminado correctamente')
     }
 
+    /**
+     * Obtener URL firmada de descarga (solo usuarios con compra)
+     * Devuelve { download_url, filename, expires_in }
+     */
+    const get_download_url = async (slug) => {
+        const res = await api.get(`/products/${slug}/download`)
+        return res.data.data
+    }
+
     return {
         all_products,
         product,
@@ -177,6 +186,7 @@ export const useProductStore = defineStore('product', () => {
         fetch_all_products_admin,
         create_product,
         update_product,
-        delete_product
+        delete_product,
+        get_download_url,
     }
 })
