@@ -298,8 +298,6 @@ onBeforeMount(() => {
         .action-btn, .nobg-btn {
             width: auto;
             max-width: fit-content;
-            padding: $space-1 $space-3;
-            font-size: $text-xs;
         }
 
         @media (max-width: $bp-md) {

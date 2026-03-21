@@ -143,12 +143,14 @@ textarea {
 
 /* Dorado — CTA principal */
 .action-btn {
-  width: 100%;
-  max-width: 30rem;
-  padding: $space-3 $space-6;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  padding: 0 $space-4;
   border-radius: $radius-sm;
   border: none;
-  font-size: $text-base;
+  font-size: $text-sm;
   font-weight: $fw-semibold;
   font-family: $font-body;
   color: var(--color-white);
@@ -156,26 +158,32 @@ textarea {
   cursor: pointer;
   transition: $transition-slow;
   letter-spacing: 0.02em;
+  white-space: nowrap;
 
   &:hover {
     background-color: var(--color-secondary-dark);
-    transform: translateY(-2px);
+    transform: translateY(-1px);
     box-shadow: var(--shadow-gold);
   }
 }
 
 /* Outline azul */
 .nobg-btn {
-  padding: $space-2 $space-6;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  padding: 0 $space-4;
   border-radius: $radius-sm;
   border: 1px solid var(--color-primary);
-  font-size: $text-base;
+  font-size: $text-sm;
   font-weight: $fw-medium;
   font-family: $font-body;
   color: var(--color-primary);
   background-color: transparent;
   cursor: pointer;
   transition: $transition;
+  white-space: nowrap;
 
   &:hover {
     background-color: var(--color-primary);

@@ -100,15 +100,6 @@ onMounted(() => {
 
     &__agendar {
         white-space: nowrap;
-        /* Compact: igual que diginode navbar__cta */
-        width: auto;
-        max-width: none;
-        height: 36px;
-        padding: 0 $space-4;
-        font-size: $text-sm;
-        font-weight: $fw-medium;
-        display: inline-flex;
-        align-items: center;
     }
 }
 
