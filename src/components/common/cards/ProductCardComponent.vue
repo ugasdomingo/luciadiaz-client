@@ -78,6 +78,8 @@ const is_pending = computed(() => auth_store.user_data && product_store.has_pend
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
+    max-width: 320px;
+    width: 100%;
 
     &:hover {
         transform: translateY(-3px);

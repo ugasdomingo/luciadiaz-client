@@ -22,46 +22,85 @@
                     </span>
                 </div>
 
-                <!-- CTA principal -->
-                <div class="product-cta">
-                    <div class="product-price">
-                        <span class="price-amount">{{ formatted_price }}</span>
+                <!-- ── Banner: ya disponible para los de la waitlist ── -->
+                <div v-if="show_available_banner" class="waitlist-available-banner">
+                    <div class="waitlist-available-banner__icon">🎉</div>
+                    <div class="waitlist-available-banner__body">
+                        <p class="waitlist-available-banner__title">¡Ya está disponible!</p>
+                        <p class="waitlist-available-banner__sub">
+                            El producto que esperabas ya está a la venta. ¡Es tu momento!
+                        </p>
                     </div>
-
-                    <div class="product-cta__actions">
+                    <div class="waitlist-available-banner__cta">
+                        <div class="product-price">
+                            <span class="price-amount">{{ formatted_price }}</span>
+                        </div>
                         <button @click="handle_purchase" class="action-btn">
                             {{ cta_text }}
                         </button>
-
-                        <!-- Waitlist: solo para no logueados en productos coming_soon/pre_sale -->
-                        <button v-if="!auth_store.user_data && (product.status === 'coming_soon' || product.status === 'pre_sale')"
-                            @click="show_waitlist_popup = true"
-                            class="nobg-btn">
-                            📋 Lista de espera
-                        </button>
-
                         <LikeButtonComponent item_type="Product" :item_id="product._id" />
                     </div>
                 </div>
+
+                <!-- ── Banner: en la lista de espera ── -->
+                <div v-else-if="show_waitlist_banner" class="waitlist-banner">
+                    <div class="waitlist-banner__header">
+                        <span class="waitlist-banner__icon">📋</span>
+                        <p class="waitlist-banner__title">Estás en la lista de espera</p>
+                    </div>
+                    <p class="waitlist-banner__sub">
+                        Te escribiremos por email en cuanto puedas acceder a la inscripción y completar el pago.
+                        No tienes que hacer nada más por ahora.
+                    </p>
+                    <div class="waitlist-banner__tips">
+                        <p class="waitlist-banner__tip">
+                            💡 <strong>Crea tu cuenta</strong> para acceder antes y tener todo listo cuando abra.
+                        </p>
+                    </div>
+                    <div class="waitlist-banner__actions">
+                        <RouterLink to="/acceso" class="action-btn">Crear cuenta</RouterLink>
+                        <LikeButtonComponent item_type="Product" :item_id="product._id" />
+                    </div>
+                </div>
+
+                <!-- ── CTA normal (no está en waitlist) ── -->
+                <template v-else>
+                    <div class="product-cta">
+                        <div class="product-price">
+                            <span class="price-amount">{{ formatted_price }}</span>
+                        </div>
+
+                        <div class="product-cta__actions">
+                            <button @click="handle_purchase" class="action-btn">
+                                {{ cta_text }}
+                            </button>
+
+                            <!-- Waitlist: para usuarios no logueados en productos no disponibles aún -->
+                            <button
+                                v-if="!auth_store.user_data && !is_product_available"
+                                @click="show_waitlist_popup = true"
+                                class="nobg-btn">
+                                📋 Lista de espera
+                            </button>
+
+                            <LikeButtonComponent item_type="Product" :item_id="product._id" />
+                        </div>
+                    </div>
+                </template>
 
                 <!-- Popup waitlist -->
                 <Teleport to="body">
                     <div v-if="show_waitlist_popup" class="waitlist-overlay" @click.self="show_waitlist_popup = false">
                         <div class="waitlist-popup">
                             <button class="waitlist-popup__close" @click="show_waitlist_popup = false">✕</button>
-                            <template v-if="!waitlist_done">
-                                <h3>Lista de espera</h3>
-                                <p>Te avisaremos cuando esté disponible.</p>
-                                <input v-model="waitlist_email" type="email" placeholder="tu@correo.com"
-                                    class="waitlist-popup__input" @keyup.enter="submit_waitlist" />
-                                <p v-if="waitlist_error" class="waitlist-popup__error">{{ waitlist_error }}</p>
-                                <button class="action-btn" @click="submit_waitlist" :disabled="waitlist_loading">
-                                    {{ waitlist_loading ? '...' : 'Apuntarme' }}
-                                </button>
-                            </template>
-                            <template v-else>
-                                <p class="waitlist-popup__success">✅ ¡Apuntado! Te avisaremos pronto.</p>
-                            </template>
+                            <h3>Lista de espera</h3>
+                            <p>Te avisaremos en cuanto esté disponible para la inscripción.</p>
+                            <input v-model="waitlist_email" type="email" placeholder="tu@correo.com"
+                                class="waitlist-popup__input" @keyup.enter="submit_waitlist" autofocus />
+                            <p v-if="waitlist_error" class="waitlist-popup__error">{{ waitlist_error }}</p>
+                            <button class="action-btn" @click="submit_waitlist" :disabled="waitlist_loading">
+                                {{ waitlist_loading ? '...' : '📋 Apuntarme' }}
+                            </button>
                         </div>
                     </div>
                 </Teleport>
@@ -132,12 +171,37 @@ const router = useRouter()
 const auth_store = useAuthStore()
 const like_store = useLikeStore()
 
-// Waitlist
+// ── Waitlist ──────────────────────────────────────────────────────────
+const WAITLIST_LS_KEY = 'waitlist_products'
+
+const get_local_waitlist = () => {
+    try { return JSON.parse(localStorage.getItem(WAITLIST_LS_KEY) || '[]') } catch { return [] }
+}
+const add_to_local_waitlist = (slug) => {
+    const list = get_local_waitlist()
+    if (!list.includes(slug)) {
+        list.push(slug)
+        localStorage.setItem(WAITLIST_LS_KEY, JSON.stringify(list))
+    }
+}
+
 const show_waitlist_popup = ref(false)
-const waitlist_email = ref(like_store.get_saved_email() || '')
+const waitlist_email = ref(like_store.session_email || '')
 const waitlist_error = ref('')
 const waitlist_loading = ref(false)
-const waitlist_done = ref(false)
+// joined en esta sesión O ya estaba guardado en localStorage
+const waitlist_joined = ref(get_local_waitlist().includes(props.product?.slug))
+
+// El producto ya no está en lista de espera → disponible para comprar
+const is_product_available = computed(() =>
+    !['coming_soon', 'pre_sale'].includes(props.product.status)
+)
+
+// Mostrar banner de waitlist (sólo cuando no está disponible aún)
+const show_waitlist_banner = computed(() => waitlist_joined.value && !is_product_available.value)
+
+// Mostrar banner de "ya disponible" para los que estaban en waitlist
+const show_available_banner = computed(() => waitlist_joined.value && is_product_available.value)
 
 const submit_waitlist = async () => {
     waitlist_error.value = ''
@@ -150,10 +214,12 @@ const submit_waitlist = async () => {
     try {
         const res = await like_store.join_waitlist(props.product.slug, email)
         if (res.data?.already_user) {
-            waitlist_error.value = 'Ya tienes cuenta. Inicia sesión para apuntarte.'
+            waitlist_error.value = 'Ya tienes cuenta. Inicia sesión para acceder.'
         } else {
             like_store.save_email(email)
-            waitlist_done.value = true
+            add_to_local_waitlist(props.product.slug)
+            waitlist_joined.value = true
+            show_waitlist_popup.value = false   // cierra popup, muestra banner inline
         }
     } catch {
         waitlist_error.value = 'Error al apuntarse. Inténtalo de nuevo.'
@@ -442,8 +508,106 @@ const handle_purchase = () => {
     margin-top: $space-4;
 }
 
-.waitlist-btn {
-    font-size: $text-sm;
+// ── Banner: en espera ─────────────────────────────────────────────────
+.waitlist-banner {
+    margin-top: $space-6;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-left: 4px solid var(--color-primary);
+    border-radius: $radius-lg;
+    padding: $space-6;
+    display: flex;
+    flex-direction: column;
+    gap: $space-4;
+
+    &__header {
+        display: flex;
+        align-items: center;
+        gap: $space-3;
+    }
+
+    &__icon {
+        font-size: $text-2xl;
+        line-height: 1;
+    }
+
+    &__title {
+        font-size: $text-lg;
+        font-weight: $fw-bold;
+        color: var(--color-text-heading);
+        margin: 0;
+    }
+
+    &__sub {
+        font-size: $text-sm;
+        color: var(--color-text-muted);
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    &__tips {
+        background: var(--color-bg-card);
+        border-radius: $radius-md;
+        padding: $space-3 $space-4;
+    }
+
+    &__tip {
+        font-size: $text-sm;
+        color: var(--color-text);
+        margin: 0;
+        line-height: 1.5;
+    }
+
+    &__actions {
+        display: flex;
+        align-items: center;
+        gap: $space-3;
+        flex-wrap: wrap;
+    }
+}
+
+// ── Banner: ya disponible ─────────────────────────────────────────────
+.waitlist-available-banner {
+    margin-top: $space-6;
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.06) 0%, rgba(34, 197, 94, 0.02) 100%);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    border-radius: $radius-lg;
+    padding: $space-6;
+    display: flex;
+    flex-direction: column;
+    gap: $space-4;
+
+    &__icon {
+        font-size: $text-3xl;
+        line-height: 1;
+    }
+
+    &__body {
+        display: flex;
+        flex-direction: column;
+        gap: $space-1;
+    }
+
+    &__title {
+        font-size: $text-xl;
+        font-weight: $fw-bold;
+        color: var(--color-success);
+        margin: 0;
+    }
+
+    &__sub {
+        font-size: $text-sm;
+        color: var(--color-text-muted);
+        margin: 0;
+        line-height: 1.6;
+    }
+
+    &__cta {
+        display: flex;
+        align-items: center;
+        gap: $space-4;
+        flex-wrap: wrap;
+    }
 }
 
 /* Waitlist popup */
@@ -484,14 +648,6 @@ const handle_purchase = () => {
     &__input { width: 100%; max-width: 100%; }
 
     &__error { color: var(--color-error); font-size: $text-xs; margin: 0; }
-
-    &__success {
-        font-size: $text-base;
-        font-weight: $fw-semibold;
-        color: var(--color-success);
-        text-align: center;
-        margin: $space-4 0;
-    }
 
     .action-btn { width: 100%; max-width: 100%; }
 }
