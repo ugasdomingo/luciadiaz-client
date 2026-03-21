@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { useAuthStore } from '../../../stores/auth-store'
 import { useProductStore } from '../../../stores/product-store'
 import { useImageFallback } from '../../../composables/useImageFallback.js'
+import LikeButtonComponent from '../LikeButtonComponent.vue'
 
 const props = defineProps({
     product: { type: Object, required: true }
@@ -61,7 +62,7 @@ const is_pending = computed(() => auth_store.user_data && product_store.has_pend
                     <span class="product-card__price">{{ formatted_price }}</span>
                     <span class="product-card__cta">Ver producto →</span>
                 </div>
-            </div>
+                <LikeButtonComponent item_type="Product" :item_id="product._id" /></div>
         </RouterLink>
     </article>
 </template>
@@ -153,6 +154,8 @@ const is_pending = computed(() => auth_store.user_data && product_store.has_pend
         flex-grow: 1;
         display: flex;
         align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
     }
 
     &__action {

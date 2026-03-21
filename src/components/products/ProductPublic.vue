@@ -29,15 +29,15 @@
                     </div>
 
                     <div class="product-cta__actions">
-                        <button @click="handle_purchase" class="btn-primary">
+                        <button @click="handle_purchase" class="action-btn">
                             {{ cta_text }}
                         </button>
 
                         <!-- Waitlist: solo para no logueados en productos coming_soon/pre_sale -->
                         <button v-if="!auth_store.user_data && (product.status === 'coming_soon' || product.status === 'pre_sale')"
                             @click="show_waitlist_popup = true"
-                            class="btn-outline waitlist-btn">
-                            📋 Apuntarme a la lista de espera
+                            class="nobg-btn">
+                            📋 Lista de espera
                         </button>
 
                         <LikeButtonComponent item_type="Product" :item_id="product._id" />
@@ -108,7 +108,7 @@
         <!-- CTA fijo en móvil -->
         <div class="cta-mobile">
             <div class="cta-mobile__price">{{ formatted_price }}</div>
-            <button @click="handle_purchase" class="cta-mobile__button">
+            <button @click="handle_purchase" class="action-btn cta-mobile__button">
                 {{ cta_text }}
             </button>
         </div>
@@ -204,19 +204,25 @@ const handle_purchase = () => {
 
 .product-hero {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
+    grid-template-columns: 280px 1fr;
+    gap: 48px;
     margin-bottom: 60px;
+    align-items: start;
 
     @media (max-width: 968px) {
         grid-template-columns: 1fr;
-        gap: 30px;
+        gap: 24px;
     }
 
     &__image {
         border-radius: $radius-lg;
         overflow: hidden;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+        max-width: 280px;
+
+        @media (max-width: 968px) {
+            max-width: 220px;
+        }
 
         img {
             width: 100%;
@@ -294,27 +300,6 @@ const handle_purchase = () => {
     }
 }
 
-.btn-primary {
-    padding: $space-4 $space-12;
-    border: none;
-    border-radius: $radius-md;
-    background: var(--color-secondary);
-    color: var(--color-bg-card);
-    font-size: $text-base;
-    font-weight: $fw-bold;
-    cursor: pointer;
-    transition: $transition-slow;
-
-    &:hover {
-        background: var(--color-secondary-dark);
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-md);
-    }
-
-    @media (max-width: 568px) {
-        width: 100%;
-    }
-}
 
 .product-curriculum {
     margin-bottom: 60px;
@@ -446,14 +431,6 @@ const handle_purchase = () => {
 
     &__button {
         flex: 1;
-        padding: 14px;
-        border: none;
-        border-radius: 10px;
-        background: var(--color-secondary);
-        color: var(--color-bg-card);
-        font-size: $text-base;
-        font-weight: $fw-bold;
-        cursor: pointer;
     }
 }
 
