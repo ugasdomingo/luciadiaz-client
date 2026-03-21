@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watchEffect } from 'vue'
 import { useLikeStore } from '../../stores/like-store'
 import { useAuthStore } from '../../stores/auth-store'
 
@@ -18,23 +18,25 @@ const popup_error = ref('')
 
 onMounted(() => {
     like_store.fetch_count(props.item_type, props.item_id)
-    // Pre-rellenar con el email en memoria (reactivo)
-    popup_email.value = like_store.session_email || ''
+})
+
+// Mantener el input del popup sincronizado con el email de sesión
+// (si otro LikeButton guardó el email, este se pre-rellena automáticamente)
+watchEffect(() => {
+    if (like_store.session_email) popup_email.value = like_store.session_email
 })
 
 const info = computed(() => like_store.get_count(props.item_type, props.item_id))
-
-// ¿Tenemos email disponible? — computed reactivo: se recalcula cuando otro
-// LikeButton guarda el email en el store, sin necesidad de re-click
-const has_email = computed(() => !!auth_store.token || !!like_store.session_email)
 
 const handle_click = async (e) => {
     e.preventDefault()
     e.stopPropagation()
     if (loading.value) return
 
-    // Si no hay token NI email en memoria → pedir email
-    if (!has_email.value) {
+    // Leer directamente del store en el momento del click (no desde computed cacheado)
+    // Esto garantiza que si otro LikeButton guardó el email, lo vemos aquí
+    const email_in_memory = like_store.session_email
+    if (!auth_store.token && !email_in_memory) {
         show_popup.value = true
         return
     }
@@ -48,10 +50,10 @@ const do_toggle = async (email = null) => {
         await like_store.toggle(props.item_type, props.item_id, email)
         show_popup.value = false
         popup_error.value = ''
+        popup_error.value = ''
     } catch (err) {
-        if (err.message === 'EMAIL_REQUIRED') {
-            show_popup.value = true
-        }
+        // Si por algún motivo el servidor pide email (edge case), mostrar popup
+        if (err.message === 'EMAIL_REQUIRED') show_popup.value = true
     } finally {
         loading.value = false
     }

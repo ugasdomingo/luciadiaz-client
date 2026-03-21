@@ -65,27 +65,37 @@
 
                 <!-- ── CTA normal (no está en waitlist) ── -->
                 <template v-else>
-                    <div class="product-cta">
+
+                    <!-- coming_soon: solo lista de espera, sin precio ni compra -->
+                    <div v-if="is_coming_soon" class="product-cta">
+                        <p class="product-coming-soon">⏳ Próximamente disponible</p>
+                        <div class="product-cta__actions">
+                            <button v-if="!auth_store.user_data"
+                                @click="show_waitlist_popup = true"
+                                class="action-btn">
+                                📋 Apuntarme a la lista de espera
+                            </button>
+                            <span v-else class="product-cta__logged-note">
+                                Te avisaremos cuando esté disponible
+                            </span>
+                            <LikeButtonComponent item_type="Product" :item_id="product._id" />
+                        </div>
+                    </div>
+
+                    <!-- pre_sale / active: precio real + botón de compra -->
+                    <div v-else class="product-cta">
                         <div class="product-price">
+                            <span v-if="product.status === 'pre_sale'" class="price-tag">Pre-venta</span>
                             <span class="price-amount">{{ formatted_price }}</span>
                         </div>
-
                         <div class="product-cta__actions">
                             <button @click="handle_purchase" class="action-btn">
                                 {{ cta_text }}
                             </button>
-
-                            <!-- Waitlist: para usuarios no logueados en productos no disponibles aún -->
-                            <button
-                                v-if="!auth_store.user_data && !is_product_available"
-                                @click="show_waitlist_popup = true"
-                                class="nobg-btn">
-                                📋 Lista de espera
-                            </button>
-
                             <LikeButtonComponent item_type="Product" :item_id="product._id" />
                         </div>
                     </div>
+
                 </template>
 
                 <!-- Popup waitlist -->
@@ -144,8 +154,8 @@
             </ul>
         </section>
 
-        <!-- CTA fijo en móvil -->
-        <div class="cta-mobile">
+        <!-- CTA fijo en móvil (solo si hay precio / se puede comprar) -->
+        <div v-if="!is_coming_soon" class="cta-mobile">
             <div class="cta-mobile__price">{{ formatted_price }}</div>
             <button @click="handle_purchase" class="action-btn cta-mobile__button">
                 {{ cta_text }}
@@ -192,16 +202,15 @@ const waitlist_loading = ref(false)
 // joined en esta sesión O ya estaba guardado en localStorage
 const waitlist_joined = ref(get_local_waitlist().includes(props.product?.slug))
 
-// El producto ya no está en lista de espera → disponible para comprar
-const is_product_available = computed(() =>
-    !['coming_soon', 'pre_sale'].includes(props.product.status)
-)
+// coming_soon = aún no se puede comprar (solo waitlist)
+// pre_sale / active / etc. = ya se puede comprar
+const is_coming_soon = computed(() => props.product.status === 'coming_soon')
 
-// Mostrar banner de waitlist (sólo cuando no está disponible aún)
-const show_waitlist_banner = computed(() => waitlist_joined.value && !is_product_available.value)
+// Mostrar banner de waitlist (sólo cuando el producto sigue sin estar disponible)
+const show_waitlist_banner = computed(() => waitlist_joined.value && is_coming_soon.value)
 
 // Mostrar banner de "ya disponible" para los que estaban en waitlist
-const show_available_banner = computed(() => waitlist_joined.value && is_product_available.value)
+const show_available_banner = computed(() => waitlist_joined.value && !is_coming_soon.value)
 
 const submit_waitlist = async () => {
     waitlist_error.value = ''
@@ -245,7 +254,11 @@ const formatted_start_date = computed(() => {
 
 const has_curriculum = computed(() => props.product.curriculum?.length > 0)
 
-const cta_text = computed(() => props.product.price === 0 ? 'Acceder gratis' : 'Comprar ahora')
+const cta_text = computed(() => {
+    if (props.product.price === 0) return 'Acceder gratis'
+    if (props.product.status === 'pre_sale') return 'Comprar en preventa'
+    return 'Comprar ahora'
+})
 
 const handle_purchase = () => {
     if (!auth_store.user_data) {
@@ -366,6 +379,32 @@ const handle_purchase = () => {
     }
 }
 
+
+.product-coming-soon {
+    font-size: $text-base;
+    font-weight: $fw-semibold;
+    color: var(--color-text-muted);
+    margin: 0 0 $space-4;
+}
+
+.price-tag {
+    display: inline-block;
+    font-size: $text-xs;
+    font-weight: $fw-bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: var(--color-secondary);
+    color: var(--color-bg-card);
+    padding: $space-1 $space-3;
+    border-radius: $radius-xs;
+    margin-bottom: $space-2;
+}
+
+.product-cta__logged-note {
+    font-size: $text-sm;
+    color: var(--color-text-muted);
+    font-style: italic;
+}
 
 .product-curriculum {
     margin-bottom: 60px;
