@@ -14,6 +14,9 @@ const emit = defineEmits(['reserve'])
             <div class="therapy-card__image-overlay"></div>
             <div class="therapy-card__badges">
                 <span class="therapy-card__duration">🕐 {{ therapy.duration }}</span>
+                <span v-for="mod in therapy.modalities" :key="mod" class="therapy-card__modality">
+                    {{ mod === 'Presencial Madrid' ? '📍 Madrid' : '💻 Online' }}
+                </span>
             </div>
         </div>
 
@@ -69,6 +72,7 @@ const emit = defineEmits(['reserve'])
             width: 100%;
             height: 100%;
             object-fit: cover;
+            object-position: top;
             transition: transform 0.5s ease;
         }
 
@@ -98,6 +102,16 @@ const emit = defineEmits(['reserve'])
     &__duration {
         background: rgba(255, 255, 255, 0.92);
         color: var(--color-primary);
+        font-size: $text-xs;
+        font-weight: $fw-semibold;
+        padding: $space-1 $space-3;
+        border-radius: $radius-full;
+        backdrop-filter: blur(4px);
+    }
+
+    &__modality {
+        background: rgba(74, 63, 143, 0.85);
+        color: #fff;
         font-size: $text-xs;
         font-weight: $fw-semibold;
         padding: $space-1 $space-3;
