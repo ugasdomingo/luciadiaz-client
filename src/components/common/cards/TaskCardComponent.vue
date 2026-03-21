@@ -1,57 +1,33 @@
 <script setup>
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import { useTaskStore } from '../../../stores/task-store'
 import { useAuthStore } from '../../../stores/auth-store'
 
 const props = defineProps({
-    task: {
-        type: Object,
-        required: true
-    },
-    showCompleteButton: {
-        type: Boolean,
-        default: false
-    }
+    task: { type: Object, required: true },
+    showCompleteButton: { type: Boolean, default: false }
 })
 
 const auth_store = useAuthStore()
 const task_store = useTaskStore()
 
-const statusColor = computed(() => {
-    switch (props.task.status) {
-        case 'completed':
-            return 'status-completed'
-        case 'cancelled':
-            return 'status-cancelled'
-        case 'pending':
-        default:
-            return 'status-pending'
-    }
-})
+const show_observations = ref(false)
 
-const statusText = computed(() => {
-    switch (props.task.status) {
-        case 'completed':
-            return 'Completada'
-        case 'cancelled':
-            return 'Cancelada'
-        case 'pending':
-        default:
-            return 'Pendiente'
-    }
-})
+const status_label = { completed: 'Completada', cancelled: 'Cancelada', pending: 'Pendiente' }
+const status_mod   = { completed: 'completed', cancelled: 'cancelled', pending: 'pending' }
 
-const formattedDate = computed(() => {
+const status_class = computed(() => status_mod[props.task.status] || 'pending')
+const status_text  = computed(() => status_label[props.task.status] || 'Pendiente')
+const has_observations = computed(() => !!props.task.observations?.trim())
+
+const formatted_date = computed(() => {
     if (!props.task.createdAt) return ''
-    const date = new Date(props.task.createdAt)
-    return date.toLocaleDateString('es-ES', {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric'
+    return new Date(props.task.createdAt).toLocaleDateString('es-ES', {
+        day: '2-digit', month: 'short', year: 'numeric'
     })
 })
 
-const handleComplete = async () => {
+const handle_complete = async () => {
     if (props.task.status === 'completed') return
     await task_store.complete_task(props.task._id)
     await auth_store.refresh()
@@ -59,169 +35,149 @@ const handleComplete = async () => {
 </script>
 
 <template>
-    <article class="task-card" :class="statusColor">
-        <div class="task-card__header">
-            <div class="task-card__status" :class="statusColor">
-                {{ statusText }}
-            </div>
-            <div class="task-card__date">{{ formattedDate }}</div>
+    <article class="task-row" :class="`task-row--${status_class}`">
+        <div class="task-row__main">
+            <span class="task-row__badge" :class="`task-row__badge--${status_class}`">
+                {{ status_text }}
+            </span>
+            <span class="task-row__title">{{ task.task }}</span>
+            <span class="task-row__date">{{ formatted_date }}</span>
         </div>
 
-        <div class="task-card__content">
-            <h3 class="task-card__title">{{ task.task }}</h3>
-            <p class="task-card__observations">{{ task.observations }}</p>
-        </div>
-
-        <div class="task-card__footer" v-if="showCompleteButton && task.status === 'pending'">
-            <button class="task-card__button nobg-btn" @click="handleComplete">
-                ✓ Marcar como completada
+        <div class="task-row__sub">
+            <button v-if="has_observations" class="task-row__obs-btn"
+                @click="show_observations = !show_observations">
+                {{ show_observations ? 'Ocultar' : 'Ver observaciones' }}
+                <span class="task-row__chevron" :class="{ 'task-row__chevron--open': show_observations }">›</span>
             </button>
+
+            <button v-if="showCompleteButton && task.status === 'pending'"
+                class="nobg-btn task-row__complete-btn"
+                @click="handle_complete">
+                ✓ Completar
+            </button>
+        </div>
+
+        <div v-if="show_observations && has_observations" class="task-row__observations">
+            {{ task.observations }}
         </div>
     </article>
 </template>
 
 <style scoped lang="scss">
-.task-card {
-    display: flex;
-    flex-direction: column;
-    background: var(--color-white);
-    border-radius: $radius-md;
-    padding: $space-6;
-    margin-bottom: $space-4;
-    box-shadow: var(--shadow-sm);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border-left: 4px solid var(--color-primary);
-    gap: $space-4;
+.task-row {
+    border-left: 3px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border-light);
+    padding: $space-3 $space-4;
+    transition: background $transition-fast;
 
-    &:hover {
-        transform: translateY(-4px);
-        box-shadow: var(--shadow-md);
-    }
+    &:last-child { border-bottom: none; }
 
-    &.status-completed {
-        border-left-color: var(--color-success);
-        opacity: 0.85;
-    }
+    &:hover { background: var(--overlay-primary-06); }
 
-    &.status-cancelled {
-        border-left-color: var(--color-text-muted);
-        opacity: 0.7;
-    }
+    &--pending   { border-left-color: var(--color-secondary); }
+    &--completed { border-left-color: var(--color-success); opacity: 0.8; }
+    &--cancelled { border-left-color: var(--color-text-muted); opacity: 0.6; }
 
-    &.status-pending {
-        border-left-color: var(--color-secondary);
-    }
-
-    &__header {
+    &__main {
         display: flex;
-        justify-content: space-between;
         align-items: center;
-        gap: $space-4;
+        gap: $space-3;
+        flex-wrap: wrap;
     }
 
-    &__status {
-        display: inline-block;
+    &__badge {
+        flex-shrink: 0;
         padding: $space-1 $space-3;
         border-radius: $radius-full;
         font-size: $text-xs;
         font-weight: $fw-bold;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
+        letter-spacing: 0.04em;
         font-family: $font-body;
 
-        &.status-pending {
-            background: color-mix(in srgb, var(--color-warning) 15%, transparent);
+        &--pending {
+            background: rgba(245, 158, 11, 0.12);
             color: var(--color-warning);
         }
-
-        &.status-completed {
-            background: color-mix(in srgb, var(--color-success) 15%, transparent);
+        &--completed {
+            background: rgba(16, 185, 129, 0.12);
             color: var(--color-success);
         }
-
-        &.status-cancelled {
-            background: color-mix(in srgb, var(--color-text-muted) 15%, transparent);
+        &--cancelled {
+            background: var(--color-border-light);
             color: var(--color-text-muted);
         }
     }
 
-    &__date {
+    &__title {
+        flex: 1;
         font-size: $text-sm;
+        font-weight: $fw-semibold;
         color: var(--color-text);
-        opacity: 0.7;
+        font-family: $font-body;
+        min-width: 0;
+    }
+
+    &__date {
+        flex-shrink: 0;
+        font-size: $text-xs;
+        color: var(--color-text-muted);
         font-family: $font-body;
     }
 
-    &__content {
+    &__sub {
         display: flex;
-        flex-direction: column;
-        gap: $space-3;
+        align-items: center;
+        gap: $space-4;
+        margin-top: $space-2;
+        padding-left: calc($space-3 + 60px); // alinea con el título
+
+        @media (max-width: $bp-md) {
+            padding-left: 0;
+        }
     }
 
-    &__title {
-        margin: 0;
-        font-size: $text-lg;
-        font-weight: $fw-semibold;
-        color: var(--color-black);
-        font-family: $font-title;
-        line-height: 1.4;
+    &__obs-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: $space-1;
+        background: none;
+        border: none;
+        font-size: $text-xs;
+        color: var(--color-primary);
+        cursor: pointer;
+        font-family: $font-body;
+        padding: 0;
+        transition: opacity $transition-fast;
+
+        &:hover { opacity: 0.7; }
+    }
+
+    &__chevron {
+        display: inline-block;
+        font-size: $text-base;
+        line-height: 1;
+        transition: transform 0.2s ease;
+
+        &--open { transform: rotate(90deg); }
+    }
+
+    &__complete-btn {
+        font-size: $text-xs;
+        height: 28px;
+        padding: 0 $space-3;
     }
 
     &__observations {
-        margin: 0;
-        font-size: $text-base;
-        line-height: 1.6;
-        color: var(--color-text);
-        font-family: $font-body;
-    }
-
-    &__footer {
-        padding-top: $space-2;
-        border-top: 1px solid var(--color-disable);
-    }
-
-    &__button {
-        width: fit-content;
-        padding: $space-3 $space-6;
-        border: none;
+        margin-top: $space-2;
+        padding: $space-3 $space-4;
+        background: var(--color-bg);
         border-radius: $radius-sm;
-        font-size: $text-base;
-        font-weight: $fw-semibold;
+        font-size: $text-sm;
+        color: var(--color-text-muted);
+        line-height: 1.6;
         font-family: $font-body;
-        cursor: pointer;
-        transition: $transition-slow;
-        box-shadow: var(--shadow-md);
-
-        &:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-gold);
-        }
-
-        &:active {
-            transform: translateY(0);
-        }
-
-        &:disabled {
-            background: var(--color-disable);
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-    }
-}
-
-@media screen and (max-width: $bp-md) {
-    .task-card {
-        padding: $space-5;
-
-        &__title {
-            font-size: $text-base;
-        }
-
-        &__button {
-            font-size: $text-sm;
-            padding: $space-3 $space-5;
-        }
     }
 }
 </style>

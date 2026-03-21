@@ -6,7 +6,14 @@ import TaskCardComponent from '../../../common/cards/TaskCardComponent.vue';
 
 const task_store = useTaskStore()
 const admin_store = useAdminStore()
-const user_tasks = computed(() => admin_store.user?.therapy_tasks)
+const user_tasks = computed(() => {
+    const tasks = admin_store.user?.therapy_tasks || []
+    return [...tasks].sort((a, b) => {
+        if (a.status === 'pending' && b.status !== 'pending') return -1
+        if (a.status !== 'pending' && b.status === 'pending') return 1
+        return new Date(b.createdAt) - new Date(a.createdAt)
+    })
+})
 const new_task = ref('')
 const new_observations = ref('')
 const create_new_task = ref(false)
@@ -31,9 +38,12 @@ const create_task = async () => {
         <button class="action-btn" type="submit">Crear</button>
     </form>
 
-    <div>
+    <div class="tasks-section">
         <h2>Tareas</h2>
-        <TaskCardComponent v-for="task in user_tasks" :key="task._id" :task="task" :showCompleteButton="false" />
+        <div v-if="user_tasks.length > 0" class="tasks-list">
+            <TaskCardComponent v-for="task in user_tasks" :key="task._id" :task="task" :showCompleteButton="false" />
+        </div>
+        <p v-else class="empty-msg">No hay tareas asignadas.</p>
     </div>
 </template>
 
@@ -44,8 +54,26 @@ const create_task = async () => {
     gap: $space-4;
     padding: $space-4 0;
 
-    button {
-        width: fit-content;
-    }
+    button { width: fit-content; }
+}
+
+.tasks-section {
+    display: flex;
+    flex-direction: column;
+    gap: $space-4;
+
+    h2 { margin: 0; }
+}
+
+.tasks-list {
+    border: 1px solid var(--color-border);
+    border-radius: $radius-md;
+    overflow: hidden;
+}
+
+.empty-msg {
+    color: var(--color-text-muted);
+    font-size: $text-sm;
+    margin: 0;
 }
 </style>
