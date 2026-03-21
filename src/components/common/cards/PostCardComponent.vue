@@ -8,7 +8,7 @@ const props = defineProps({
     post: { type: Object, required: true }
 })
 
-const { format_date, reading_time } = useDateFormatter()
+const { format_month_year, reading_time } = useDateFormatter()
 const { src: cover_src, on_error } = useImageFallback(
     () => props.post.post_cover?.secure_url,
     '/img/placeholder-post.jpg'
@@ -28,8 +28,11 @@ const time = computed(() => reading_time(props.post.content))
             <h3 class="post-card__title">{{ post.title }}</h3>
             <p class="post-card__excerpt" v-html="post.brief || post.content?.substring(0, 120) + '...'" />
             <div class="post-card__meta">
-                <span class="post-card__date">{{ format_date(post.createdAt) }}</span>
-                <span class="post-card__read-time">{{ time }} min lectura</span>
+                <div class="post-card__meta-info">
+                    <span class="post-card__date">{{ format_month_year(post.createdAt) }}</span>
+                    <span class="post-card__sep">·</span>
+                    <span class="post-card__read-time">{{ time }} min lectura</span>
+                </div>
                 <LikeButtonComponent v-if="post._id" item_type="Post" :item_id="post._id" />
             </div>
         </div>
@@ -123,9 +126,19 @@ const time = computed(() => reading_time(props.post.content))
         margin-top: auto;
         padding-top: 0.75rem;
         border-top: 1px solid var(--color-border-light);
-        font-size: var(--text-xs);
-        color: var(--color-text-muted);
         font-family: 'Montserrat', sans-serif;
+    }
+
+    &__meta-info {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        font-size: 11px;
+        color: var(--color-text-muted);
+    }
+
+    &__sep {
+        opacity: 0.4;
     }
 
     &__read-time {
