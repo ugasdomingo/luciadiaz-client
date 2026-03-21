@@ -43,6 +43,11 @@
                 <button @click="set_view('likes')" :class="{ active: current_view === 'likes' }">
                     ♥ Mis Likes
                 </button>
+                <button @click="set_view('consent')"
+                    :class="{ active: current_view === 'consent', 'nav-btn--alert': !consent_signed }">
+                    📋 Consentimiento
+                    <span v-if="!consent_signed" class="nav-dot" title="Pendiente de firmar"></span>
+                </button>
 
                 <div class="divider"></div>
 
@@ -64,6 +69,7 @@
             <UserTaskComponent v-else-if="current_view === 'tasks'" />
             <UserMedicalHistoryComponent v-else-if="current_view === 'medical'" />
             <UserLikesComponent v-else-if="current_view === 'likes'" />
+            <UserConsentComponent v-else-if="current_view === 'consent'" />
         </section>
 
     </div>
@@ -78,6 +84,7 @@ import UserOrdersComponent from './user/UserOrdersComponent.vue'
 import UserMedicalHistoryComponent from './user/UserMedicalHistoryComponent.vue'
 import UserTaskComponent from './user/UserTaskComponent.vue'
 import UserLikesComponent from './user/UserLikesComponent.vue'
+import UserConsentComponent from './user/UserConsentComponent.vue'
 
 const auth_store = useAuthStore()
 const util_store = useUtilStore()
@@ -85,6 +92,7 @@ const util_store = useUtilStore()
 const current_view = ref('courses')
 const is_patient = computed(() => auth_store.user_data?.user?.role === 'patient')
 const initial = computed(() => auth_store.user_data?.user?.name?.charAt(0)?.toUpperCase() || '?')
+const consent_signed = computed(() => !!auth_store.user_data?.user?.consent_signed)
 
 const set_view = (view) => {
     current_view.value = view
@@ -223,6 +231,21 @@ const set_view = (view) => {
         background: var(--color-border-light);
         margin: $space-3 0;
     }
+
+    .nav-btn--alert {
+        color: var(--color-secondary) !important;
+    }
+}
+
+.nav-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    background: var(--color-error);
+    border-radius: $radius-full;
+    margin-left: $space-2;
+    vertical-align: middle;
+    flex-shrink: 0;
 }
 
 .sidebar-menu-btn {
