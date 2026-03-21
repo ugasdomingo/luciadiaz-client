@@ -59,6 +59,12 @@ const routes = [
         component: () => import('../views/PaypalReturn.vue'),
         meta: { requires_auth: true }
     },
+    {
+        path: '/paypal/therapy-return',
+        name: 'PaypalTherapyReturn',
+        component: () => import('../views/PaypalTherapyReturn.vue'),
+        meta: { requires_auth: true }
+    },
     // Test Pages *************************************
     {
         path: '/tests',
