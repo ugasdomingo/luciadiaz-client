@@ -51,7 +51,13 @@ const routes = [
         path: '/checkout/:slug',
         name: 'ProductCheckout',
         component: () => import('../views/ProductCheckout.vue'),
-        meta: { requires_auth: true } // Solo logueados
+        meta: { requires_auth: true }
+    },
+    {
+        path: '/paypal/return',
+        name: 'PaypalReturn',
+        component: () => import('../views/PaypalReturn.vue'),
+        meta: { requires_auth: true }
     },
     // Test Pages *************************************
     {
