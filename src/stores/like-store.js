@@ -1,44 +1,69 @@
 import { defineStore } from 'pinia'
-import { api } from '../service/axios'
 import { ref } from 'vue'
-import { useUtilStore } from './util-store'
+import { api } from '../service/axios'
+import { useAuthStore } from './auth-store'
+
+const LIKE_EMAIL_KEY = 'like_email'
 
 export const useLikeStore = defineStore('like', () => {
-    const util_store = useUtilStore()
-    const liked_by_user = ref(false)
-    const like_count = ref(0)
+    // Cache local: { 'Post:abc123': { count: 5, is_liked: true } }
+    const counts = ref({})
 
-    const toggle_like = async (item_type, item_id) => {
+    const get_key = (item_type, item_id) => `${item_type}:${item_id}`
+
+    const get_saved_email = () => localStorage.getItem(LIKE_EMAIL_KEY) || null
+    const save_email = (email) => localStorage.setItem(LIKE_EMAIL_KEY, email)
+
+    /** Fetch count + is_liked para un item */
+    const fetch_count = async (item_type, item_id) => {
+        const key = get_key(item_type, item_id)
         try {
-            util_store.set_loading(true)
-            const response = await api.post('/like', { item_type, item_id })
-            util_store.set_message(response.data.message, 'success')
-            return response.data.data
-        } catch (err) {
-            const msg = err.response?.data?.message || 'Error al procesar like'
-            util_store.set_message(msg, 'error')
-            return null
-        } finally {
-            util_store.set_loading(false)
+            const email = get_saved_email()
+            const q = email ? `?email=${encodeURIComponent(email)}` : ''
+            const res = await api.get(`/like/count/${item_type}/${item_id}${q}`)
+            counts.value[key] = res.data.data
+        } catch {
+            counts.value[key] = { count: 0, is_liked: false }
         }
     }
 
-    const get_likes_count = async (item_id) => {
-        try {
-            const response = await api.get(`/like/${item_id}`)
-            like_count.value = response.data.data?.count || 0
-            liked_by_user.value = response.data.data?.liked_by_user || false
-            return response.data.data
-        } catch (err) {
-            console.error('Error al obtener likes:', err)
-            return null
+    /**
+     * Toggle like.
+     * Si el usuario no está logueado, lanza 'EMAIL_REQUIRED' si no hay email disponible.
+     * El componente debe capturar eso y mostrar el popup.
+     */
+    const toggle = async (item_type, item_id, email = null) => {
+        const auth_store = useAuthStore()
+        const key = get_key(item_type, item_id)
+
+        const body = { item_type, item_id: String(item_id) }
+
+        if (!auth_store.token) {
+            const resolved = email || get_saved_email()
+            if (!resolved) throw new Error('EMAIL_REQUIRED')
+            body.email = resolved
+            save_email(resolved)
         }
+
+        const res = await api.post('/like/toggle', body)
+        counts.value[key] = { count: res.data.data.count, is_liked: res.data.data.liked }
+        return res.data.data
     }
 
-    return {
-        liked_by_user,
-        like_count,
-        toggle_like,
-        get_likes_count
+    /** Unirse a waitlist de un producto */
+    const join_waitlist = async (product_slug, email) => {
+        const res = await api.post('/like/waitlist', { product_slug, email })
+        return res.data
     }
+
+    const get_count = (item_type, item_id) =>
+        counts.value[get_key(item_type, item_id)] || { count: 0, is_liked: false }
+
+    /** Admin: obtener resumen de likes + leads */
+    const fetch_admin_summary = async () => {
+        const res = await api.get('/like/admin/summary')
+        return res.data.data
+    }
+
+    return { counts, fetch_count, toggle, join_waitlist, get_count, get_saved_email, save_email, fetch_admin_summary }
 })

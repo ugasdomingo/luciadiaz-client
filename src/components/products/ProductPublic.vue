@@ -28,10 +28,43 @@
                         <span class="price-amount">{{ formatted_price }}</span>
                     </div>
 
-                    <button @click="handle_purchase" class="btn-primary">
-                        {{ cta_text }}
-                    </button>
+                    <div class="product-cta__actions">
+                        <button @click="handle_purchase" class="btn-primary">
+                            {{ cta_text }}
+                        </button>
+
+                        <!-- Waitlist: solo para no logueados en productos coming_soon/pre_sale -->
+                        <button v-if="!auth_store.user_data && (product.status === 'coming_soon' || product.status === 'pre_sale')"
+                            @click="show_waitlist_popup = true"
+                            class="btn-outline waitlist-btn">
+                            📋 Apuntarme a la lista de espera
+                        </button>
+
+                        <LikeButtonComponent item_type="Product" :item_id="product._id" />
+                    </div>
                 </div>
+
+                <!-- Popup waitlist -->
+                <Teleport to="body">
+                    <div v-if="show_waitlist_popup" class="waitlist-overlay" @click.self="show_waitlist_popup = false">
+                        <div class="waitlist-popup">
+                            <button class="waitlist-popup__close" @click="show_waitlist_popup = false">✕</button>
+                            <template v-if="!waitlist_done">
+                                <h3>Lista de espera</h3>
+                                <p>Te avisaremos cuando esté disponible.</p>
+                                <input v-model="waitlist_email" type="email" placeholder="tu@correo.com"
+                                    class="waitlist-popup__input" @keyup.enter="submit_waitlist" />
+                                <p v-if="waitlist_error" class="waitlist-popup__error">{{ waitlist_error }}</p>
+                                <button class="action-btn" @click="submit_waitlist" :disabled="waitlist_loading">
+                                    {{ waitlist_loading ? '...' : 'Apuntarme' }}
+                                </button>
+                            </template>
+                            <template v-else>
+                                <p class="waitlist-popup__success">✅ ¡Apuntado! Te avisaremos pronto.</p>
+                            </template>
+                        </div>
+                    </div>
+                </Teleport>
             </div>
         </section>
 
@@ -83,10 +116,12 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../../stores/auth-store'
+import { useLikeStore } from '../../stores/like-store'
 import CourseLanding from '../landings/CourseLanding.vue'
+import LikeButtonComponent from '../common/LikeButtonComponent.vue'
 import { courses } from '../../static/courses.js'
 
 const props = defineProps({
@@ -95,6 +130,37 @@ const props = defineProps({
 
 const router = useRouter()
 const auth_store = useAuthStore()
+const like_store = useLikeStore()
+
+// Waitlist
+const show_waitlist_popup = ref(false)
+const waitlist_email = ref(like_store.get_saved_email() || '')
+const waitlist_error = ref('')
+const waitlist_loading = ref(false)
+const waitlist_done = ref(false)
+
+const submit_waitlist = async () => {
+    waitlist_error.value = ''
+    const email = waitlist_email.value.trim()
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        waitlist_error.value = 'Introduce un email válido'
+        return
+    }
+    waitlist_loading.value = true
+    try {
+        const res = await like_store.join_waitlist(props.product.slug, email)
+        if (res.data?.already_user) {
+            waitlist_error.value = 'Ya tienes cuenta. Inicia sesión para apuntarte.'
+        } else {
+            like_store.save_email(email)
+            waitlist_done.value = true
+        }
+    } catch {
+        waitlist_error.value = 'Error al apuntarse. Inténtalo de nuevo.'
+    } finally {
+        waitlist_loading.value = false
+    }
+}
 
 // Si el producto tiene una landing personalizada (free_course / paid_workshop), la usamos
 const course_config = computed(() => courses[props.product.slug] ?? null)
@@ -389,5 +455,67 @@ const handle_purchase = () => {
         font-weight: $fw-bold;
         cursor: pointer;
     }
+}
+
+.product-cta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: $space-3;
+    margin-top: $space-4;
+}
+
+.waitlist-btn {
+    font-size: $text-sm;
+}
+
+/* Waitlist popup */
+.waitlist-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: $space-4;
+}
+
+.waitlist-popup {
+    background: var(--color-bg-card);
+    border-radius: $radius-lg;
+    padding: $space-8;
+    max-width: 380px;
+    width: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: $space-3;
+    box-shadow: var(--shadow-lg);
+
+    &__close {
+        position: absolute;
+        top: $space-3;
+        right: $space-3;
+        background: none;
+        border: none;
+        font-size: $text-lg;
+        cursor: pointer;
+        color: var(--color-text-muted);
+    }
+
+    &__input { width: 100%; max-width: 100%; }
+
+    &__error { color: var(--color-error); font-size: $text-xs; margin: 0; }
+
+    &__success {
+        font-size: $text-base;
+        font-weight: $fw-semibold;
+        color: var(--color-success);
+        text-align: center;
+        margin: $space-4 0;
+    }
+
+    .action-btn { width: 100%; max-width: 100%; }
 }
 </style>

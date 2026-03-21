@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { useDateFormatter } from '../../../composables/useDateFormatter.js'
 import { useImageFallback } from '../../../composables/useImageFallback.js'
+import LikeButtonComponent from '../LikeButtonComponent.vue'
 
 const props = defineProps({
     post: { type: Object, required: true }
@@ -29,6 +30,7 @@ const time = computed(() => reading_time(props.post.content))
             <div class="post-card__meta">
                 <span class="post-card__date">{{ format_date(post.createdAt) }}</span>
                 <span class="post-card__read-time">{{ time }} min lectura</span>
+                <LikeButtonComponent v-if="post._id" item_type="Post" :item_id="post._id" />
             </div>
         </div>
     </RouterLink>

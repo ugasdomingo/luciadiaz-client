@@ -40,6 +40,10 @@
                     🏥 Historial Clínico
                 </button>
 
+                <button @click="set_view('likes')" :class="{ active: current_view === 'likes' }">
+                    ♥ Mis Likes
+                </button>
+
                 <div class="divider"></div>
 
                 <RouterLink to="/terapias" class="nav-link" @click="util_store.close_dashboard_sidebar()">
@@ -59,6 +63,7 @@
             <UserOrdersComponent v-else-if="current_view === 'orders'" />
             <UserTaskComponent v-else-if="current_view === 'tasks'" />
             <UserMedicalHistoryComponent v-else-if="current_view === 'medical'" />
+            <UserLikesComponent v-else-if="current_view === 'likes'" />
         </section>
 
     </div>
@@ -72,6 +77,7 @@ import UserCoursesComponent from './user/UserCoursesComponent.vue'
 import UserOrdersComponent from './user/UserOrdersComponent.vue'
 import UserMedicalHistoryComponent from './user/UserMedicalHistoryComponent.vue'
 import UserTaskComponent from './user/UserTaskComponent.vue'
+import UserLikesComponent from './user/UserLikesComponent.vue'
 
 const auth_store = useAuthStore()
 const util_store = useUtilStore()

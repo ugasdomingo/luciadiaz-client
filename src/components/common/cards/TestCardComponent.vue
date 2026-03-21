@@ -1,4 +1,6 @@
 <script setup>
+import LikeButtonComponent from '../LikeButtonComponent.vue'
+
 defineProps({
     test: { type: Object, required: true },
     index: { type: Number, default: 0 }
@@ -23,6 +25,7 @@ const palette = [
         </div>
         <div class="test-card__footer">
             <span class="test-card__cta">Comenzar test →</span>
+            <LikeButtonComponent item_type="Test" :item_id="test.id" />
         </div>
     </RouterLink>
 </template>
@@ -101,6 +104,10 @@ const palette = [
     &__footer {
         padding: 1rem 1.5rem 1.5rem;
         margin-top: auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
     }
 
     &__cta {
