@@ -40,7 +40,7 @@ const create_task = async () => {
 
     <div class="tasks-section">
         <h2>Tareas</h2>
-        <div v-if="user_tasks.length > 0" class="tasks-list">
+        <div v-if="user_tasks.length > 0" class="tasks-grid">
             <TaskCardComponent v-for="task in user_tasks" :key="task._id" :task="task" :showCompleteButton="false" />
         </div>
         <p v-else class="empty-msg">No hay tareas asignadas.</p>
@@ -65,10 +65,13 @@ const create_task = async () => {
     h2 { margin: 0; }
 }
 
-.tasks-list {
-    border: 1px solid var(--color-border);
-    border-radius: $radius-md;
-    overflow: hidden;
+.tasks-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: $space-4;
+
+    @media (max-width: $bp-lg) { grid-template-columns: repeat(2, 1fr); }
+    @media (max-width: $bp-md) { grid-template-columns: 1fr; }
 }
 
 .empty-msg {

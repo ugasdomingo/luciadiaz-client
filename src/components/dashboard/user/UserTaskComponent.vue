@@ -19,7 +19,7 @@ const all_tasks = computed(() => {
     <section class="user-tasks">
         <h2>Tareas terapéuticas</h2>
 
-        <div v-if="all_tasks.length > 0" class="tasks-list">
+        <div v-if="all_tasks.length > 0" class="tasks-grid">
             <TaskCardComponent
                 v-for="task in all_tasks"
                 :key="task._id || task.id"
@@ -40,10 +40,13 @@ const all_tasks = computed(() => {
     h2 { margin: 0; }
 }
 
-.tasks-list {
-    border: 1px solid var(--color-border);
-    border-radius: $radius-md;
-    overflow: hidden;
+.tasks-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: $space-4;
+
+    @media (max-width: $bp-lg) { grid-template-columns: repeat(2, 1fr); }
+    @media (max-width: $bp-md) { grid-template-columns: 1fr; }
 }
 
 .empty-msg {
