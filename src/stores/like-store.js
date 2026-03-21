@@ -9,10 +9,18 @@ export const useLikeStore = defineStore('like', () => {
     // Cache local: { 'Post:abc123': { count: 5, is_liked: true } }
     const counts = ref({})
 
+    // Email en memoria para la sesión — reactive, compartido entre todos los LikeButton
+    // Se inicializa con lo que haya en localStorage (sesiones anteriores)
+    const session_email = ref(localStorage.getItem(LIKE_EMAIL_KEY) || null)
+
     const get_key = (item_type, item_id) => `${item_type}:${item_id}`
 
-    const get_saved_email = () => localStorage.getItem(LIKE_EMAIL_KEY) || null
-    const save_email = (email) => localStorage.setItem(LIKE_EMAIL_KEY, email)
+    const get_saved_email = () => session_email.value
+
+    const save_email = (email) => {
+        session_email.value = email          // memoria → reactivo inmediatamente
+        localStorage.setItem(LIKE_EMAIL_KEY, email)  // persistencia entre sesiones
+    }
 
     /** Fetch count + is_liked para un item */
     const fetch_count = async (item_type, item_id) => {
@@ -65,5 +73,5 @@ export const useLikeStore = defineStore('like', () => {
         return res.data.data
     }
 
-    return { counts, fetch_count, toggle, join_waitlist, get_count, get_saved_email, save_email, fetch_admin_summary }
+    return { counts, session_email, fetch_count, toggle, join_waitlist, get_count, get_saved_email, save_email, fetch_admin_summary }
 })

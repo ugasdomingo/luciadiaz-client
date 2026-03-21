@@ -18,18 +18,23 @@ const popup_error = ref('')
 
 onMounted(() => {
     like_store.fetch_count(props.item_type, props.item_id)
-    // Pre-rellenar con email guardado
-    popup_email.value = like_store.get_saved_email() || ''
+    // Pre-rellenar con el email en memoria (reactivo)
+    popup_email.value = like_store.session_email || ''
 })
 
 const info = computed(() => like_store.get_count(props.item_type, props.item_id))
+
+// ¿Tenemos email disponible? — computed reactivo: se recalcula cuando otro
+// LikeButton guarda el email en el store, sin necesidad de re-click
+const has_email = computed(() => !!auth_store.token || !!like_store.session_email)
 
 const handle_click = async (e) => {
     e.preventDefault()
     e.stopPropagation()
     if (loading.value) return
 
-    if (!auth_store.token && !like_store.get_saved_email()) {
+    // Si no hay token NI email en memoria → pedir email
+    if (!has_email.value) {
         show_popup.value = true
         return
     }
@@ -42,6 +47,7 @@ const do_toggle = async (email = null) => {
     try {
         await like_store.toggle(props.item_type, props.item_id, email)
         show_popup.value = false
+        popup_error.value = ''
     } catch (err) {
         if (err.message === 'EMAIL_REQUIRED') {
             show_popup.value = true
@@ -58,6 +64,8 @@ const submit_email = async () => {
         popup_error.value = 'Introduce un email válido'
         return
     }
+    // save_email guarda en memoria (session_email) y en localStorage
+    like_store.save_email(email)
     await do_toggle(email)
 }
 
