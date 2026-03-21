@@ -1,16 +1,13 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onBeforeMount } from 'vue'
 import { usePostStore } from '../../../stores/post-store.js'
-import { onBeforeMount } from 'vue'
 import EditorComponent from '../../common/EditorComponent.vue'
-import PostCardComponent from '../../common/cards/PostCardComponent.vue'
 import { useAuthStore } from '../../../stores/auth-store.js'
 
 const auth_store = useAuthStore()
-
 const post_store = usePostStore()
+
 const show_create_post = ref(false)
-const show_update_post = ref(false)
 const post_to_update = ref(null)
 
 const toggle_create_post = () => {
@@ -18,14 +15,12 @@ const toggle_create_post = () => {
 }
 
 const toggle_update_post = () => {
-    show_update_post.value = !show_update_post.value
-
     if (post_store.posts.length === 0) {
         post_store.get_all_posts()
     }
 }
 
-//Formdata
+// Formdata
 const title = ref('')
 const slug = ref('')
 const content = ref('')
@@ -34,8 +29,6 @@ const tags = ref('')
 const post_cover = ref()
 const status = ref('draft')
 
-
-//Handdle_submit
 const handle_submit = async () => {
     const form_data = new FormData()
     form_data.append('title', title.value)
@@ -57,27 +50,22 @@ const handle_submit = async () => {
     post_cover.value = null
 }
 
-//Handdle_file_change
 const handle_file_change = (event) => {
     const file = event.target.files[0]
-    if (file) {
-        post_cover.value = file
-    }
-
+    if (file) post_cover.value = file
 }
 
-//Prepare post to update
 const prepare_post_to_update = (post) => {
     post_to_update.value = post
-    toggle_create_post()
+    show_create_post.value = true
     title.value = post.title
     slug.value = post.slug
     content.value = post.content
     category.value = post.category
     tags.value = post.tags
+    status.value = post.status || 'draft'
 }
 
-//Handdle_update
 const handle_update = async () => {
     const form_data = new FormData()
     form_data.append('title', title.value)
@@ -98,96 +86,254 @@ const handle_update = async () => {
     status.value = 'draft'
     post_cover.value = null
     post_to_update.value = null
-    toggle_update_post()
+    show_create_post.value = false
 }
 
+const cancel_edit = () => {
+    post_to_update.value = null
+    show_create_post.value = false
+    title.value = ''
+    slug.value = ''
+    content.value = ''
+    category.value = ''
+    tags.value = ''
+    status.value = 'draft'
+    post_cover.value = null
+}
+
+const get_cover = (post) => {
+    if (!post.post_cover) return null
+    if (typeof post.post_cover === 'string') return post.post_cover
+    return post.post_cover?.secure_url || null
+}
+
+const status_label = { draft: 'Borrador', published: 'Publicado' }
+
+onBeforeMount(() => {
+    if (post_store.posts.length === 0) post_store.get_all_posts()
+})
 </script>
 
 <template>
-    <section class="section__container">
-        <h2 @click="toggle_create_post">Crear Post <span>{{ show_create_post ? '-' : '+' }}</span></h2>
-        <form @submit.prevent="handle_submit" v-if="show_create_post" class="section__container__create">
-            <input type="text" placeholder="Titulo" v-model="title" required>
+    <section class="manage-posts">
+
+        <!-- Crear Post -->
+        <h2 @click="toggle_create_post" class="section-toggle">
+            Crear Post <span>{{ show_create_post && !post_to_update ? '−' : '+' }}</span>
+        </h2>
+
+        <form @submit.prevent="post_to_update ? handle_update() : handle_submit()"
+            v-if="show_create_post" class="post-form">
+            <input type="text" placeholder="Título" v-model="title" required>
             <input type="text" placeholder="Slug" v-model="slug" required>
             <EditorComponent v-model="content" />
-            <input type="text" placeholder="Categoria" v-model="category" required>
+            <input type="text" placeholder="Categoría" v-model="category" required>
             <input type="text" placeholder="Tags" v-model="tags" required>
-            <input type="file" accept="image/*" @change="handle_file_change" required>
+            <input type="file" accept="image/*" @change="handle_file_change">
             <select v-model="status">
                 <option value="draft">Borrador</option>
                 <option value="published">Publicado</option>
             </select>
-            <button type="submit" class="action-btn">Crear Post</button>
-            <button type="button" class="nobg-btn" @click="handle_update">Actualizar Post</button>
+            <div class="post-form__actions">
+                <button type="submit" class="action-btn">
+                    {{ post_to_update ? 'Guardar cambios' : 'Crear Post' }}
+                </button>
+                <button v-if="post_to_update" type="button" class="nobg-btn" @click="cancel_edit">
+                    Cancelar
+                </button>
+            </div>
         </form>
-        <h2 @click="toggle_update_post">Actualizar Post <span>{{ show_update_post ? '-' : '+' }}</span></h2>
-        <section v-if="show_update_post" class="section__container__posts">
-            <div v-for="post in post_store.posts" :key="post.id">
-                <PostCardComponent :post="post" />
-                <div class="section__container__posts__actions" v-if="auth_store.user_data.user.role === 'Admin'">
+
+        <!-- Lista de Posts -->
+        <h2 @click="toggle_update_post" class="section-toggle">
+            Posts <span>{{ post_store.posts.length }}</span>
+        </h2>
+
+        <ul v-if="post_store.posts.length > 0" class="posts-list">
+            <li v-for="post in post_store.posts" :key="post._id" class="post-row">
+                <div class="post-row__thumb">
+                    <img v-if="get_cover(post)" :src="get_cover(post)" :alt="post.title">
+                    <div v-else class="post-row__thumb--empty">✍</div>
+                </div>
+                <div class="post-row__info">
+                    <span class="post-row__title">{{ post.title }}</span>
+                    <span class="post-row__meta">
+                        {{ post.category }} ·
+                        <span :class="`status-dot status-dot--${post.status}`">
+                            {{ status_label[post.status] || post.status }}
+                        </span>
+                    </span>
+                </div>
+                <div v-if="auth_store.user_data.user.role === 'Admin'" class="post-row__actions">
                     <button @click="post_store.update_post(post._id, { status: 'published' })"
                         class="action-btn">Publicar</button>
-                    <button @click="post_store.delete_post(post._id)" class="nobg-btn">Eliminar</button>
-                    <button @click="prepare_post_to_update(post)" class="action-btn">Editar</button>
+                    <button @click="prepare_post_to_update(post)" class="nobg-btn">Editar</button>
+                    <button @click="post_store.delete_post(post._id)" class="nobg-btn nobg-btn--danger">Eliminar</button>
                 </div>
-            </div>
-        </section>
+            </li>
+        </ul>
+
+        <p v-else class="empty-msg">No hay posts aún.</p>
+
     </section>
 </template>
 
 <style scoped lang="scss">
-.section__container {
-    width: 100%;
-    margin: 0;
-    padding: 0;
+.manage-posts {
     display: flex;
     flex-direction: column;
-    box-sizing: border-box;
+    gap: 0;
+}
 
-    h2 {
+.section-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0;
+    padding: $space-5 $space-2;
+    cursor: pointer;
+    transition: color $transition-fast;
+
+    &:hover { color: var(--color-primary); }
+
+    span {
+        font-size: $text-xl;
+        font-weight: $fw-regular;
+        color: var(--color-text-muted);
+    }
+}
+
+.post-form {
+    display: flex;
+    flex-direction: column;
+    gap: $space-4;
+    padding: $space-4 0 $space-6;
+
+    input, select { max-width: 100%; }
+
+    &__actions {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin: 0;
-        padding: $space-6 $space-2;
-        cursor: pointer;
-        color: var(--color-text);
-        transition: all 0.25s;
+        gap: $space-3;
+        flex-wrap: wrap;
 
-        &:hover {
-            color: var(--color-primary);
+        .action-btn { width: auto; max-width: fit-content; }
+    }
+}
+
+/* ── Posts list ── */
+.posts-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border: 1px solid var(--color-border);
+    border-radius: $radius-md;
+    overflow: hidden;
+}
+
+.post-row {
+    display: flex;
+    align-items: center;
+    gap: $space-4;
+    padding: $space-3 $space-4;
+    border-bottom: 1px solid var(--color-border);
+    transition: background $transition-fast;
+
+    &:last-child { border-bottom: none; }
+    &:hover { background: var(--overlay-primary-06); }
+
+    &__thumb {
+        width: 52px;
+        height: 52px;
+        border-radius: $radius-sm;
+        overflow: hidden;
+        flex-shrink: 0;
+        background: var(--color-border-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        &--empty {
+            font-size: $text-xl;
+            color: var(--color-text-muted);
         }
     }
 
-    &__create {
-        width: 100%;
+    &__info {
+        flex: 1;
+        min-width: 0;
         display: flex;
         flex-direction: column;
-        gap: $space-4;
-        padding: $space-4 0;
-
-        input, select {
-            max-width: 100%;
-        }
-
-        button {
-            margin-top: $space-4;
-        }
+        gap: $space-1;
     }
 
-    &__posts {
-        width: 100%;
+    &__title {
+        font-size: $text-sm;
+        font-weight: $fw-semibold;
+        color: var(--color-text);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    &__meta {
+        font-size: $text-xs;
+        color: var(--color-text-muted);
+    }
+
+    &__actions {
         display: flex;
-        justify-content: space-between;
+        gap: $space-2;
+        flex-shrink: 0;
         flex-wrap: wrap;
-        gap: $space-6;
-        padding: $space-4 0;
 
-        &__actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: $space-3;
+        .action-btn, .nobg-btn {
+            width: auto;
+            max-width: fit-content;
+            padding: $space-1 $space-3;
+            font-size: $text-xs;
+        }
+
+        @media (max-width: $bp-md) {
+            flex-direction: column;
+            gap: $space-1;
+
+            .action-btn, .nobg-btn {
+                width: 100%;
+                max-width: 100%;
+                text-align: center;
+            }
         }
     }
+}
+
+.status-dot {
+    &--published { color: var(--color-success); }
+    &--draft     { color: var(--color-text-muted); }
+}
+
+.nobg-btn--danger {
+    border-color: var(--color-error);
+    color: var(--color-error);
+
+    &:hover {
+        background-color: var(--color-error);
+        color: var(--color-white);
+    }
+}
+
+.empty-msg {
+    color: var(--color-text-muted);
+    font-size: $text-sm;
+    padding: $space-4 $space-2;
+    margin: 0;
 }
 </style>

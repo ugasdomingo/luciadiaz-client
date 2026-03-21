@@ -1,11 +1,9 @@
 <script setup>
-import { onMounted, ref, computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { onMounted, ref } from 'vue'
 import { useUtilStore } from '../../stores/util-store'
 import { useAuthStore } from '../../stores/auth-store'
 import NavbarComponent from './NavbarComponent.vue'
 
-const route = useRoute()
 const util_store = useUtilStore()
 const auth_store = useAuthStore()
 
@@ -13,15 +11,8 @@ const show_header = ref(true)
 const need_bg = ref(false)
 let last_scroll_y = 0
 
-// En el dashboard la hamburguesa controla el aside, no el navbar global
-const is_dashboard = computed(() => route.name === 'Dashboard' || route.name === 'One User Info')
-
 const on_hamburger_click = () => {
-    if (is_dashboard.value) {
-        util_store.toggle_dashboard_sidebar()
-    } else {
-        util_store.toggle_navbar()
-    }
+    util_store.toggle_navbar()
 }
 
 onMounted(() => {
@@ -53,17 +44,16 @@ onMounted(() => {
                 <span class="text--short">✕</span>
             </button>
 
-            <!-- Hamburguesa: abre aside en dashboard, navbar en el resto -->
+            <!-- Hamburguesa: abre navbar global -->
             <button class="hamburger" @click="on_hamburger_click" aria-label="Menú">
                 <span class="hamburger__line"
-                    :class="{ 'hamburger__line--open': is_dashboard ? util_store.dashboard_sidebar_open : util_store.show_navbar }">
+                    :class="{ 'hamburger__line--open': util_store.show_navbar }">
                     <span></span><span></span><span></span>
                 </span>
             </button>
 
-            <!-- Navbar global (solo en páginas normales) -->
-            <NavbarComponent v-if="!is_dashboard"
-                :class="util_store.show_navbar ? 'navbar--visible' : 'navbar--hidden'" />
+            <!-- Navbar global -->
+            <NavbarComponent :class="util_store.show_navbar ? 'navbar--visible' : 'navbar--hidden'" />
         </div>
 
     </header>
@@ -110,6 +100,15 @@ onMounted(() => {
 
     &__agendar {
         white-space: nowrap;
+        /* Compact: igual que diginode navbar__cta */
+        width: auto;
+        max-width: none;
+        height: 36px;
+        padding: 0 $space-4;
+        font-size: $text-sm;
+        font-weight: $fw-medium;
+        display: inline-flex;
+        align-items: center;
     }
 }
 

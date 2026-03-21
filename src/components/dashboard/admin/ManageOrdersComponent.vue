@@ -147,6 +147,32 @@
             </div>
         </Teleport>
 
+        <!-- Historial de pedidos aprobados -->
+        <div class="orders-history">
+            <h3 class="history-title">Historial de pedidos</h3>
+            <div v-if="completed_orders_all.length === 0" class="history-empty">
+                <p>No hay pedidos aprobados aún.</p>
+            </div>
+            <div v-else class="history-list">
+                <div v-for="order in history_orders" :key="order._id" class="history-card">
+                    <div class="history-card__info">
+                        <span class="history-card__id">#{{ order._id.slice(-8) }}</span>
+                        <span class="history-card__client">{{ order.user_id?.name || 'N/A' }}</span>
+                        <span class="history-card__product">{{ order.products?.[0]?.title || '—' }}</span>
+                    </div>
+                    <div class="history-card__meta">
+                        <span class="history-card__amount">{{ formatPrice(order.total_amount) }}</span>
+                        <span class="history-card__date">{{ formatDate(order.createdAt) }}</span>
+                        <span class="order-badge order-badge--approved">✅ Aprobado</span>
+                    </div>
+                </div>
+                <button v-if="completed_orders_all.length > 3" @click="show_all_history = !show_all_history"
+                    class="history-toggle">
+                    {{ show_all_history ? 'Ver menos' : `Ver todos (${completed_orders_all.length})` }}
+                </button>
+            </div>
+        </div>
+
         <!-- Modal: Confirmar rechazo -->
         <Teleport to="body">
             <div v-if="showRejectModal" class="modal-overlay" @click="showRejectModal = false">
@@ -180,7 +206,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useOrderStore } from '../../../stores/order-store'
 import LoadingComponent from '../../common/LoadingComponent.vue'
 
@@ -189,6 +215,8 @@ const order_store = useOrderStore()
 // State
 const loading = ref(false)
 const orders = ref([])
+const completed_orders_all = ref([])
+const show_all_history = ref(false)
 const processingOrder = ref(null)
 const approving = ref(false)
 const rejecting = ref(false)
@@ -198,11 +226,19 @@ const showRejectModal = ref(false)
 const selectedImage = ref(null)
 const orderToProcess = ref(null)
 
-// Cargar órdenes pendientes
+const history_orders = computed(() =>
+    show_all_history.value ? completed_orders_all.value : completed_orders_all.value.slice(0, 3)
+)
+
+// Cargar órdenes pendientes y completadas
 const loadOrders = async () => {
     loading.value = true
-    const result = await order_store.fetch_pending_orders()
-    orders.value = result || []
+    const [pending, all] = await Promise.all([
+        order_store.fetch_pending_orders(),
+        order_store.fetch_all_orders()
+    ])
+    orders.value = pending || []
+    completed_orders_all.value = (all || []).filter(o => o.payment_status === 'completed')
     loading.value = false
 }
 
@@ -796,6 +832,130 @@ onMounted(() => {
         background: var(--color-white);
         color: var(--color-text);
     }
+}
+
+// HISTORIAL
+.orders-history {
+    margin-top: $space-12;
+    padding-top: $space-8;
+    border-top: 2px solid var(--color-border);
+}
+
+.history-title {
+    font-size: $text-xl;
+    font-weight: $fw-bold;
+    margin: 0 0 $space-5;
+    color: var(--color-text);
+}
+
+.history-empty {
+    p { color: var(--color-text-muted); font-size: $text-sm; margin: 0; }
+}
+
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: $space-2;
+}
+
+.history-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: $space-4;
+    padding: $space-3 $space-5;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: $radius-sm;
+
+    @media (max-width: $bp-md) {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: $space-2;
+    }
+
+    &__info {
+        display: flex;
+        align-items: center;
+        gap: $space-4;
+        flex: 1;
+        min-width: 0;
+
+        @media (max-width: $bp-md) {
+            flex-wrap: wrap;
+            gap: $space-2;
+        }
+    }
+
+    &__id {
+        font-size: $text-xs;
+        font-weight: $fw-semibold;
+        color: var(--color-text-muted);
+        flex-shrink: 0;
+    }
+
+    &__client {
+        font-size: $text-sm;
+        font-weight: $fw-medium;
+        color: var(--color-text);
+    }
+
+    &__product {
+        font-size: $text-sm;
+        color: var(--color-text-muted);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 200px;
+    }
+
+    &__meta {
+        display: flex;
+        align-items: center;
+        gap: $space-4;
+        flex-shrink: 0;
+
+        @media (max-width: $bp-md) {
+            gap: $space-3;
+        }
+    }
+
+    &__amount {
+        font-size: $text-sm;
+        font-weight: $fw-bold;
+        color: var(--color-primary);
+    }
+
+    &__date {
+        font-size: $text-xs;
+        color: var(--color-text-muted);
+
+        @media (max-width: $bp-md) { display: none; }
+    }
+}
+
+.order-badge--approved {
+    background: rgba(16, 185, 129, 0.12);
+    color: var(--color-success);
+    padding: $space-1 $space-3;
+    border-radius: $radius-full;
+    font-size: $text-xs;
+    font-weight: $fw-semibold;
+}
+
+.history-toggle {
+    margin-top: $space-2;
+    background: none;
+    border: 1px solid var(--color-border);
+    border-radius: $radius-sm;
+    padding: $space-2 $space-4;
+    font-size: $text-sm;
+    color: var(--color-primary);
+    cursor: pointer;
+    transition: $transition-fast;
+    font-family: $font-body;
+
+    &:hover { border-color: var(--color-primary); }
 }
 
 // BOTONES

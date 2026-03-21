@@ -50,6 +50,11 @@
 
         <!-- Contenido principal -->
         <section class="dashboard-content">
+            <!-- Botón menú del sidebar (solo mobile) -->
+            <button class="sidebar-menu-btn" @click="util_store.toggle_dashboard_sidebar()" aria-label="Abrir menú">
+                ☰ Menú
+            </button>
+
             <UserCoursesComponent v-if="current_view === 'courses'" />
             <UserOrdersComponent v-else-if="current_view === 'orders'" />
             <UserTaskComponent v-else-if="current_view === 'tasks'" />
@@ -212,6 +217,26 @@ const set_view = (view) => {
         background: var(--color-border-light);
         margin: $space-3 0;
     }
+}
+
+.sidebar-menu-btn {
+    display: none;
+    align-items: center;
+    gap: $space-2;
+    background: none;
+    border: 1px solid var(--color-border);
+    border-radius: $radius-sm;
+    padding: $space-2 $space-4;
+    font-size: $text-sm;
+    font-family: $font-body;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    margin-bottom: $space-4;
+    transition: $transition-fast;
+
+    &:hover { color: var(--color-text); border-color: var(--color-text-muted); }
+
+    @media (max-width: $bp-md) { display: inline-flex; }
 }
 
 .dashboard-content {
