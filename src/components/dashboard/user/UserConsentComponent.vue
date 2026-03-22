@@ -140,10 +140,14 @@ const submit = async () => {
                 Tu consentimiento informado está guardado. Puedes descargarlo cuando quieras.
             </p>
             <div class="consent-done__actions">
-                <button v-if="already_signed" @click="download_my_consent"
-                    :disabled="downloading_pdf" class="action-btn">
+                <!-- Solo visible cuando el admin ha subido el PDF al sistema -->
+                <button v-if="auth_store.user_data?.user?.consent_form_url"
+                    @click="download_my_consent" :disabled="downloading_pdf" class="action-btn">
                     {{ downloading_pdf ? 'Cargando...' : '📄 Ver / Descargar PDF' }}
                 </button>
+                <p v-else style="font-size:0.85rem;color:var(--color-text-muted);margin:0;">
+                    📬 Hemos recibido tu consentimiento. Te avisaremos por correo cuando esté disponible para descargar.
+                </p>
                 <p class="consent-done__next">
                     ✅ Siguiente paso: <strong>completa tu historial clínico</strong> antes de tu primera sesión.
                 </p>
