@@ -38,12 +38,6 @@ onMounted(() => {
                 <span class="text--short">Agendar</span>
             </RouterLink>
 
-            <!-- Cerrar sesión: solo si hay token -->
-            <button v-if="auth_store.token" @click="auth_store.logout()" class="logout-btn" title="Cerrar sesión">
-                <span class="text--long">Cerrar sesión</span>
-                <span class="text--short">✕</span>
-            </button>
-
             <!-- Hamburguesa: abre navbar global -->
             <button class="hamburger" @click="on_hamburger_click" aria-label="Menú">
                 <span class="hamburger__line"
@@ -106,20 +100,6 @@ onMounted(() => {
 .text--long  { display: inline; }
 .text--short { display: none; }
 
-.logout-btn {
-    background: none;
-    border: 1px solid var(--color-border-light);
-    border-radius: $radius-sm;
-    cursor: pointer;
-    color: var(--color-text-muted);
-    font-size: $text-sm;
-    padding: $space-1 $space-3;
-    white-space: nowrap;
-    transition: color $transition-fast, border-color $transition-fast;
-    flex-shrink: 0;
-
-    &:hover { color: var(--color-error); border-color: var(--color-error); }
-}
 
 .hamburger {
     background: none;
@@ -163,6 +143,5 @@ onMounted(() => {
     .text--long  { display: none; }
     .text--short { display: inline; }
 
-    .logout-btn { font-size: $text-base; padding: $space-1 $space-2; }
 }
 </style>
