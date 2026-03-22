@@ -29,11 +29,27 @@ const canvas_ref = ref(null)
 let signature_pad = null
 
 const already_signed = computed(() => !!auth_store.user_data?.user?.consent_signed)
-const consent_url    = computed(() => auth_store.user_data?.user?.consent_form_url)
 const consent_date   = computed(() => {
     const d = auth_store.user_data?.user?.consent_signed_at
     return d ? new Date(d).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' }) : ''
 })
+
+// Descargar PDF vía proxy del servidor (evita restricción de Cloudinary)
+const downloading_pdf = ref(false)
+const download_my_consent = async () => {
+    downloading_pdf.value = true
+    try {
+        const res = await api.get('/consent/my-pdf', { responseType: 'blob' })
+        const blob = new Blob([res.data], { type: 'application/pdf' })
+        const url = URL.createObjectURL(blob)
+        window.open(url, '_blank')
+        setTimeout(() => URL.revokeObjectURL(url), 15000)
+    } catch {
+        alert('No se pudo obtener el PDF. Inténtalo más tarde.')
+    } finally {
+        downloading_pdf.value = false
+    }
+}
 
 onMounted(() => {
     // Pre-rellenar nombre del usuario si está disponible
@@ -124,9 +140,10 @@ const submit = async () => {
                 Tu consentimiento informado está guardado. Puedes descargarlo cuando quieras.
             </p>
             <div class="consent-done__actions">
-                <a v-if="consent_url" :href="consent_url" target="_blank" rel="noopener" class="action-btn">
-                    📄 Descargar PDF
-                </a>
+                <button v-if="already_signed" @click="download_my_consent"
+                    :disabled="downloading_pdf" class="action-btn">
+                    {{ downloading_pdf ? 'Cargando...' : '📄 Ver / Descargar PDF' }}
+                </button>
                 <p class="consent-done__next">
                     ✅ Siguiente paso: <strong>completa tu historial clínico</strong> antes de tu primera sesión.
                 </p>
