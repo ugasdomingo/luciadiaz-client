@@ -32,12 +32,6 @@ onMounted(() => {
         </RouterLink>
 
         <div class="header__menu">
-            <!-- Agendar: solo fuera de home -->
-            <RouterLink v-if="!util_store.is_home" to="/terapias" class="action-btn header__agendar">
-                <span class="text--long">Agendar consulta terapéutica</span>
-                <span class="text--short">Agendar</span>
-            </RouterLink>
-
             <!-- Hamburguesa: abre navbar global -->
             <button class="hamburger" @click="on_hamburger_click" aria-label="Menú">
                 <span class="hamburger__line"
@@ -92,13 +86,7 @@ onMounted(() => {
         flex-shrink: 0;
     }
 
-    &__agendar {
-        white-space: nowrap;
-    }
 }
-
-.text--long  { display: inline; }
-.text--short { display: none; }
 
 
 .hamburger {
@@ -139,9 +127,5 @@ onMounted(() => {
 
 @media (max-width: $bp-md) {
     .header { padding: $space-3 $space-4; }
-
-    .text--long  { display: none; }
-    .text--short { display: inline; }
-
 }
 </style>

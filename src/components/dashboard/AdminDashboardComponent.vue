@@ -67,6 +67,16 @@ const set_view = (key) => {
                     {{ item.label }}
                 </button>
             </nav>
+
+            <div class="sidebar-bottom">
+                <button class="logout-btn" @click="auth_store.logout()" aria-label="Cerrar sesión" title="Cerrar sesión">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                        <polyline points="16 17 21 12 16 7"/>
+                        <line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                </button>
+            </div>
         </aside>
 
         <!-- Contenido principal -->
@@ -223,6 +233,32 @@ const set_view = (key) => {
     &:hover { color: var(--color-text); border-color: var(--color-text-muted); }
 
     @media (max-width: $bp-md) { display: inline-flex; }
+}
+
+.sidebar-bottom {
+    margin-top: auto;
+    padding-top: $space-4;
+    border-top: 1px solid var(--color-border-light);
+    display: flex;
+    justify-content: center;
+}
+
+.logout-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-text-muted);
+    padding: $space-2;
+    border-radius: $radius-sm;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: $transition-fast;
+
+    &:hover {
+        color: var(--color-error);
+        background: rgba(239, 68, 68, 0.08);
+    }
 }
 
 .dashboard-content {

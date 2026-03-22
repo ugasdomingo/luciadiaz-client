@@ -4,6 +4,7 @@ import SignaturePad from 'signature_pad'
 import { useAuthStore } from '../../../stores/auth-store.js'
 import { api } from '../../../service/axios.js'
 
+const emit = defineEmits(['navigate'])
 const auth_store = useAuthStore()
 
 // Estado principal
@@ -136,20 +137,23 @@ const submit = async () => {
             <div class="consent-done__icon">✅</div>
             <h2 class="consent-done__title">Consentimiento firmado</h2>
             <p class="consent-done__date">Firmado el {{ consent_date }}</p>
-            <p class="consent-done__sub">
-                Tu consentimiento informado está guardado. Puedes descargarlo cuando quieras.
-            </p>
             <div class="consent-done__actions">
                 <!-- Solo visible cuando el admin ha subido el PDF al sistema -->
-                <button v-if="auth_store.user_data?.user?.consent_form_url"
-                    @click="download_my_consent" :disabled="downloading_pdf" class="action-btn">
-                    {{ downloading_pdf ? 'Cargando...' : '📄 Ver / Descargar PDF' }}
-                </button>
-                <p v-else style="font-size:0.85rem;color:var(--color-text-muted);margin:0;">
+                <template v-if="auth_store.user_data?.user?.consent_form_url">
+                    <p class="consent-done__sub">
+                        Tu consentimiento está guardado y disponible para descargar.
+                    </p>
+                    <button @click="download_my_consent" :disabled="downloading_pdf" class="action-btn">
+                        {{ downloading_pdf ? 'Cargando...' : '📄 Ver / Descargar PDF' }}
+                    </button>
+                </template>
+                <p v-else class="consent-done__sub">
                     📬 Hemos recibido tu consentimiento. Te avisaremos por correo cuando esté disponible para descargar.
                 </p>
                 <p class="consent-done__next">
-                    ✅ Siguiente paso: <strong>completa tu historial clínico</strong> antes de tu primera sesión.
+                    ✅ Siguiente paso: completa tu
+                    <button class="consent-done__link" @click="emit('navigate', 'medical')">historial clínico</button>
+                    antes de tu primera sesión.
                 </p>
             </div>
         </div>
@@ -411,6 +415,21 @@ const submit = async () => {
         background: var(--color-bg);
         border-radius: $radius-md;
         margin: 0;
+    }
+
+    &__link {
+        background: none;
+        border: none;
+        padding: 0;
+        font-size: inherit;
+        font-family: inherit;
+        font-weight: $fw-semibold;
+        color: var(--color-primary);
+        cursor: pointer;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+
+        &:hover { opacity: 0.75; }
     }
 }
 
