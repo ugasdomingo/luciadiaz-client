@@ -15,19 +15,16 @@ const register = async () => {
     <form @submit.prevent="register" class="register-form">
 
         <div class="field">
-            <label for="reg-name">Nombre completo</label>
-            <input id="reg-name" type="text" v-model="auth_store.name" placeholder="Tu nombre" />
+            <input id="reg-name" type="text" v-model="auth_store.name" placeholder="Nombre completo" />
         </div>
 
         <div class="field">
-            <label for="reg-email">Correo electrónico</label>
-            <input id="reg-email" type="email" v-model="auth_store.email" placeholder="correo@ejemplo.com" />
+            <input id="reg-email" type="email" v-model="auth_store.email" placeholder="Correo electrónico" />
         </div>
 
         <div class="field">
-            <label for="reg-password">Contraseña</label>
             <div class="password-wrap">
-                <input id="reg-password" v-model="auth_store.password" placeholder="Mínimo 8 caracteres"
+                <input id="reg-password" v-model="auth_store.password" placeholder="Contraseña"
                     :type="show_password ? 'text' : 'password'" />
                 <img :src="show_password ? '/icon/icon-eye-open.svg' : '/icon/icon-eye-close.svg'" alt="ver contraseña"
                     @click="show_password = !show_password" />
