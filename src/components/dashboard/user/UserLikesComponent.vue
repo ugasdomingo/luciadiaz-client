@@ -18,9 +18,10 @@ const likes = computed(() => {
 })
 
 const get_link = (like) => {
-    if (like.item_type === 'Post') return `/blog/${like.item_id}`
+    const slug = like.item_slug || like.item_id
+    if (like.item_type === 'Post') return `/blog/${slug}`
     if (like.item_type === 'Test') return `/tests`
-    if (like.item_type === 'Product') return `/productos/${like.item_id}`
+    if (like.item_type === 'Product') return `/productos/${slug}`
     return '/'
 }
 </script>
