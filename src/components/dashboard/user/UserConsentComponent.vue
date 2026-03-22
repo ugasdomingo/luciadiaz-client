@@ -34,6 +34,7 @@ const consent_date   = computed(() => {
     const d = auth_store.user_data?.user?.consent_signed_at
     return d ? new Date(d).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' }) : ''
 })
+const has_pdf = computed(() => !!auth_store.user_data?.user?.consent_form_url)
 
 // Descargar PDF vía proxy del servidor (evita restricción de Cloudinary)
 const downloading_pdf = ref(false)
@@ -139,7 +140,7 @@ const submit = async () => {
             <p class="consent-done__date">Firmado el {{ consent_date }}</p>
             <div class="consent-done__actions">
                 <!-- Solo visible cuando el admin ha subido el PDF al sistema -->
-                <template v-if="auth_store.user_data?.user?.consent_form_url">
+                <template v-if="has_pdf">
                     <p class="consent-done__sub">
                         Tu consentimiento está guardado y disponible para descargar.
                     </p>
@@ -150,11 +151,11 @@ const submit = async () => {
                 <p v-else class="consent-done__sub">
                     📬 Hemos recibido tu consentimiento. Te avisaremos por correo cuando esté disponible para descargar.
                 </p>
-                <p class="consent-done__next">
+                <div class="consent-done__next">
                     ✅ Siguiente paso: completa tu
                     <button class="consent-done__link" @click="emit('navigate', 'medical')">historial clínico</button>
                     antes de tu primera sesión.
-                </p>
+                </div>
             </div>
         </div>
 

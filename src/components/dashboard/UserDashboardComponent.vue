@@ -278,32 +278,6 @@ const set_view = (view) => {
     @media (max-width: $bp-md) { display: inline-flex; }
 }
 
-.sidebar-bottom {
-    margin-top: auto;
-    padding-top: $space-4;
-    border-top: 1px solid var(--color-border-light);
-    display: flex;
-    justify-content: center;
-}
-
-.logout-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--color-text-muted);
-    padding: $space-2;
-    border-radius: $radius-sm;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: $transition-fast;
-
-    &:hover {
-        color: var(--color-error);
-        background: rgba(239, 68, 68, 0.08);
-    }
-}
-
 .dashboard-content {
     flex: 1;
     padding: $space-12;
