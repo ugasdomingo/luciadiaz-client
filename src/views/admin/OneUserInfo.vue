@@ -24,6 +24,21 @@
                     <strong> Fecha de alta en web: </strong> {{ new
                         Date(user_info?.user?.createdAt).toLocaleDateString() }}
                 </li>
+                <li>
+                    <strong>Consentimiento: </strong>
+                    <span v-if="user_info?.user?.consent_signed" style="color: var(--color-success);">
+                        ✓ Firmado
+                    </span>
+                    <span v-else style="color: var(--color-text-muted);">Pendiente</span>
+                    <button
+                        v-if="user_info?.user?.consent_signed"
+                        @click="view_consent_pdf"
+                        :disabled="loading_pdf"
+                        class="nobg-btn"
+                        style="margin-left: 8px; font-size: 0.75rem; padding: 2px 8px;">
+                        {{ loading_pdf ? '...' : '📄 Ver PDF' }}
+                    </button>
+                </li>
             </ul>
         </aside>
         <section class="content">
@@ -59,6 +74,7 @@
 import { onMounted, ref, computed } from 'vue'
 import { useRoute } from 'vue-router';
 import { useAdminStore } from '../../stores/admin-store';
+import { api } from '../../service/axios';
 
 //Import components
 import InfoUserHistoryComponent from '../../components/dashboard/admin/info-user/InfoUserHistoryComponent.vue'
@@ -72,6 +88,19 @@ const route = useRoute()
 const admin_store = useAdminStore()
 const user_info = computed(() => admin_store.user)
 const show_component = ref('tasks')
+const loading_pdf = ref(false)
+
+const view_consent_pdf = async () => {
+    loading_pdf.value = true
+    try {
+        const res = await api.get(`/consent/pdf/${route.params.user_id}`)
+        window.open(res.data.data.consent_form_url, '_blank')
+    } catch {
+        alert('No se pudo obtener el PDF del consentimiento.')
+    } finally {
+        loading_pdf.value = false
+    }
+}
 
 onMounted(async () => {
     await admin_store.get_user_by_id(route.params.user_id)
