@@ -1,6 +1,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { useProductStore } from '../../../stores/product-store.js'
+import EditorComponent from '../../common/EditorComponent.vue'
 
 const props = defineProps({
     is_open: { type: Boolean, required: true },
@@ -208,8 +209,7 @@ const handle_submit = async () => {
                     <!-- Descripción -->
                     <div class="form-group">
                         <label class="form-label">Descripción *</label>
-                        <textarea v-model="form_data.description" required rows="4" class="form-textarea"
-                            placeholder="Describe el producto..." />
+                        <EditorComponent v-model="form_data.description" />
                     </div>
 
                     <!-- Categoría y Estado -->
