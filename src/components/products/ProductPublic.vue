@@ -11,7 +11,7 @@
             <div class="product-hero__content">
                 <span class="product-badge">{{ type_label }}</span>
                 <h1 class="product-title">{{ product.title }}</h1>
-                <p class="product-description">{{ product.description }}</p>
+                <div class="product-description" v-html="product.description"></div>
 
                 <div class="product-meta">
                     <span v-if="product.category" class="meta-item">

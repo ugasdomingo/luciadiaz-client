@@ -85,7 +85,7 @@ onMounted(async () => {
                         <span class="type-badge">{{ type_label }}</span>
                     </div>
                     <h1 class="product-hero__title">{{ product.title }}</h1>
-                    <p class="product-hero__desc">{{ product.description }}</p>
+                    <div class="product-hero__desc" v-html="product.description"></div>
 
                     <!-- Progreso (solo cursos) -->
                     <div v-if="product.type === 'course' && user_progress" class="progress-block">
