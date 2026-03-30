@@ -28,7 +28,7 @@ const default_form = () => ({
     category: '',
     status: 'active',
     start_date: '',
-    download_url: '',
+    download_public_id: '',
     curriculum: [],
 })
 
@@ -51,7 +51,7 @@ watch(() => [props.is_open, props.product, props.mode], ([open]) => {
             start_date: props.product.start_date
                 ? new Date(props.product.start_date).toISOString().slice(0, 16)
                 : '',
-            download_url: props.product.download_url || '',
+            download_public_id: props.product.download_file?.public_id || '',
             curriculum: props.product.curriculum ? [...props.product.curriculum] : [],
         }
         if (props.product.cover_image) {
@@ -212,12 +212,14 @@ const handle_submit = async () => {
                         <input v-model="form_data.start_date" type="datetime-local" class="form-input" />
                     </div>
 
-                    <!-- URL de descarga (ebook / bundle) -->
+                    <!-- Public ID de Cloudinary (ebook / bundle) -->
                     <div v-if="form_data.type === 'ebook' || form_data.type === 'bundle'" class="form-group">
-                        <label class="form-label">URL de descarga (PDF)</label>
-                        <input v-model="form_data.download_url" type="url" class="form-input"
-                            placeholder="https://res.cloudinary.com/..." />
-                        <span class="form-hint">Sube el PDF manualmente a Cloudinary y pega aquí el enlace.</span>
+                        <label class="form-label">Public ID de Cloudinary (PDF)</label>
+                        <input v-model="form_data.download_public_id" type="text" class="form-input"
+                            placeholder="ej: guides/mi-guia-2024" />
+                        <span class="form-hint">
+                            Sube el PDF a Cloudinary → copia el <strong>Public ID</strong> (no la URL) → pégalo aquí. Se generará un enlace firmado al descargar.
+                        </span>
                     </div>
 
                     <!-- Imagen de portada -->
