@@ -73,8 +73,8 @@
 }
 
 html {
-  overflow-x: hidden;
-  scroll-behavior: smooth;
+  // No overflow-x:hidden en html — bloquea el scroll nativo en iOS
+  // scroll-behavior:smooth lo gestiona JS donde sea necesario, no de forma global
 }
 
 body {
@@ -88,6 +88,9 @@ body {
   color: var(--color-text);
   font-family: $font-body;
   font-size: $text-base;
+  // Scroll nativo fluido en iOS
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: none;
 }
 
 /* ========== TIPOGRAFÍA ========== */
@@ -140,6 +143,10 @@ textarea {
 }
 
 /* ========== BOTONES ========== */
+
+button, a, [role="button"] {
+  touch-action: manipulation; // Elimina el delay de 300ms en móvil
+}
 
 /* Dorado — CTA principal */
 .action-btn {
@@ -292,7 +299,6 @@ textarea {
 #app {
   width: 100%;
   max-width: 100%;
-  overflow-x: hidden;
   margin: 0 auto;
 }
 
