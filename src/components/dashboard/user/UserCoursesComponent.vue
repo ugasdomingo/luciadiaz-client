@@ -4,21 +4,27 @@ import { useAuthStore } from '../../../stores/auth-store.js'
 import { useProductStore } from '../../../stores/product-store.js'
 import ProgressCardComponent from '../../common/cards/ProgressCardComponent.vue'
 import { RouterLink } from 'vue-router'
+import { api } from '../../../service/axios.js'
 
 const auth_store = useAuthStore()
 const product_store = useProductStore()
 
-// Descarga segura de guías
+// Descarga segura de guías — proxy en servidor, el PDF nunca se expone al cliente
 const downloading = ref({})
 const download_guide = async (slug) => {
     if (downloading.value[slug]) return
     downloading.value[slug] = true
     try {
-        const data = await product_store.get_download_url(slug)
-        // Abrir en nueva pestaña — el navegador forzará la descarga por el header attachment
-        window.open(data.download_url, '_blank')
+        const res = await api.get(`/products/${slug}/download`, { responseType: 'blob' })
+        const blob = new Blob([res.data], { type: 'application/pdf' })
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = `${slug}.pdf`
+        a.click()
+        setTimeout(() => URL.revokeObjectURL(url), 15000)
     } catch {
-        alert('No se pudo obtener el enlace de descarga. Inténtalo de nuevo.')
+        alert('No se pudo descargar el archivo. Inténtalo de nuevo.')
     } finally {
         downloading.value[slug] = false
     }
