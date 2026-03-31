@@ -17,6 +17,9 @@ const submitting = ref(false)
 const image_input = ref(null)
 const image_preview = ref(null)
 const image_file = ref(null)
+const guide_input = ref(null)
+const guide_file = ref(null)
+const guide_filename = ref('')
 
 const default_form = () => ({
     title: '',
@@ -63,6 +66,8 @@ watch(() => [props.is_open, props.product, props.mode], ([open]) => {
         form_data.value = default_form()
         image_preview.value = null
         image_file.value = null
+        guide_file.value = null
+        guide_filename.value = ''
     }
 
 }, { immediate: true })
@@ -87,6 +92,21 @@ const remove_image = () => {
     if (image_input.value) image_input.value.value = ''
 }
 
+const handle_guide_upload = (event) => {
+    const file = event.target.files[0]
+    if (!file) return
+    if (file.type !== 'application/pdf') { alert('Solo se aceptan archivos PDF'); return }
+    if (file.size > 50 * 1024 * 1024) { alert('El archivo no debe superar 50MB'); return }
+    guide_file.value = file
+    guide_filename.value = file.name
+}
+
+const remove_guide = () => {
+    guide_file.value = null
+    guide_filename.value = ''
+    if (guide_input.value) guide_input.value.value = ''
+}
+
 
 const add_lesson = () => {
     form_data.value.curriculum.push({ title: '', video_url: '', notes: '', is_free_preview: false })
@@ -108,6 +128,9 @@ const handle_submit = async () => {
         }
         if (image_file.value) {
             submit_data.append('cover_image', image_file.value)
+        }
+        if (guide_file.value) {
+            submit_data.append('guide_file', guide_file.value)
         }
         let result
         if (props.mode === 'edit') {
@@ -212,12 +235,22 @@ const handle_submit = async () => {
                         <input v-model="form_data.start_date" type="datetime-local" class="form-input" />
                     </div>
 
-                    <!-- URL del PDF descargable (ebook / bundle) -->
+                    <!-- PDF descargable (ebook / bundle) -->
                     <div v-if="form_data.type === 'ebook' || form_data.type === 'bundle'" class="form-group">
-                        <label class="form-label">URL del PDF (Cloudinary)</label>
-                        <input v-model="form_data.download_url" type="url" class="form-input"
-                            placeholder="https://res.cloudinary.com/..." />
-                        <span class="form-hint">Sube el PDF a Cloudinary y pega aquí la URL completa. El archivo se servirá de forma protegida a través de tu servidor.</span>
+                        <label class="form-label">Archivo PDF descargable</label>
+                        <input type="file" ref="guide_input" accept="application/pdf"
+                            @change="handle_guide_upload" class="image-input" />
+                        <div v-if="guide_filename" class="guide-current">
+                            <span>📄 {{ guide_filename }}</span>
+                            <button type="button" class="btn-remove-image" @click="remove_guide">✕</button>
+                        </div>
+                        <button v-else type="button" class="btn-upload-guide" @click="guide_input?.click()">
+                            📤 Seleccionar PDF
+                        </button>
+                        <span v-if="form_data.download_url && !guide_file" class="form-hint" style="color:var(--color-success)">
+                            ✅ Ya tiene PDF subido. Selecciona uno nuevo solo si quieres reemplazarlo.
+                        </span>
+                        <span v-else class="form-hint">El PDF se sube de forma segura. Los usuarios lo descargan a través de tu servidor.</span>
                     </div>
 
                     <!-- Imagen de portada -->
@@ -414,6 +447,38 @@ const handle_submit = async () => {
     font-size: $text-xs;
     color: var(--color-text-muted);
     margin-top: $space-1;
+}
+
+// GUIDE UPLOAD
+.guide-current {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: $space-3;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: $radius-md;
+    padding: $space-2 $space-4;
+    font-size: $text-sm;
+}
+
+.btn-upload-guide {
+    display: inline-flex;
+    align-items: center;
+    gap: $space-2;
+    padding: $space-2 $space-5;
+    background: var(--color-bg);
+    border: 1px dashed var(--color-border);
+    border-radius: $radius-md;
+    font-size: $text-sm;
+    cursor: pointer;
+    color: var(--color-text-muted);
+    transition: $transition-fast;
+
+    &:hover {
+        border-color: var(--color-primary);
+        color: var(--color-primary);
+    }
 }
 
 // IMAGE UPLOAD
