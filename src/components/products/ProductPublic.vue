@@ -121,22 +121,41 @@
         <section v-if="has_curriculum" class="product-curriculum">
             <h2>Contenido del programa</h2>
             <div class="curriculum-list">
-                <div v-for="(lesson, index) in product.curriculum" :key="index" class="curriculum-item"
-                    :class="{ 'curriculum-item--free': lesson.is_free_preview }">
-                    <div class="curriculum-item__header">
+                <div v-for="(lesson, index) in product.curriculum" :key="index"
+                    class="curriculum-item"
+                    :class="{ 'curriculum-item--free': lesson.is_free_preview, 'curriculum-item--open': expanded_lesson === index }">
+
+                    <!-- Cabecera clicable -->
+                    <div class="curriculum-item__header" @click="expanded_lesson = expanded_lesson === index ? null : index">
                         <span class="curriculum-number">{{ index + 1 }}</span>
                         <h3 class="curriculum-title">{{ lesson.title }}</h3>
-                        <span v-if="lesson.is_free_preview" class="curriculum-badge">
-                            👁️ Vista previa
-                        </span>
-                        <span v-else class="curriculum-badge curriculum-badge--locked">
-                            🔒
-                        </span>
+                        <div class="curriculum-item__right">
+                            <span v-if="lesson.is_free_preview" class="curriculum-badge">
+                                👁️ Vista previa
+                            </span>
+                            <span v-else class="curriculum-badge curriculum-badge--locked">
+                                🔒
+                            </span>
+                            <span class="curriculum-chevron" :class="{ 'curriculum-chevron--open': expanded_lesson === index }">▾</span>
+                        </div>
                     </div>
 
-                    <!-- Solo mostrar contenido si es preview gratuito -->
-                    <div v-if="lesson.is_free_preview && lesson.notes" class="curriculum-notes">
-                        <p>{{ lesson.notes }}</p>
+                    <!-- Panel expandible -->
+                    <div v-if="expanded_lesson === index" class="curriculum-body">
+                        <!-- Descripción (solo free preview) -->
+                        <div v-if="lesson.is_free_preview && lesson.notes" class="curriculum-notes" v-html="lesson.notes"></div>
+
+                        <!-- Indicadores de material -->
+                        <div v-if="lesson.has_video || lesson.has_pdf" class="curriculum-material">
+                            <span class="curriculum-material__label">Material de apoyo:</span>
+                            <span v-if="lesson.has_video" class="curriculum-material__tag">🎬 Video</span>
+                            <span v-if="lesson.has_pdf" class="curriculum-material__tag">📄 Guía PDF</span>
+                        </div>
+
+                        <!-- Mensaje para contenido bloqueado -->
+                        <p v-if="!lesson.is_free_preview" class="curriculum-locked-msg">
+                            🔒 Accede a este módulo comprando el curso
+                        </p>
                     </div>
                 </div>
             </div>
@@ -180,6 +199,8 @@ const props = defineProps({
 const router = useRouter()
 const auth_store = useAuthStore()
 const like_store = useLikeStore()
+
+const expanded_lesson = ref(null)
 
 // ── Waitlist ──────────────────────────────────────────────────────────
 const WAITLIST_LS_KEY = 'waitlist_products'
@@ -425,27 +446,41 @@ const handle_purchase = () => {
 }
 
 .curriculum-item {
-    background: var(--color-bg);
+    background: var(--color-bg-card);
     border-radius: $radius-md;
-    padding: $space-5;
-    border: 2px solid transparent;
-    transition: $transition;
+    border: 1px solid var(--color-border-light);
+    overflow: hidden;
+    transition: $transition-fast;
 
-    &--free {
-        background: var(--color-bg-card);
-        border-color: var(--color-success);
-    }
+    &:hover { box-shadow: var(--shadow-sm); }
+
+    &--free { border-left: 3px solid var(--color-success); }
+
+    &--open { border-color: var(--color-primary); }
 
     &__header {
         display: flex;
         align-items: center;
         gap: $space-4;
+        padding: $space-4 $space-5;
+        cursor: pointer;
+        user-select: none;
+
+        &:hover { background: var(--color-bg); }
+    }
+
+    &__right {
+        display: flex;
+        align-items: center;
+        gap: $space-3;
+        flex-shrink: 0;
+        margin-left: auto;
     }
 }
 
 .curriculum-number {
-    width: $space-8;
-    height: $space-8;
+    width: 32px;
+    height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -473,18 +508,71 @@ const handle_purchase = () => {
     font-weight: $fw-semibold;
 
     &--locked {
-        background: var(--color-border);
+        background: transparent;
         color: var(--color-text-muted);
+        font-size: $text-base;
+        padding: 0;
     }
 }
 
-.curriculum-notes {
-    margin-top: $space-3;
-    padding-top: $space-3;
-    border-top: 1px solid var(--color-border-light);
-    font-size: $text-sm;
+.curriculum-chevron {
     color: var(--color-text-muted);
-    line-height: 1.6;
+    font-size: $text-sm;
+    transition: transform $transition-fast;
+    &--open { transform: rotate(180deg); }
+}
+
+.curriculum-body {
+    padding: $space-4 $space-5 $space-5;
+    border-top: 1px solid var(--color-border-light);
+    animation: fade-down 0.2s ease;
+    background: var(--color-bg);
+}
+
+.curriculum-notes {
+    font-size: $text-sm;
+    color: var(--color-text);
+    line-height: 1.65;
+    margin-bottom: $space-3;
+
+    :deep(p) { margin: 0 0 $space-2; &:last-child { margin-bottom: 0; } }
+    :deep(ul), :deep(ol) { padding-left: $space-5; margin: $space-1 0; }
+}
+
+.curriculum-material {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    flex-wrap: wrap;
+    margin-top: $space-3;
+
+    &__label {
+        font-size: $text-xs;
+        color: var(--color-text-muted);
+        font-weight: $fw-semibold;
+    }
+
+    &__tag {
+        font-size: $text-xs;
+        padding: $space-1 $space-2;
+        background: var(--color-bg-card);
+        border: 1px solid var(--color-border);
+        border-radius: $radius-xs;
+        color: var(--color-text);
+        font-weight: $fw-semibold;
+    }
+}
+
+.curriculum-locked-msg {
+    font-size: $text-xs;
+    color: var(--color-text-muted);
+    margin: $space-3 0 0;
+    font-style: italic;
+}
+
+@keyframes fade-down {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
 .product-info {
