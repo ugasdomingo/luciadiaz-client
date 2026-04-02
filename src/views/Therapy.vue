@@ -27,11 +27,8 @@ const handle_reserve = async (therapy) => {
     const result = await appointment_store.init_therapy_payment(therapy.id)
     loading_id.value = null
 
-    if (result?.approve_url) {
-        // Guardar therapy_id para recuperarlo en la vuelta
-        localStorage.setItem('pending_therapy_id', therapy.id)
-        // Redirigir a PayPal
-        window.location.href = result.approve_url
+    if (result?.session_url) {
+        window.location.href = result.session_url
     } else {
         error_msg.value = 'No se pudo iniciar el pago. Por favor inténtalo de nuevo.'
     }
@@ -68,7 +65,7 @@ const handle_reserve = async (therapy) => {
 
         <!-- Pie de confianza -->
         <div class="therapy__trust">
-            <span>🔒 Pago seguro con PayPal</span>
+            <span>🔒 Pago seguro con Stripe</span>
             <span>·</span>
             <span>📅 Elige tu horario en Cal.com</span>
             <span>·</span>

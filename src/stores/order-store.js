@@ -16,19 +16,18 @@ export const useOrderStore = defineStore('order', () => {
     const my_orders = ref([]) // Para usuario
     const current_order = ref(null)
 
-    const init_paypal_checkout = async (product_id) => {
+    const init_stripe_checkout = async (product_id) => {
         try {
             util_store.set_loading(true)
-            const response = await api.post('/orders/paypal/init', { product_id })
+            const response = await api.post('/orders/stripe/init', { product_id })
 
-            // Redirigir a PayPal
-            if (response.data.data?.approve_url) {
-                window.location.href = response.data.data.approve_url
+            if (response.data.data?.session_url) {
+                window.location.href = response.data.data.session_url
             } else {
-                util_store.set_message('Error al conectar con PayPal', 'error')
+                util_store.set_message('Error al conectar con Stripe', 'error')
             }
         } catch (error) {
-            console.error('PayPal init error:', error)
+            console.error('Stripe init error:', error)
             const msg = error.response?.data?.message || 'Error al iniciar pago'
             util_store.set_message(msg, 'error')
         } finally {
@@ -36,10 +35,10 @@ export const useOrderStore = defineStore('order', () => {
         }
     }
 
-    const confirm_paypal_payment = async (paypal_order_id) => {
+    const confirm_stripe_payment = async (session_id) => {
         try {
             util_store.set_loading(true)
-            const response = await api.post('/orders/paypal/confirm', { paypal_order_id })
+            const response = await api.post('/orders/stripe/confirm', { session_id })
 
             util_store.set_message(response.data.message, 'success')
 
@@ -209,8 +208,8 @@ export const useOrderStore = defineStore('order', () => {
         current_order,
 
         // Actions - Cliente
-        init_paypal_checkout,
-        confirm_paypal_payment,
+        init_stripe_checkout,
+        confirm_stripe_payment,
         create_offline_order,
         fetch_my_orders,
         update_payment_proof,

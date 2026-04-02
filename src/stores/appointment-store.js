@@ -5,12 +5,12 @@ export const useAppointmentStore = defineStore('appointments', () => {
     const auth_store = useAuthStore()
 
     /**
-     * Inicia el pago PayPal para una terapia.
-     * Devuelve { approve_url, paypal_order_id, therapy_id } o null.
+     * Inicia el pago Stripe para una terapia.
+     * Devuelve { session_url } o null.
      */
     const init_therapy_payment = async (therapy_id) => {
         try {
-            const res = await fetch(`${import.meta.env.VITE_API_URL}/appointments/paypal/init`, {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/appointments/stripe/init`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -28,18 +28,18 @@ export const useAppointmentStore = defineStore('appointments', () => {
     }
 
     /**
-     * Confirma el pago PayPal y devuelve el link de cal.com para reservar.
+     * Confirma el pago Stripe y devuelve el link de cal.com para reservar.
      * Devuelve { cal_link, therapy_id } o null.
      */
-    const confirm_therapy_payment = async (paypal_order_id) => {
+    const confirm_therapy_payment = async (session_id) => {
         try {
-            const res = await fetch(`${import.meta.env.VITE_API_URL}/appointments/paypal/confirm`, {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/appointments/stripe/confirm`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${auth_store.token}`,
                 },
-                body: JSON.stringify({ paypal_order_id }),
+                body: JSON.stringify({ session_id }),
             })
             const data = await res.json()
             if (!res.ok) throw new Error(data.message || 'Error confirmando pago')

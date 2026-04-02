@@ -54,15 +54,15 @@ const routes = [
         meta: { requires_auth: true }
     },
     {
-        path: '/paypal/return',
-        name: 'PaypalReturn',
-        component: () => import('../views/PaypalReturn.vue'),
+        path: '/stripe/return',
+        name: 'StripeReturn',
+        component: () => import('../views/StripeReturn.vue'),
         meta: { requires_auth: true }
     },
     {
-        path: '/paypal/therapy-return',
-        name: 'PaypalTherapyReturn',
-        component: () => import('../views/PaypalTherapyReturn.vue'),
+        path: '/stripe/therapy-return',
+        name: 'StripeTherapyReturn',
+        component: () => import('../views/StripeTherapyReturn.vue'),
         meta: { requires_auth: true }
     },
     // Test Pages *************************************

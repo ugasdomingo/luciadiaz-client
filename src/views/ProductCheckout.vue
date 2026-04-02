@@ -42,15 +42,15 @@
                     <h2>Método de pago</h2>
 
                     <div class="payment-methods">
-                        <!-- PayPal / Tarjeta -->
+                        <!-- Stripe / Tarjeta -->
                         <label class="payment-method"
-                            :class="{ 'payment-method--selected': selectedMethod === 'paypal' }">
-                            <input type="radio" name="payment" value="paypal" v-model="selectedMethod">
+                            :class="{ 'payment-method--selected': selectedMethod === 'stripe' }">
+                            <input type="radio" name="payment" value="stripe" v-model="selectedMethod">
                             <div class="method-content">
                                 <div class="method-icon">💳</div>
                                 <div class="method-info">
-                                    <h3>PayPal / Tarjeta</h3>
-                                    <p>Pago seguro con PayPal o tarjeta de crédito/débito</p>
+                                    <h3>Tarjeta de crédito / débito</h3>
+                                    <p>Pago seguro con Stripe</p>
                                 </div>
                             </div>
                         </label>
@@ -151,7 +151,7 @@ const util_store = useUtilStore()
 // State
 const loading = ref(false)
 const product = ref(null)
-const selectedMethod = ref('paypal')
+const selectedMethod = ref('stripe')
 const uploadedProof = ref(null)
 const fileInput = ref(null)
 const showPaymentModal = ref(false)
@@ -172,13 +172,13 @@ const truncatedDescription = computed(() => {
 })
 
 const canProceed = computed(() => {
-    if (selectedMethod.value === 'paypal') return true
+    if (selectedMethod.value === 'stripe') return true
     if (selectedMethod.value === 'offline') return !!uploadedProof.value
     return false
 })
 
 const payButtonText = computed(() => {
-    if (selectedMethod.value === 'paypal') return 'Pagar con PayPal'
+    if (selectedMethod.value === 'stripe') return 'Pagar con tarjeta'
     if (selectedMethod.value === 'offline') return 'Enviar comprobante'
     return 'Selecciona método de pago'
 })
@@ -231,8 +231,8 @@ const handleFreePayment = async () => {
 const handlePayment = async () => {
     if (!canProceed.value) return
 
-    if (selectedMethod.value === 'paypal') {
-        await order_store.init_paypal_checkout(product.value._id)
+    if (selectedMethod.value === 'stripe') {
+        await order_store.init_stripe_checkout(product.value._id)
     } else if (selectedMethod.value === 'offline') {
         const result = await order_store.create_offline_order({
             product_id: product.value._id,
