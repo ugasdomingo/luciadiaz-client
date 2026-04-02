@@ -21,6 +21,10 @@ const guide_input = ref(null)
 const guide_file = ref(null)
 const guide_filename = ref('')
 
+// PDFs por módulo: { [index]: File }
+const lesson_guide_files = ref({})
+const lesson_guide_names = ref({})
+
 const default_form = () => ({
     title: '',
     slug: '',
@@ -68,6 +72,8 @@ watch(() => [props.is_open, props.product, props.mode], ([open]) => {
         image_file.value = null
         guide_file.value = null
         guide_filename.value = ''
+        lesson_guide_files.value = {}
+        lesson_guide_names.value = {}
     }
 
 }, { immediate: true })
@@ -108,11 +114,39 @@ const remove_guide = () => {
 }
 
 
-const add_lesson = () => {
-    form_data.value.curriculum.push({ title: '', video_url: '', notes: '', is_free_preview: false })
+const handle_lesson_guide = (index, event) => {
+    const file = event.target.files[0]
+    if (!file) return
+    if (file.type !== 'application/pdf') { alert('Solo se aceptan archivos PDF'); return }
+    if (file.size > 50 * 1024 * 1024) { alert('El archivo no debe superar 50MB'); return }
+    lesson_guide_files.value = { ...lesson_guide_files.value, [index]: file }
+    lesson_guide_names.value = { ...lesson_guide_names.value, [index]: file.name }
 }
 
-const remove_lesson = (index) => form_data.value.curriculum.splice(index, 1)
+const remove_lesson_guide = (index) => {
+    const { [index]: _f, ...rest_f } = lesson_guide_files.value
+    const { [index]: _n, ...rest_n } = lesson_guide_names.value
+    lesson_guide_files.value = rest_f
+    lesson_guide_names.value = rest_n
+}
+
+const add_lesson = () => {
+    form_data.value.curriculum.push({ title: '', video_url: '', notes: '', lesson_pdf_url: '', is_free_preview: false })
+}
+
+const remove_lesson = (index) => {
+    form_data.value.curriculum.splice(index, 1)
+    // Remap file indices: shift down entries above removed index
+    const new_files = {}
+    const new_names = {}
+    Object.entries(lesson_guide_files.value).forEach(([i, file]) => {
+        const num = parseInt(i)
+        if (num < index) { new_files[num] = file; new_names[num] = lesson_guide_names.value[i] }
+        else if (num > index) { new_files[num - 1] = file; new_names[num - 1] = lesson_guide_names.value[i] }
+    })
+    lesson_guide_files.value = new_files
+    lesson_guide_names.value = new_names
+}
 
 const handle_submit = async () => {
     submitting.value = true
@@ -132,6 +166,10 @@ const handle_submit = async () => {
         if (guide_file.value) {
             submit_data.append('guide_file', guide_file.value)
         }
+        // PDFs por módulo
+        Object.entries(lesson_guide_files.value).forEach(([index, file]) => {
+            submit_data.append(`lesson_guide_${index}`, file)
+        })
         let result
         if (props.mode === 'edit') {
             result = await product_store.update_product(form_data.value._id, submit_data)
@@ -289,8 +327,31 @@ const handle_submit = async () => {
                                 </div>
                                 <input v-model="lesson.video_url" type="url"
                                     placeholder="URL del video (opcional)" class="lesson-input-small" />
-                                <textarea v-model="lesson.notes" placeholder="Notas de la lección (opcional)"
-                                    rows="2" class="lesson-textarea" />
+                                <div class="lesson-editor-label">Descripción del módulo (opcional)</div>
+                                <EditorComponent v-model="lesson.notes" />
+                                <!-- PDF del módulo -->
+                                <div class="lesson-pdf-section">
+                                    <span class="lesson-pdf-label">PDF descargable del módulo (opcional)</span>
+                                    <div v-if="lesson_guide_names[index]" class="lesson-pdf-current">
+                                        <span>📄 {{ lesson_guide_names[index] }}</span>
+                                        <button type="button" class="lesson-pdf-remove" @click="remove_lesson_guide(index)">✕</button>
+                                    </div>
+                                    <div v-else-if="lesson.lesson_pdf_url" class="lesson-pdf-existing">
+                                        <span>✅ PDF subido</span>
+                                        <input type="file" :id="`lesson_guide_${index}`" accept="application/pdf"
+                                            style="display:none"
+                                            @change="handle_lesson_guide(index, $event)" />
+                                        <label :for="`lesson_guide_${index}`" class="lesson-pdf-replace">Reemplazar</label>
+                                    </div>
+                                    <div v-else>
+                                        <input type="file" :id="`lesson_guide_${index}`" accept="application/pdf"
+                                            style="display:none"
+                                            @change="handle_lesson_guide(index, $event)" />
+                                        <label :for="`lesson_guide_${index}`" class="lesson-pdf-upload">
+                                            📤 Subir PDF
+                                        </label>
+                                    </div>
+                                </div>
                                 <label class="lesson-checkbox">
                                     <input v-model="lesson.is_free_preview" type="checkbox" />
                                     <span>Vista previa gratuita</span>
@@ -632,6 +693,63 @@ const handle_submit = async () => {
         outline: none;
         border-color: var(--color-primary);
     }
+}
+
+.lesson-editor-label {
+    font-size: 12px;
+    font-weight: $fw-semibold;
+    color: var(--color-text-muted);
+    margin-bottom: $space-1;
+}
+
+.lesson-pdf-section {
+    margin: $space-3 0;
+}
+
+.lesson-pdf-label {
+    display: block;
+    font-size: 12px;
+    font-weight: $fw-semibold;
+    color: var(--color-text-muted);
+    margin-bottom: $space-1;
+}
+
+.lesson-pdf-current, .lesson-pdf-existing {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    font-size: 12px;
+    color: var(--color-success);
+}
+
+.lesson-pdf-remove {
+    background: none;
+    border: none;
+    color: var(--color-error);
+    cursor: pointer;
+    font-size: 12px;
+    padding: 0 $space-1;
+}
+
+.lesson-pdf-upload, .lesson-pdf-replace {
+    display: inline-block;
+    padding: $space-1 $space-3;
+    border: 1px dashed var(--color-border);
+    border-radius: $radius-xs;
+    font-size: 12px;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: $transition-fast;
+
+    &:hover {
+        border-color: var(--color-primary);
+        color: var(--color-primary);
+    }
+}
+
+.lesson-pdf-replace {
+    border-style: solid;
+    font-size: 11px;
 }
 
 .lesson-checkbox {

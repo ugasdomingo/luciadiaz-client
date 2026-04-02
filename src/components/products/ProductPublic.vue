@@ -130,7 +130,7 @@
                             👁️ Vista previa
                         </span>
                         <span v-else class="curriculum-badge curriculum-badge--locked">
-                            🔒 Bloqueado
+                            🔒
                         </span>
                     </div>
 
@@ -277,7 +277,7 @@ const handle_purchase = () => {
     padding-bottom: 100px; // Espacio para CTA móvil
 
     @media (max-width: $bp-md) {
-        padding: $space-5 $space-4 100px;
+        padding: 90px $space-4 100px; // 90px para limpiar el header fijo
     }
 }
 
@@ -300,7 +300,8 @@ const handle_purchase = () => {
         max-width: 280px;
 
         @media (max-width: 968px) {
-            max-width: 220px;
+            max-width: 200px;
+            margin: 0 auto;
         }
 
         img {

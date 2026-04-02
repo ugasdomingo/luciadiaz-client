@@ -141,9 +141,11 @@ onMounted(async () => {
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                     allowfullscreen></iframe>
                             </div>
-                            <div v-if="lesson.notes" class="lesson__notes">
-                                <p>{{ lesson.notes }}</p>
-                            </div>
+                            <div v-if="lesson.notes" class="lesson__notes" v-html="lesson.notes"></div>
+                            <a v-if="lesson.lesson_pdf_url" :href="lesson.lesson_pdf_url" target="_blank"
+                                download class="lesson__pdf-btn">
+                                ⬇ Descargar guía del módulo (PDF)
+                            </a>
                             <button v-if="!is_lesson_completed(lesson._id)" @click="mark_as_completed(lesson._id)"
                                 class="action-btn" :disabled="loading">
                                 {{ loading ? 'Guardando...' : '✓ Marcar como completada' }}
@@ -227,6 +229,18 @@ onMounted(async () => {
         max-width: 680px;
         margin: 0 0 $space-8;
         font-weight: $fw-light;
+
+        // Forzar color blanco en todo el HTML generado por TinyMCE
+        :deep(*) {
+            color: rgba(255,255,255,0.88) !important;
+        }
+        :deep(strong), :deep(b) {
+            color: #fff !important;
+        }
+        :deep(a) {
+            color: rgba(255,255,255,0.9) !important;
+            text-decoration: underline;
+        }
     }
 
     &__download {
@@ -391,12 +405,33 @@ onMounted(async () => {
         border-radius: $radius-sm;
         padding: $space-4;
         margin-bottom: $space-5;
+        font-size: $text-sm;
+        line-height: 1.65;
+        color: var(--color-text);
 
-        p {
-            font-size: $text-sm;
-            line-height: 1.65;
-            color: var(--color-text);
-            margin: 0;
+        :deep(p) { margin: 0 0 $space-2; &:last-child { margin-bottom: 0; } }
+        :deep(ul), :deep(ol) { padding-left: $space-5; margin: $space-2 0; }
+        :deep(strong) { font-weight: $fw-semibold; }
+    }
+
+    &__pdf-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: $space-2;
+        padding: $space-2 $space-4;
+        margin-bottom: $space-5;
+        background: var(--color-bg);
+        border: 1px solid var(--color-primary);
+        border-radius: $radius-sm;
+        color: var(--color-primary);
+        font-size: $text-sm;
+        font-weight: $fw-semibold;
+        text-decoration: none;
+        transition: $transition-fast;
+
+        &:hover {
+            background: var(--color-primary);
+            color: #fff;
         }
     }
 }
