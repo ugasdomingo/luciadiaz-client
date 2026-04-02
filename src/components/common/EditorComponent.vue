@@ -16,25 +16,23 @@
 </script>
 
 <template>
-  <main id="sample">
+  <div class="editor-wrapper">
     <Editor
-      :model-value="props.modelValue"
-      @update:modelValue="handle_change"
+      :value="props.modelValue"
+      @input="handle_change"
       api-key="hgq60faxr9cutw0vi6tjcs6h4w4bwlbyhp5hp71rteepokoy"
       :init="{
         toolbar_mode: 'sliding',
         plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
         toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
         setup: (editor) => {
-          editor.on('input change keyup', () => {
-            const content = editor.getContent()
-            handle_change(content)
+          editor.on('change keyup', () => {
+            handle_change(editor.getContent())
           })
         }
       }"
-      :initial-value="props.modelValue"
     />
-  </main>
+  </div>
 </template>
 
 <style scoped lang="scss">

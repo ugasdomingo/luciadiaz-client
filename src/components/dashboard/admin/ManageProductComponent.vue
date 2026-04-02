@@ -16,6 +16,15 @@ const { is_open, mode, selected, open_create, open_edit, close } = useModalState
 
 const loading = ref(false)
 const deleting = ref(false)
+const loading_edit = ref(false)
+
+// Carga el producto completo (con curriculum.notes, video_url, etc.) antes de abrir el modal
+const handle_edit = async (product) => {
+    loading_edit.value = true
+    const full_product = await product_store.fetch_product_for_edit(product._id)
+    loading_edit.value = false
+    if (full_product) open_edit(full_product)
+}
 const products = ref([])
 const show_delete_modal = ref(false)
 const product_to_delete = ref(null)
@@ -113,7 +122,7 @@ onMounted(() => load_products())
                             v-for="product in products"
                             :key="product._id"
                             :product="product"
-                            @edit="open_edit"
+                            @edit="handle_edit"
                             @delete="confirm_delete"
                         />
                     </tbody>
@@ -141,7 +150,9 @@ onMounted(() => load_products())
                             </span>
                         </div>
                         <div class="product-btns">
-                            <button @click="open_edit(product)" class="btn-primary">✏️ Editar</button>
+                            <button @click="handle_edit(product)" class="btn-primary">
+                                {{ loading_edit ? '...' : '✏️ Editar' }}
+                            </button>
                             <button @click="confirm_delete(product)" class="btn-danger">🗑️ Eliminar</button>
                         </div>
                     </div>

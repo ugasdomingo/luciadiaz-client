@@ -163,6 +163,16 @@ export const useProductStore = defineStore('product', () => {
     }
 
     /**
+     * Obtener producto completo para edición admin (incluye curriculum.notes, video_url, etc.)
+     */
+    const fetch_product_for_edit = async (product_id) => {
+        return await with_request(async () => {
+            const response = await api.get(`/products/admin/${product_id}`)
+            return response.data.data
+        })
+    }
+
+    /**
      * Obtener URL firmada de descarga (solo usuarios con compra)
      * Devuelve { download_url, filename, expires_in }
      */
@@ -184,6 +194,7 @@ export const useProductStore = defineStore('product', () => {
         fetch_products,
         fetch_product_by_slug,
         fetch_all_products_admin,
+        fetch_product_for_edit,
         create_product,
         update_product,
         delete_product,
