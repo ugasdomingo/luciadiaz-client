@@ -57,6 +57,9 @@
             </nav>
 
             <div class="sidebar-bottom">
+                <button class="delete-account-btn" @click="show_delete_modal = true" title="Eliminar cuenta">
+                    🗑
+                </button>
                 <button class="logout-btn" @click="auth_store.logout()" aria-label="Cerrar sesión" title="Cerrar sesión">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
@@ -66,6 +69,27 @@
                 </button>
             </div>
         </aside>
+
+        <!-- Modal eliminar cuenta -->
+        <Teleport to="body">
+            <div v-if="show_delete_modal" class="delete-modal-overlay" @click.self="show_delete_modal = false">
+                <div class="delete-modal">
+                    <h2>¿Eliminar tu cuenta?</h2>
+                    <p class="delete-modal__warning">Esta acción es <strong>permanente e irreversible</strong>.</p>
+                    <p class="delete-modal__detail">
+                        Se eliminarán todos tus datos asociados: compras, historial clínico,
+                        tareas terapéuticas, progreso en cursos y likes.
+                        No podrás recuperar esta información.
+                    </p>
+                    <div class="delete-modal__actions">
+                        <button class="btn-cancel" @click="show_delete_modal = false">Cancelar</button>
+                        <button class="btn-confirm-delete" @click="handle_delete">
+                            He leído — quiero eliminar mi cuenta
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </Teleport>
 
         <!-- Contenido principal -->
         <section class="dashboard-content">
@@ -100,6 +124,15 @@ const auth_store = useAuthStore()
 const util_store = useUtilStore()
 
 const current_view = ref('courses')
+const show_delete_modal = ref(false)
+
+const handle_delete = async () => {
+    try {
+        await auth_store.delete_account()
+    } catch {
+        show_delete_modal.value = false
+    }
+}
 const is_patient = computed(() => auth_store.user_data?.user?.role === 'patient')
 const initial = computed(() => auth_store.user_data?.user?.name?.charAt(0)?.toUpperCase() || '?')
 const consent_signed = computed(() => !!auth_store.user_data?.user?.consent_signed)
@@ -286,5 +319,125 @@ const set_view = (view) => {
     @media (max-width: $bp-md) {
         padding: $space-6 $space-4 $space-12;
     }
+}
+
+.sidebar-bottom {
+    margin-top: auto;
+    padding-top: $space-6;
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+}
+
+.delete-account-btn {
+    background: none;
+    border: 1px solid transparent;
+    border-radius: $radius-sm;
+    padding: $space-2;
+    cursor: pointer;
+    font-size: $text-base;
+    line-height: 1;
+    color: var(--color-text-muted);
+    transition: $transition-fast;
+
+    &:hover {
+        color: #dc2626;
+        border-color: #dc2626;
+        background: rgba(220, 38, 38, 0.06);
+    }
+}
+
+.logout-btn {
+    margin-left: auto;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: $space-2;
+    color: var(--color-text-muted);
+    border-radius: $radius-sm;
+    transition: $transition-fast;
+    display: flex;
+    align-items: center;
+
+    &:hover { color: var(--color-error, #dc2626); }
+}
+
+// Modal eliminar cuenta
+.delete-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: $space-4;
+}
+
+.delete-modal {
+    background: var(--color-bg-card);
+    border-radius: $radius-lg;
+    padding: $space-10;
+    max-width: 480px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+
+    h2 {
+        font-size: $text-xl;
+        margin: 0 0 $space-4;
+        color: #dc2626;
+    }
+
+    &__warning {
+        font-size: $text-base;
+        margin: 0 0 $space-3;
+        font-weight: $fw-semibold;
+    }
+
+    &__detail {
+        font-size: $text-sm;
+        color: var(--color-text-muted);
+        margin: 0 0 $space-8;
+        line-height: 1.6;
+    }
+
+    &__actions {
+        display: flex;
+        gap: $space-3;
+        flex-wrap: wrap;
+
+        @media (max-width: $bp-sm) { flex-direction: column-reverse; }
+    }
+}
+
+.btn-cancel {
+    flex: 1;
+    padding: $space-3 $space-6;
+    border: 1px solid var(--color-border);
+    border-radius: $radius-sm;
+    background: none;
+    font-family: $font-body;
+    font-size: $text-sm;
+    cursor: pointer;
+    color: var(--color-text-muted);
+    transition: $transition-fast;
+
+    &:hover { background: var(--color-bg); }
+}
+
+.btn-confirm-delete {
+    flex: 2;
+    padding: $space-3 $space-6;
+    border: none;
+    border-radius: $radius-sm;
+    background: #dc2626;
+    color: #fff;
+    font-family: $font-body;
+    font-size: $text-sm;
+    font-weight: $fw-semibold;
+    cursor: pointer;
+    transition: $transition-fast;
+
+    &:hover { background: #b91c1c; }
 }
 </style>

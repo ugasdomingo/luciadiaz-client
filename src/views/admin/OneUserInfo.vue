@@ -54,8 +54,36 @@
                     </div>
                     <p v-if="consent_upload_msg" class="consent-upload-msg">{{ consent_upload_msg }}</p>
                 </li>
+                <li class="delete-user-row">
+                    <button class="delete-user-btn" @click="show_delete_modal = true">
+                        Eliminar usuario
+                    </button>
+                </li>
             </ul>
         </aside>
+
+    <!-- Modal confirmación eliminar usuario -->
+    <Teleport to="body">
+        <div v-if="show_delete_modal" class="delete-modal-overlay" @click.self="show_delete_modal = false">
+            <div class="delete-modal">
+                <h2>¿Eliminar cuenta de usuario?</h2>
+                <p class="delete-modal__warning">
+                    Vas a eliminar la cuenta de <strong>{{ user_info?.user?.name }}</strong>.
+                    Esta acción es <strong>permanente e irreversible</strong>.
+                </p>
+                <p class="delete-modal__detail">
+                    Se eliminarán todos sus datos: compras, historial clínico, tareas terapéuticas,
+                    progreso en cursos y likes. No se puede deshacer.
+                </p>
+                <div class="delete-modal__actions">
+                    <button class="btn-cancel" @click="show_delete_modal = false">Cancelar</button>
+                    <button class="btn-confirm-delete" @click="handle_delete_user">
+                        He leído — quiero eliminar esta cuenta
+                    </button>
+                </div>
+            </div>
+        </div>
+    </Teleport>
         <section class="content">
             <div class="content__navegation">
                 <button class="nobg-btn" @click="show_component = 'medical'">
@@ -87,7 +115,7 @@
 
 <script setup>
 import { onMounted, ref, computed } from 'vue'
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useAdminStore } from '../../stores/admin-store';
 import { api } from '../../service/axios';
 
@@ -100,7 +128,15 @@ import InfoUserLikeComponent from '../../components/dashboard/admin/info-user/In
 import InfoUserNotesComponent from '../../components/dashboard/admin/info-user/InfoUserNotesComponent.vue'
 
 const route = useRoute()
+const router = useRouter()
 const admin_store = useAdminStore()
+
+const show_delete_modal = ref(false)
+const handle_delete_user = async () => {
+    const ok = await admin_store.delete_user(route.params.user_id)
+    if (ok) router.push('/mi-espacio')
+    else show_delete_modal.value = false
+}
 const user_info = computed(() => admin_store.user)
 const show_component = ref('tasks')
 
@@ -240,6 +276,105 @@ onMounted(async () => {
             justify-content: center;
         }
     }
+}
+
+.delete-user-row {
+    margin-top: $space-4;
+    border-top: 1px solid var(--color-border-light);
+    padding-top: $space-4;
+}
+
+.delete-user-btn {
+    background: none;
+    border: 1px solid #dc2626;
+    border-radius: $radius-sm;
+    color: #dc2626;
+    font-family: $font-body;
+    font-size: $text-sm;
+    padding: $space-2 $space-4;
+    cursor: pointer;
+    transition: $transition-fast;
+
+    &:hover {
+        background: rgba(220, 38, 38, 0.08);
+    }
+}
+
+.delete-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: $space-4;
+}
+
+.delete-modal {
+    background: var(--color-bg-card);
+    border-radius: $radius-lg;
+    padding: $space-10;
+    max-width: 480px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+
+    h2 {
+        font-size: $text-xl;
+        margin: 0 0 $space-4;
+        color: #dc2626;
+    }
+
+    &__warning {
+        font-size: $text-base;
+        margin: 0 0 $space-3;
+    }
+
+    &__detail {
+        font-size: $text-sm;
+        color: var(--color-text-muted);
+        margin: 0 0 $space-8;
+        line-height: 1.6;
+    }
+
+    &__actions {
+        display: flex;
+        gap: $space-3;
+        flex-wrap: wrap;
+
+        @media (max-width: $bp-sm) { flex-direction: column-reverse; }
+    }
+}
+
+.btn-cancel {
+    flex: 1;
+    padding: $space-3 $space-6;
+    border: 1px solid var(--color-border);
+    border-radius: $radius-sm;
+    background: none;
+    font-family: $font-body;
+    font-size: $text-sm;
+    cursor: pointer;
+    color: var(--color-text-muted);
+    transition: $transition-fast;
+
+    &:hover { background: var(--color-bg); }
+}
+
+.btn-confirm-delete {
+    flex: 2;
+    padding: $space-3 $space-6;
+    border: none;
+    border-radius: $radius-sm;
+    background: #dc2626;
+    color: #fff;
+    font-family: $font-body;
+    font-size: $text-sm;
+    font-weight: $fw-semibold;
+    cursor: pointer;
+    transition: $transition-fast;
+
+    &:hover { background: #b91c1c; }
 }
 
 @media screen and (max-width: $bp-md) {

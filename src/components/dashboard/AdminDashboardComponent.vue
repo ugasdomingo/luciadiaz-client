@@ -97,6 +97,7 @@ const set_view = (key) => {
         </section>
 
     </div>
+
 </template>
 
 <style scoped lang="scss">
@@ -244,4 +245,28 @@ const set_view = (key) => {
         padding: $space-6 $space-4 $space-12;
     }
 }
+
+.sidebar-bottom {
+    margin-top: auto;
+    padding-top: $space-6;
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+}
+
+.logout-btn {
+    margin-left: auto;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: $space-2;
+    color: var(--color-text-muted);
+    border-radius: $radius-sm;
+    transition: $transition-fast;
+    display: flex;
+    align-items: center;
+
+    &:hover { color: #dc2626; }
+}
+
 </style>

@@ -82,6 +82,22 @@ export const useAdminStore = defineStore('admin', () => {
         }
     }
 
+    const delete_user = async (user_id) => {
+        try {
+            util_store.set_loading(true)
+            const response = await api.delete(`/user/${user_id}`)
+            users.value = users.value.filter(u => u._id !== user_id)
+            util_store.set_message(response.data.message, 'success')
+            return true
+        } catch (err) {
+            const msg = err.response?.data?.message || 'Error al eliminar usuario'
+            util_store.set_message(msg, 'error')
+            return false
+        } finally {
+            util_store.set_loading(false)
+        }
+    }
+
     return {
         users,
         user,
@@ -90,6 +106,7 @@ export const useAdminStore = defineStore('admin', () => {
         get_user_by_id,
         update_user,
         role_to_patient,
-        active_anamnesis_kids
+        active_anamnesis_kids,
+        delete_user
     }
 })

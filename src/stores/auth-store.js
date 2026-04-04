@@ -180,11 +180,12 @@ export const useAuthStore = defineStore('auth', () => {
     const forgot_password = async (email_val) => {
         try {
             util_store.set_loading(true)
-            const response = await api.post('/auth/forgot-password', { email: email_val })
+            const email = typeof email_val === 'object' && email_val !== null ? email_val.email : email_val
+            const response = await api.post('/auth/forgot-password', { email })
 
             util_store.set_message(response.data.message, 'success')
-            email.value = email_val
-            router.push('/reset-password')
+            email.value = email
+            // No redirigir aquí — el usuario recibirá el email con el enlace directo
 
         } catch (error) {
             const msg = error.response?.data?.message || 'Error al solicitar recuperación'
@@ -227,6 +228,23 @@ export const useAuthStore = defineStore('auth', () => {
         } catch (error) {
             const msg = error.response?.data?.message || 'Error al cambiar contraseña'
             util_store.set_message(msg, 'error')
+        } finally {
+            util_store.set_loading(false)
+        }
+    }
+
+    /**
+     * Eliminar cuenta propia
+     */
+    const delete_account = async () => {
+        try {
+            util_store.set_loading(true)
+            await api.delete('/users/me')
+            logout()
+        } catch (error) {
+            const msg = error.response?.data?.message || 'Error al eliminar la cuenta'
+            util_store.set_message(msg, 'error')
+            throw error
         } finally {
             util_store.set_loading(false)
         }
@@ -281,6 +299,7 @@ export const useAuthStore = defineStore('auth', () => {
         logout,
         forgot_password,
         reset_password,
-        change_password
+        change_password,
+        delete_account
     }
 })

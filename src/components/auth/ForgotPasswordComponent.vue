@@ -4,7 +4,7 @@ import { useAuthStore } from '../../stores/auth-store'
 const auth_store = useAuthStore()
 
 const forgot_password = async () => {
-    await auth_store.forgot_password({ email: auth_store.email })
+    await auth_store.forgot_password(auth_store.email)
 }
 </script>
 
