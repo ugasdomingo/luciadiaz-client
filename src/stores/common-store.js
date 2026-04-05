@@ -3,19 +3,25 @@ import { api } from '../service/axios'
 import { ref } from 'vue'
 import { useUtilStore } from './util-store'
 
+const CACHE_TTL = 5 * 60 * 1000 // 5 minutos
+
 export const useCommonStore = defineStore('common', () => {
     const util_store = useUtilStore()
 
     // State
     const posts = ref([])
-    const products = ref([]) // ✨ CAMBIO: Antes era 'formations'
+    const products = ref([])
     const videos = ref([])
+    const last_fetched = ref(null)
 
     /**
-     * Obtener datos para la página Home
-     * Backend devuelve: { posts, videos, products }
+     * Obtener datos para la página Home.
+     * No hace fetch si los datos tienen menos de 5 minutos (cache en memoria).
      */
-    const get_common = async () => {
+    const get_common = async (force = false) => {
+        const cache_valid = last_fetched.value && (Date.now() - last_fetched.value < CACHE_TTL)
+        if (!force && cache_valid) return
+
         try {
             util_store.set_loading(true)
             const response = await api.get('/common/home')
@@ -23,6 +29,7 @@ export const useCommonStore = defineStore('common', () => {
             posts.value = response.data.data.posts || []
             products.value = response.data.data.products || []
             videos.value = response.data.data.videos || []
+            last_fetched.value = Date.now()
 
             return response.data.data
         } catch (error) {

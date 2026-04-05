@@ -22,9 +22,7 @@ import PostComponent from '../components/home/PostComponent.vue'
 const common_store = useCommonStore()
 
 onBeforeMount(() => {
-    if (!common_store.posts.length || !common_store.videos.length) {
-        common_store.get_common()
-    }
+    common_store.get_common()
 })
 </script>
 
