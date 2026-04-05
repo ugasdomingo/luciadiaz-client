@@ -47,7 +47,10 @@ const waitlist_leads = ref(false)
                     </div>
                     <div v-for="item in likes_by_item" :key="`${item._id.item_type}-${item._id.item_id}`" class="likes-table__row">
                         <span class="likes-table__badge">{{ type_label[item._id.item_type] || item._id.item_type }}</span>
-                        <span class="likes-table__id">{{ item._id.item_id }}</span>
+                        <span class="likes-table__id">
+                            <span v-if="item.item_title" class="likes-table__title">{{ item.item_title }}</span>
+                            <span class="likes-table__raw-id">{{ item._id.item_id }}</span>
+                        </span>
                         <span class="likes-table__count likes-table__count--val">♥ {{ item.count }}</span>
                     </div>
                 </div>
@@ -155,11 +158,27 @@ const waitlist_leads = ref(false)
     }
 
     &__id {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        overflow: hidden;
+    }
+
+    &__title {
+        font-size: $text-sm;
+        font-weight: $fw-medium;
+        color: var(--color-text);
+        white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        white-space: nowrap;
-        color: var(--color-text-muted);
+    }
+
+    &__raw-id {
         font-size: $text-xs;
+        color: var(--color-text-muted);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     &__count {
