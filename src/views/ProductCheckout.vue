@@ -49,7 +49,7 @@
                                 <span class="price-value">{{ split_amount }}€</span>
                             </div>
                             <div class="price-row price-row--split">
-                                <span>2ª cuota (antes de la formación):</span>
+                                <span>2ª cuota (cuando quieras):</span>
                                 <span class="price-value">{{ split_amount }}€</span>
                             </div>
                         </template>
@@ -66,7 +66,7 @@
                             <input type="checkbox" v-model="split_payment" class="split-toggle__checkbox" />
                             <span class="split-toggle__text">
                                 <strong>Pagar en 2 cuotas</strong>
-                                <small>Paga la mitad ahora y la otra mitad antes de la formación</small>
+                                <small>Paga la mitad ahora y la otra mitad cuando quieras</small>
                             </span>
                         </label>
                     </div>
