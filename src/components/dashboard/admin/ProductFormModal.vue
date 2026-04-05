@@ -37,6 +37,7 @@ const default_form = () => ({
     start_date: '',
     download_url: '',
     curriculum: [],
+    dates: [],
 })
 
 const form_data = ref(default_form())
@@ -60,6 +61,12 @@ watch(() => [props.is_open, props.product, props.mode], ([open]) => {
                 : '',
             download_url: props.product.download_url || '',
             curriculum: props.product.curriculum ? [...props.product.curriculum] : [],
+            dates: props.product.dates
+                ? props.product.dates.map(d => ({
+                    date: new Date(d.date).toISOString().slice(0, 16),
+                    price: d.price,
+                }))
+                : [],
         }
         if (props.product.cover_image) {
             image_preview.value = typeof props.product.cover_image === 'string'
@@ -130,6 +137,14 @@ const remove_lesson_guide = (index) => {
     lesson_guide_names.value = rest_n
 }
 
+const add_date = () => {
+    form_data.value.dates.push({ date: '', price: 0 })
+}
+
+const remove_date = (index) => {
+    form_data.value.dates.splice(index, 1)
+}
+
 const add_lesson = () => {
     form_data.value.curriculum.push({ title: '', video_url: '', notes: '', lesson_pdf_url: '', is_free_preview: false })
 }
@@ -153,12 +168,15 @@ const handle_submit = async () => {
     try {
         const submit_data = new FormData()
         Object.keys(form_data.value).forEach(key => {
-            if (key !== '_id' && key !== 'curriculum' && form_data.value[key] !== '') {
+            if (key !== '_id' && key !== 'curriculum' && key !== 'dates' && form_data.value[key] !== '') {
                 submit_data.append(key, form_data.value[key])
             }
         })
         if (form_data.value.curriculum.length > 0) {
             submit_data.append('curriculum', JSON.stringify(form_data.value.curriculum))
+        }
+        if (form_data.value.dates.length > 0) {
+            submit_data.append('dates', JSON.stringify(form_data.value.dates))
         }
         if (image_file.value) {
             submit_data.append('cover_image', image_file.value)
@@ -225,6 +243,7 @@ const handle_submit = async () => {
                                 <option value="ebook">Guía/Ebook</option>
                                 <option value="bundle">Pack</option>
                                 <option value="service">Servicio</option>
+                                <option value="formation">Formación</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -234,12 +253,12 @@ const handle_submit = async () => {
                         </div>
                     </div>
 
-                    <!-- Precio de pre-venta -->
-                    <div v-if="form_data.status === 'pre_sale'" class="form-group">
-                        <label class="form-label">Precio de pre-venta ($)</label>
+                    <!-- Precio de pre-venta (siempre visible) -->
+                    <div class="form-group">
+                        <label class="form-label">Precio de pre-venta (€)</label>
                         <input v-model.number="form_data.presale_price" type="number" min="0" step="0.01"
-                            class="form-input" placeholder="0.00" />
-                        <span class="form-hint">Se cobrará este precio en lugar del precio normal mientras el producto esté en pre-venta.</span>
+                            class="form-input" placeholder="Dejar vacío si no aplica" />
+                        <span class="form-hint">Si el producto está en pre-venta, se cobrará este precio en lugar del precio normal.</span>
                     </div>
 
                     <!-- Descripción -->
@@ -271,6 +290,24 @@ const handle_submit = async () => {
                     <div v-if="form_data.type === 'course'" class="form-group">
                         <label class="form-label">Fecha de inicio</label>
                         <input v-model="form_data.start_date" type="datetime-local" class="form-input" />
+                    </div>
+
+                    <!-- Fechas con precio propio (solo formaciones) -->
+                    <div v-if="form_data.type === 'formation'" class="form-group">
+                        <label class="form-label">Fechas de formación</label>
+                        <div class="dates-editor">
+                            <div v-for="(item, index) in form_data.dates" :key="index" class="date-item">
+                                <span class="date-item__num">{{ index + 1 }}</span>
+                                <input v-model="item.date" type="datetime-local" class="date-item__date" required />
+                                <input v-model.number="item.price" type="number" min="0" step="0.01"
+                                    class="date-item__price" placeholder="Precio €" required />
+                                <button type="button" class="date-item__remove" @click="remove_date(index)">✕</button>
+                            </div>
+                            <button type="button" class="btn-add-date" @click="add_date">
+                                ➕ Añadir fecha
+                            </button>
+                        </div>
+                        <span class="form-hint">Cada fecha puede tener su propio precio. Los usuarios elegirán al hacer el pedido.</span>
                     </div>
 
                     <!-- PDF descargable (ebook / bundle) -->
@@ -784,6 +821,101 @@ const handle_submit = async () => {
 
 .btn-add-lesson {
     padding: $space-3 $space-6;
+    border: 2px dashed var(--color-border);
+    background: transparent;
+    border-radius: $radius-sm;
+    font-size: $text-sm;
+    font-weight: $fw-semibold;
+    color: var(--color-primary);
+    cursor: pointer;
+    transition: $transition;
+
+    &:hover {
+        border-color: var(--color-primary);
+        background: var(--color-bg);
+    }
+}
+
+// DATES EDITOR
+.dates-editor {
+    display: flex;
+    flex-direction: column;
+    gap: $space-3;
+}
+
+.date-item {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    padding: $space-3;
+    border: 1px solid var(--color-border);
+    border-radius: $radius-md;
+    background: var(--color-bg);
+
+    &__num {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        background: var(--color-primary);
+        color: var(--color-white);
+        border-radius: 50%;
+        font-size: $text-xs;
+        font-weight: $fw-bold;
+        flex-shrink: 0;
+    }
+
+    &__date {
+        flex: 2;
+        padding: $space-2 $space-3;
+        border: 1px solid var(--color-border);
+        border-radius: $radius-xs;
+        font-size: $text-sm;
+        font-family: inherit;
+        box-sizing: border-box;
+
+        &:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+    }
+
+    &__price {
+        flex: 1;
+        padding: $space-2 $space-3;
+        border: 1px solid var(--color-border);
+        border-radius: $radius-xs;
+        font-size: $text-sm;
+        font-family: inherit;
+        box-sizing: border-box;
+
+        &:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+    }
+
+    &__remove {
+        width: 28px;
+        height: 28px;
+        border: none;
+        background: var(--color-error);
+        color: var(--color-white);
+        border-radius: 50%;
+        font-size: $text-sm;
+        cursor: pointer;
+        flex-shrink: 0;
+        transition: opacity $transition;
+
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+}
+
+.btn-add-date {
+    padding: $space-2 $space-5;
     border: 2px dashed var(--color-border);
     background: transparent;
     border-radius: $radius-sm;

@@ -17,23 +17,58 @@
                         </div>
                     </div>
 
+                    <!-- Selector de fecha (formaciones con múltiples fechas) -->
+                    <div v-if="product.dates?.length" class="form-group date-selector">
+                        <label class="field-label">Fecha de inicio *</label>
+                        <select v-model="selected_date" class="date-select" required>
+                            <option value="">Selecciona una fecha...</option>
+                            <option v-for="d in product.dates" :key="d.date" :value="d.date">
+                                {{ format_date(d.date) }} — {{ d.price }}€
+                            </option>
+                        </select>
+                    </div>
+
                     <div class="price-summary">
                         <div v-if="is_presale" class="price-row price-row--presale">
                             <span>Precio pre-venta:</span>
-                            <span class="price-value price-value--presale">{{ product.presale_price }}$</span>
+                            <span class="price-value price-value--presale">{{ product.presale_price }}€</span>
                         </div>
                         <div v-if="is_presale" class="price-row">
                             <span>Precio normal:</span>
-                            <span class="price-value price-value--striked">{{ product.price }}$</span>
+                            <span class="price-value price-value--striked">{{ product.price }}€</span>
                         </div>
                         <div v-else class="price-row">
                             <span>Subtotal:</span>
-                            <span class="price-value">{{ product.price }}$</span>
+                            <span class="price-value">{{ effective_price }}€</span>
                         </div>
+
+                        <!-- Desglose pago fraccionado -->
+                        <template v-if="split_payment">
+                            <div class="price-row price-row--split">
+                                <span>1ª cuota (ahora):</span>
+                                <span class="price-value">{{ split_amount }}€</span>
+                            </div>
+                            <div class="price-row price-row--split">
+                                <span>2ª cuota (antes de la formación):</span>
+                                <span class="price-value">{{ split_amount }}€</span>
+                            </div>
+                        </template>
+
                         <div class="price-row price-row--total">
-                            <span>Total:</span>
-                            <span class="price-value">{{ effective_price }}$</span>
+                            <span>{{ split_payment ? 'Pagas ahora:' : 'Total:' }}</span>
+                            <span class="price-value">{{ split_payment ? split_amount : effective_price }}€</span>
                         </div>
+                    </div>
+
+                    <!-- Toggle pago en 2 partes (solo formaciones con fecha seleccionada) -->
+                    <div v-if="can_split" class="split-toggle">
+                        <label class="split-toggle__label">
+                            <input type="checkbox" v-model="split_payment" class="split-toggle__checkbox" />
+                            <span class="split-toggle__text">
+                                <strong>Pagar en 2 cuotas</strong>
+                                <small>Paga la mitad ahora y la otra mitad antes de la formación</small>
+                            </span>
+                        </label>
                     </div>
                 </section>
 
@@ -155,13 +190,33 @@ const selectedMethod = ref('stripe')
 const uploadedProof = ref(null)
 const fileInput = ref(null)
 const showPaymentModal = ref(false)
+const selected_date = ref('')
+const split_payment = ref(false)
+
+// Computed — precio efectivo según fecha seleccionada o presale
 const is_presale = computed(() =>
     product.value?.status === 'pre_sale' && product.value?.presale_price != null
 )
-const effective_price = computed(() =>
-    is_presale.value ? product.value.presale_price : product.value?.price
+const effective_price = computed(() => {
+    if (is_presale.value) return product.value.presale_price
+    if (selected_date.value && product.value?.dates?.length) {
+        const match = product.value.dates.find(
+            d => new Date(d.date).getTime() === new Date(selected_date.value).getTime()
+        )
+        if (match) return match.price
+    }
+    return product.value?.price ?? 0
+})
+const split_amount = computed(() => Math.round((effective_price.value / 2) * 100) / 100)
+const can_split = computed(() =>
+    product.value?.type === 'formation' && !!selected_date.value
 )
 const is_product_free = computed(() => effective_price.value === 0)
+
+// Helpers
+const format_date = (iso) => new Date(iso).toLocaleDateString('es-ES', {
+    day: 'numeric', month: 'long', year: 'numeric'
+})
 
 // Computed
 const truncatedDescription = computed(() => {
@@ -172,6 +227,8 @@ const truncatedDescription = computed(() => {
 })
 
 const canProceed = computed(() => {
+    // Si es formación con fechas, la fecha debe estar seleccionada
+    if (product.value?.dates?.length && !selected_date.value) return false
     if (selectedMethod.value === 'stripe') return true
     if (selectedMethod.value === 'offline') return !!uploadedProof.value
     return false
@@ -231,12 +288,18 @@ const handleFreePayment = async () => {
 const handlePayment = async () => {
     if (!canProceed.value) return
 
+    const opts = {
+        selected_date: selected_date.value || null,
+        split_payment: split_payment.value,
+    }
+
     if (selectedMethod.value === 'stripe') {
-        await order_store.init_stripe_checkout(product.value._id)
+        await order_store.init_stripe_checkout(product.value._id, opts)
     } else if (selectedMethod.value === 'offline') {
         const result = await order_store.create_offline_order({
             product_id: product.value._id,
-            file: uploadedProof.value?.file ?? null
+            file: uploadedProof.value?.file ?? null,
+            ...opts,
         })
         if (result) router.push(`/productos/${product.value.slug}`)
     }
@@ -572,6 +635,92 @@ onMounted(() => {
 
         &:hover {
             text-decoration: underline;
+        }
+    }
+}
+
+.date-selector {
+    margin-bottom: $space-5;
+}
+
+.field-label {
+    display: block;
+    font-size: $text-sm;
+    font-weight: $fw-semibold;
+    color: var(--color-text);
+    margin-bottom: $space-2;
+}
+
+.date-select {
+    width: 100%;
+    padding: $space-3 $space-4;
+    border: 2px solid var(--color-border);
+    border-radius: $radius-sm;
+    font-size: $text-sm;
+    font-family: inherit;
+    background: var(--color-bg-card);
+    cursor: pointer;
+    transition: border-color $transition;
+
+    &:focus {
+        outline: none;
+        border-color: var(--color-primary);
+    }
+}
+
+.price-row--split {
+    color: var(--color-text-muted);
+    font-size: $text-sm;
+
+    .price-value {
+        font-weight: $fw-semibold;
+        color: var(--color-primary);
+    }
+}
+
+.split-toggle {
+    margin-top: $space-5;
+    padding: $space-4;
+    background: var(--color-bg);
+    border: 2px solid var(--color-border);
+    border-radius: $radius-md;
+    transition: border-color $transition;
+
+    &:has(.split-toggle__checkbox:checked) {
+        border-color: var(--color-primary);
+        background: var(--color-border-light);
+    }
+
+    &__label {
+        display: flex;
+        align-items: flex-start;
+        gap: $space-3;
+        cursor: pointer;
+    }
+
+    &__checkbox {
+        margin-top: 3px;
+        flex-shrink: 0;
+        width: 18px;
+        height: 18px;
+        accent-color: var(--color-primary);
+        cursor: pointer;
+    }
+
+    &__text {
+        display: flex;
+        flex-direction: column;
+        gap: $space-1;
+
+        strong {
+            font-size: $text-sm;
+            color: var(--color-text);
+        }
+
+        small {
+            font-size: $text-xs;
+            color: var(--color-text-muted);
+            line-height: 1.4;
         }
     }
 }

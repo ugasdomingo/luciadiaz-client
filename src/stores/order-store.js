@@ -16,10 +16,10 @@ export const useOrderStore = defineStore('order', () => {
     const my_orders = ref([]) // Para usuario
     const current_order = ref(null)
 
-    const init_stripe_checkout = async (product_id) => {
+    const init_stripe_checkout = async (product_id, { selected_date = null, split_payment = false } = {}) => {
         try {
             util_store.set_loading(true)
-            const response = await api.post('/orders/stripe/init', { product_id })
+            const response = await api.post('/orders/stripe/init', { product_id, selected_date, split_payment })
 
             if (response.data.data?.session_url) {
                 window.location.href = response.data.data.session_url
@@ -54,12 +54,14 @@ export const useOrderStore = defineStore('order', () => {
         }
     }
 
-    const create_offline_order = async ({ product_id, file = null }) => {
+    const create_offline_order = async ({ product_id, file = null, selected_date = null, split_payment = false }) => {
         try {
             util_store.set_loading(true)
             const form_data = new FormData()
             form_data.append('product_id', product_id)
             if (file) form_data.append('payment_proof', file)
+            if (selected_date) form_data.append('selected_date', selected_date)
+            form_data.append('split_payment', split_payment)
 
             const response = await api.post('/orders/offline', form_data, {
                 headers: { 'Content-Type': 'multipart/form-data' }
