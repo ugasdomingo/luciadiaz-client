@@ -31,7 +31,7 @@ const product_to_delete = ref(null)
 
 const filters = ref({
     type: '',
-    status: 'coming_soon',
+    status: '',
     search: ''
 })
 
