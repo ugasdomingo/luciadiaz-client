@@ -2,6 +2,56 @@
   line-height: 1.5;
   font-weight: $fw-regular;
 
+  /* ========== NUEVO DISEÑO 2026 — tokens app.css ========== */
+  --blue:        #1E56A0;
+  --blue-bright: #2663C7;
+  --blue-deep:   #0B3B8C;
+  --blue-ink:    #071E4D;
+  --blue-wash:   #EEF4FC;
+  --blue-veil:   rgba(11,59,140,0.06);
+
+  --gold:        #D4A017;
+  --gold-bright: #E8B923;
+  --gold-light:  #F5C518;
+  --gold-soft:   #FFE082;
+  --gold-deep:   #B8860B;
+  --gold-grad:   linear-gradient(135deg, #F5C518 0%, #E8B923 45%, #D4A017 100%);
+  --gold-grad-hover: linear-gradient(135deg, #FFE082 0%, #F5C518 50%, #E8B923 100%);
+
+  --white:       #FFFFFF;
+  --cream:       #FDFBF5;
+  --cream-warm:  #FAF6EC;
+  --paper:       #F7F8FA;
+
+  --ink:         #0A1530;
+  --ink-soft:    #2B3A5C;
+  --ink-muted:   #6B7B9A;
+  --ink-faint:   #A8B2C5;
+
+  --border:      #E2E8F0;
+  --border-soft: #F0E9D6;
+  --border-gold: rgba(212,160,23,0.25);
+
+  --shadow-xs:   0 1px 2px rgba(7,30,77,.04);
+  --shadow-sm-new: 0 2px 6px rgba(7,30,77,.06), 0 4px 12px rgba(7,30,77,.04);
+  --shadow-md-new: 0 6px 16px rgba(7,30,77,.08), 0 12px 28px rgba(7,30,77,.06);
+  --shadow-lg-new: 0 12px 28px rgba(7,30,77,.12), 0 24px 48px rgba(7,30,77,.08);
+  --shadow-blue: 0 8px 24px rgba(30,86,160,.28);
+  --shadow-gold-new: 0 4px 14px rgba(212,160,23,.30), 0 8px 28px rgba(212,160,23,.20);
+  --shadow-gold-glow: 0 0 0 3px rgba(245,197,24,.25), 0 10px 30px rgba(232,185,35,.45), 0 6px 18px rgba(212,160,23,.35);
+
+  --font-title: 'Playfair Display', Georgia, serif;
+  --font-body:  'Montserrat', system-ui, sans-serif;
+
+  --r-xs: 4px;  --r-sm: 8px;   --r-md: 12px;
+  --r-lg: 16px; --r-xl: 24px;  --r-2xl: 32px;
+  --r-full: 9999px;
+
+  --max-w: 1240px;
+  --header-h: 80px;
+
+  --ease: cubic-bezier(.4, 0, .2, 1);
+
   /* ========== PALETA DE COLORES — Brillante 2026 ========== */
 
   /* Azules vibrantes */

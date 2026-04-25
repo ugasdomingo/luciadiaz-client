@@ -1,80 +1,172 @@
 <script setup>
 import { useCommonStore } from '../../stores/common-store'
-import PostCardComponent from '../common/cards/PostCardComponent.vue'
-import { use_scroll_reveal } from '../../composables/use-scroll-reveal.js'
+import { useRouter } from 'vue-router'
+import { computed } from 'vue'
 
-use_scroll_reveal()
+const router = useRouter()
 const common_store = useCommonStore()
+
+const posts = computed(() => common_store.posts?.slice(0, 3) || [])
+
+const fallback_posts = [
+    { cat: 'Autoconocimiento', title: 'Lo que escondes cuando dices "estoy bien"', read: '6 min', img: 'https://images.unsplash.com/photo-1528543606781-2f6e6857f318?w=700&q=80', date: '12 Abr' },
+    { cat: 'Relaciones', title: 'Apego seguro no es no tener miedo — es volver', read: '8 min', img: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=700&q=80', date: '05 Abr' },
+    { cat: 'Prácticas', title: 'Tres preguntas para ordenar un día difícil', read: '4 min', img: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=700&q=80', date: '29 Mar' },
+]
+
+const display_posts = computed(() => {
+    if (posts.value.length >= 3) return posts.value.slice(0, 3)
+    return fallback_posts
+})
+
+const get_img = (post) => post.img || post.image || fallback_posts[0].img
+const get_cat = (post) => post.cat || post.category || 'Psicología'
+const get_date = (post) => post.date ? new Date(post.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) : ''
+const get_read = (post) => post.read || post.read_time || '5 min'
+const get_id = (post) => post.id || post._id
 </script>
 
 <template>
-    <section class="section-container post">
-        <div class="section-container__header" data-scroll-reveal>
-            <h2>Últimas publicaciones</h2>
-            <p>Reflexiones y herramientas para entenderte mejor cada día</p>
+    <section class="blog-preview">
+        <div class="container">
+            <div class="blog-preview__header">
+                <div>
+                    <div class="eyebrow">Últimas publicaciones</div>
+                    <h2>Lecturas para <em>volver a ti</em>.</h2>
+                </div>
+                <RouterLink to="/blog" class="btn-ghost">Ver todo el blog →</RouterLink>
+            </div>
+
+            <div class="blog-preview__grid">
+                <article
+                    v-for="(post, i) in display_posts"
+                    :key="i"
+                    class="blog-card"
+                    :class="{ 'blog-card--big': i === 0 }"
+                    @click="get_id(post) ? router.push(`/blog/${get_id(post)}`) : router.push('/blog')"
+                >
+                    <div class="blog-card__img-wrap" :class="{ 'blog-card__img-wrap--big': i === 0 }">
+                        <img :src="get_img(post)" :alt="post.title" class="blog-card__img" />
+                        <div class="blog-card__cat">{{ get_cat(post) }}</div>
+                    </div>
+                    <div class="blog-card__body" :class="{ 'blog-card__body--big': i === 0 }">
+                        <h3 class="blog-card__title" :class="{ 'blog-card__title--big': i === 0 }">{{ post.title }}</h3>
+                        <div class="blog-card__meta">
+                            <span>{{ get_date(post) }}</span>
+                            <span>{{ get_read(post) }} de lectura</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
         </div>
-        <div class="post__grid">
-            <PostCardComponent v-for="(post, index) in common_store.posts" :key="post.id" :post="post"
-                data-scroll-reveal :style="{ '--delay': `${0.2 + index * 0.12}s` }" />
-        </div>
-        <RouterLink to="/blog" class="post__link" data-scroll-reveal>
-            Ver todas las publicaciones →
-        </RouterLink>
     </section>
 </template>
 
-
 <style scoped lang="scss">
-.post {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: $space-10;
+.blog-preview {
+    padding: 140px 0;
+    background: var(--cream);
+}
 
-    &__grid {
-        width: 100%;
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: $space-8;
-        box-sizing: border-box;
-    }
+.container {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 0 28px;
+}
 
-    &__link {
-        display: inline-block;
-        padding: $space-3 $space-6;
-        color: var(--color-primary);
-        font-family: $font-body;
-        font-size: $text-base;
-        font-weight: $fw-medium;
-        border: 1px solid var(--color-border);
-        border-radius: $radius-sm;
-        transition: $transition-slow;
-        opacity: 0;
-        transform: translateY(20px);
+.blog-preview__header {
+    display: flex; justify-content: space-between;
+    align-items: flex-end; margin-bottom: 56px;
+    gap: 24px; flex-wrap: wrap;
+}
 
-        &.is-visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
+.eyebrow {
+    font-family: var(--font-body);
+    font-size: 12px; font-weight: 600;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--blue); margin-bottom: 14px;
+}
 
-        &:hover {
-            border-color: var(--color-primary);
-            box-shadow: var(--shadow-sm);
-            transform: translateY(-2px);
-        }
+h2 {
+    font-family: var(--font-title);
+    font-size: clamp(2rem, 4.2vw, 3.25rem);
+    font-weight: 700; color: var(--blue-ink);
+    line-height: 1.08; letter-spacing: -0.02em;
+    margin: 0;
+    em { font-style: italic; color: var(--gold-deep); }
+}
+
+.btn-ghost {
+    font-family: var(--font-body); font-weight: 600;
+    font-size: 14px; color: var(--blue);
+    text-decoration: none; white-space: nowrap;
+    transition: color .2s var(--ease);
+    &:hover { color: var(--gold-deep); }
+}
+
+.blog-preview__grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 24px;
+}
+
+.blog-card {
+    background: var(--white); border-radius: 20px;
+    overflow: hidden; border: 1px solid var(--border-soft);
+    display: flex; flex-direction: column;
+    cursor: pointer;
+    transition: transform .35s var(--ease), box-shadow .35s var(--ease), border-color .3s var(--ease);
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 18px 40px rgba(7,30,77,0.10);
+        border-color: var(--border-gold);
+
+        .blog-card__img { transform: scale(1.05); }
     }
 }
 
-@media screen and (max-width: $bp-lg) {
-    .post__grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+.blog-card__img-wrap {
+    position: relative; aspect-ratio: 16/10;
+    overflow: hidden; background: var(--blue-wash);
+
+    &--big { aspect-ratio: 16/11; }
 }
 
-@media screen and (max-width: $bp-md) {
-    .post__grid {
-        grid-template-columns: 1fr;
-        gap: $space-6;
-    }
+.blog-card__img {
+    width: 100%; height: 100%; object-fit: cover;
+    display: block;
+    transition: transform .7s var(--ease);
+}
+
+.blog-card__cat {
+    position: absolute; top: 16px; left: 16px;
+    background: var(--white); padding: 6px 12px; border-radius: 999px;
+    font-family: var(--font-body);
+    font-size: 11px; font-weight: 600; color: var(--blue-ink);
+    letter-spacing: 0.04em; text-transform: uppercase;
+}
+
+.blog-card__body {
+    padding: 24px; display: flex; flex-direction: column; flex: 1;
+    &--big { padding: 32px; }
+}
+
+.blog-card__title {
+    font-family: var(--font-title);
+    font-size: 19px; line-height: 1.25;
+    margin: 0 0 16px; color: var(--blue-ink); flex: 1; font-weight: 600;
+    &--big { font-size: 26px; }
+}
+
+.blog-card__meta {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 16px; border-top: 1px solid var(--border-soft);
+    font-family: var(--font-body);
+    font-size: 12px; color: var(--ink-muted); letter-spacing: 0.04em;
+}
+
+@media (max-width: 980px) {
+    .blog-preview__grid { grid-template-columns: 1fr; }
 }
 </style>

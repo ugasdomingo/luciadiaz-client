@@ -1,131 +1,297 @@
 <script setup>
-import { onMounted, ref } from 'vue'
-import { useUtilStore } from '../../stores/util-store'
+import { ref, onMounted, onUnmounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '../../stores/auth-store'
-import NavbarComponent from './NavbarComponent.vue'
 
-const util_store = useUtilStore()
+const router = useRouter()
+const route = useRoute()
 const auth_store = useAuthStore()
 
-const show_header = ref(true)
-const need_bg = ref(false)
-let last_scroll_y = 0
+const scrolled = ref(false)
+const menu_open = ref(false)
 
-const on_hamburger_click = () => {
-    util_store.toggle_navbar()
+const links = [
+    { id: 'terapias', label: 'Terapias', path: '/terapias' },
+    { id: 'tests', label: 'Tests', path: '/tests' },
+    { id: 'formaciones', label: 'Formaciones', path: '/productos' },
+    { id: 'blog', label: 'Blog', path: '/blog' },
+]
+
+const is_active = (path) => route.path === path || route.path.startsWith(path + '/')
+
+const on_scroll = () => { scrolled.value = window.scrollY > 40 }
+
+onMounted(() => window.addEventListener('scroll', on_scroll, { passive: true }))
+onUnmounted(() => window.removeEventListener('scroll', on_scroll))
+
+const navigate = (path) => {
+    menu_open.value = false
+    router.push(path)
 }
-
-onMounted(() => {
-    window.addEventListener('scroll', () => {
-        show_header.value = window.scrollY <= last_scroll_y
-        need_bg.value = window.scrollY > 100
-        last_scroll_y = window.scrollY
-    })
-})
 </script>
 
 <template>
-    <header class="header" :class="{ 'header--hidden': !show_header, 'header--bg': need_bg }">
+    <header class="header" :class="{ 'header--scrolled': scrolled }">
+        <div class="container header__inner">
+            <!-- Logo -->
+            <RouterLink to="/" class="header__brand">
+                <div class="header__logo-wrap">
+                    <div class="header__logo-inner">
+                        <img src="/logo.png" alt="Lucía Díaz" class="header__logo-img" />
+                    </div>
+                </div>
+                <div class="header__brand-text">
+                    <span class="header__brand-name">Lucía Díaz</span>
+                    <span class="header__brand-sub">Psicología · Madrid</span>
+                </div>
+            </RouterLink>
 
-        <RouterLink to="/" class="header__logo">
-            <img src="/logo-notextbg.png" alt="logo lucia">
-        </RouterLink>
+            <!-- Desktop nav -->
+            <nav class="header__nav nav-desktop">
+                <RouterLink
+                    v-for="l in links"
+                    :key="l.id"
+                    :to="l.path"
+                    class="header__nav-link"
+                    :class="{ 'header__nav-link--active': is_active(l.path) }"
+                >
+                    {{ l.label }}
+                    <span v-if="is_active(l.path)" class="header__nav-dot" />
+                </RouterLink>
+            </nav>
 
-        <div class="header__menu">
-            <!-- Hamburguesa: abre navbar global -->
-            <button class="hamburger" @click="on_hamburger_click" aria-label="Menú">
-                <span class="hamburger__line"
-                    :class="{ 'hamburger__line--open': util_store.show_navbar }">
-                    <span></span><span></span><span></span>
-                </span>
-            </button>
-
-            <!-- Navbar global -->
-            <NavbarComponent :class="util_store.show_navbar ? 'navbar--visible' : 'navbar--hidden'" />
+            <!-- Actions -->
+            <div class="header__actions">
+                <RouterLink to="/mi-espacio" class="header__mi-espacio nav-desktop">Mi espacio</RouterLink>
+                <RouterLink to="/terapias" class="btn-header-gold">Agendar sesión</RouterLink>
+                <button class="burger" @click="menu_open = !menu_open" aria-label="Menú">
+                    <span /><span /><span class="burger__third" />
+                </button>
+            </div>
         </div>
-
     </header>
+
+    <!-- Mobile fullscreen menu -->
+    <Transition name="menu-fade">
+        <div v-if="menu_open" class="mobile-menu" @click="menu_open = false">
+            <nav class="mobile-menu__nav" @click.stop>
+                <RouterLink
+                    v-for="l in links"
+                    :key="l.id"
+                    :to="l.path"
+                    class="mobile-menu__link"
+                    :class="{ 'mobile-menu__link--active': is_active(l.path) }"
+                    @click="menu_open = false"
+                >{{ l.label }}</RouterLink>
+                <RouterLink to="/mi-espacio" class="mobile-menu__link" @click="menu_open = false">Mi espacio</RouterLink>
+            </nav>
+        </div>
+    </Transition>
 </template>
 
 <style scoped lang="scss">
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&display=swap');
+
 .header {
-    width: 100%;
-    max-width: 1360px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: $space-3 $space-16;
-    margin: 0 auto;
     position: fixed;
-    top: $space-2;
-    left: 0;
-    right: 0;
+    top: 0; left: 0; right: 0;
     z-index: 100;
-    box-sizing: border-box;
-    height: $header-height;
+    height: var(--header-h);
+    background: transparent;
+    border-bottom: 1px solid transparent;
+    transition: background .35s var(--ease), border-color .35s var(--ease), backdrop-filter .35s var(--ease);
 
-    &--hidden { display: none; }
-
-    &--bg {
-        background-color: var(--overlay-white-85);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        box-shadow: var(--shadow-sm);
+    &--scrolled {
+        background: rgba(255,255,255,0.88);
+        backdrop-filter: blur(16px) saturate(1.4);
+        -webkit-backdrop-filter: blur(16px) saturate(1.4);
+        border-bottom-color: rgba(30,86,160,0.08);
     }
-
-    &__logo img {
-        width: 3.5rem;
-        object-fit: contain;
-        display: block;
-    }
-
-    &__menu {
-        display: flex;
-        align-items: center;
-        gap: $space-3;
-        flex-shrink: 0;
-    }
-
 }
 
-
-.hamburger {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: $space-1;
+.header__inner {
+    height: 100%;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.container {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 0 28px;
+}
+
+.header__brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    flex-shrink: 0;
+}
+
+.header__logo-wrap {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: var(--gold-grad);
+    padding: 2px;
+    box-shadow: 0 2px 10px rgba(212,160,23,.3);
+    flex-shrink: 0;
+}
+
+.header__logo-inner {
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    background: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+}
+
+.header__logo-img {
+    width: 36px; height: 36px;
+    object-fit: contain;
+}
+
+.header__brand-text {
+    display: flex; flex-direction: column;
+    line-height: 1;
+}
+
+.header__brand-name {
+    font-family: var(--font-title);
+    font-size: 20px; font-weight: 700;
+    color: var(--blue-ink);
+    letter-spacing: -0.01em;
+}
+
+.header__brand-sub {
+    font-family: var(--font-body);
+    font-size: 10px; font-weight: 500;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--gold-deep);
+    margin-top: 3px;
+}
+
+.header__nav {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.header__nav-link {
+    position: relative;
+    padding: 10px 16px;
+    font-size: 14px; font-weight: 500;
+    color: var(--ink-soft);
+    text-decoration: none;
+    transition: color .2s var(--ease);
+    font-family: var(--font-body);
+
+    &:hover { color: var(--blue-ink); }
+
+    &--active { color: var(--blue-ink); }
+}
+
+.header__nav-dot {
+    position: absolute;
+    left: 50%; bottom: 2px;
+    transform: translateX(-50%);
+    width: 18px; height: 2px;
+    background: var(--gold-grad);
+    border-radius: 2px;
+}
+
+.header__actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header__mi-espacio {
+    font-size: 13px; font-weight: 500;
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-family: var(--font-body);
+    transition: color .2s var(--ease);
+    &:hover { color: var(--blue-ink); }
+}
+
+.btn-header-gold {
+    display: inline-flex;
+    align-items: center; justify-content: center;
+    padding: 12px 22px;
+    border-radius: var(--r-full);
+    background: var(--gold-grad);
+    color: var(--white);
+    font-family: var(--font-body);
+    font-weight: 700; font-size: 12px;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    text-decoration: none;
+    border: none; cursor: pointer;
+    box-shadow: var(--shadow-gold-new);
+    transition: background .25s var(--ease), transform .25s var(--ease), box-shadow .3s var(--ease), color .25s var(--ease);
+
+    &:hover {
+        background: var(--gold-grad-hover);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-gold-glow);
+        color: var(--blue-ink);
+    }
+}
+
+.burger {
+    display: none;
+    width: 40px; height: 40px;
+    border: none; background: transparent;
+    cursor: pointer;
+    flex-direction: column; justify-content: center; align-items: center;
+    gap: 5px;
     flex-shrink: 0;
 
-    &__line {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-        width: 22px;
-
-        span {
-            display: block;
-            height: 2px;
-            background: var(--color-text);
-            border-radius: $radius-xs;
-            transition: $transition;
-            transform-origin: center;
-        }
-
-        &--open {
-            span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-            span:nth-child(2) { opacity: 0; transform: scaleX(0); }
-            span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-        }
+    span {
+        display: block;
+        width: 22px; height: 2px;
+        background: var(--blue-ink);
+        border-radius: 2px;
     }
+    .burger__third { width: 14px; background: var(--gold); }
 }
 
-.navbar--visible { display: block; }
-.navbar--hidden  { display: none; }
+/* Mobile fullscreen menu */
+.mobile-menu {
+    position: fixed; inset: 0;
+    z-index: 99;
+    background: linear-gradient(135deg, var(--blue) 0%, var(--blue-deep) 100%);
+    display: flex; align-items: center; justify-content: center;
+}
 
-@media (max-width: $bp-md) {
-    .header { padding: $space-3 $space-4; }
+.mobile-menu__nav {
+    display: flex; flex-direction: column;
+    gap: 24px; text-align: center;
+}
+
+.mobile-menu__link {
+    font-family: var(--font-title);
+    font-size: 36px; font-weight: 600;
+    color: var(--white);
+    text-decoration: none;
+    transition: color .2s var(--ease);
+
+    &:hover, &--active { color: var(--gold-light); }
+}
+
+/* Transition */
+.menu-fade-enter-active, .menu-fade-leave-active {
+    transition: opacity .3s var(--ease);
+}
+.menu-fade-enter-from, .menu-fade-leave-to { opacity: 0; }
+
+/* Responsive */
+.nav-desktop { display: flex !important; }
+
+@media (max-width: 980px) {
+    .nav-desktop { display: none !important; }
+    .burger { display: flex; }
 }
 </style>

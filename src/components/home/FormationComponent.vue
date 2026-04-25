@@ -1,74 +1,168 @@
 <script setup>
-import { useCommonStore } from '../../stores/common-store'
-import ProductCardComponent from '../common/cards/ProductCardComponent.vue'
-import { use_scroll_reveal } from '../../composables/use-scroll-reveal.js'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 
-use_scroll_reveal()
-const common_store = useCommonStore()
+const items = [
+    { title: 'Habitar tu cuerpo', price: '89€', img: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&q=80', tag: 'Formación' },
+    { title: 'Cartografía emocional', price: '19€', img: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=600&q=80', tag: 'Guía' },
+    { title: 'Pack autoconocimiento', price: '120€', old: '150€', img: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80', tag: 'Pack' },
+    { title: 'Arquetipos femeninos', price: '75€', img: 'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=600&q=80', tag: 'Formación' },
+]
 </script>
 
 <template>
-    <section class="section-container formation">
-        <div class="section-container__header" data-scroll-reveal>
-            <h2>Próximas formaciones y talleres vivenciales</h2>
-            <p>Experiencias diseñadas para acompañarte en tu proceso de crecimiento</p>
+    <section class="formations">
+        <div class="container">
+            <div class="formations__header">
+                <div>
+                    <div class="eyebrow">Herramientas</div>
+                    <h2>Formaciones para <em>caminar sola</em>.</h2>
+                    <p class="formations__sub">Lo que uso en consulta, ordenado en materiales que puedes llevar a tu ritmo.</p>
+                </div>
+                <RouterLink to="/productos" class="btn-ghost">Ver todas las formaciones →</RouterLink>
+            </div>
+
+            <div class="formations__grid">
+                <div
+                    v-for="(item, i) in items"
+                    :key="i"
+                    class="formation-card"
+                    @click="router.push('/productos')"
+                >
+                    <div class="formation-card__img-wrap">
+                        <img :src="item.img" :alt="item.title" class="formation-card__img" />
+                        <div class="formation-card__tag">{{ item.tag }}</div>
+                    </div>
+                    <div class="formation-card__body">
+                        <h4 class="formation-card__title">{{ item.title }}</h4>
+                        <div class="formation-card__price-row">
+                            <span class="formation-card__price">{{ item.price }}</span>
+                            <span v-if="item.old" class="formation-card__old">{{ item.old }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="formation__grid">
-            <ProductCardComponent v-for="(product, index) in common_store.products" :key="product._id"
-                :product="product" data-scroll-reveal :style="{ '--delay': `${0.2 + index * 0.15}s` }" />
-        </div>
-        <RouterLink to="/formaciones" class="formation__link" data-scroll-reveal>
-            Ver todas las formaciones →
-        </RouterLink>
     </section>
 </template>
 
-
 <style scoped lang="scss">
-.formation {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: $space-10;
+.formations {
+    padding: 120px 0;
+    background: var(--white);
+}
 
-    &__grid {
-        width: 100%;
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: $space-8;
-        box-sizing: border-box;
-    }
+.container {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 0 28px;
+}
 
-    &__link {
-        display: inline-block;
-        padding: $space-3 $space-6;
-        color: var(--color-primary);
-        font-family: $font-body;
-        font-size: $text-base;
-        font-weight: $fw-medium;
-        border: 1px solid var(--color-border);
-        border-radius: $radius-sm;
-        transition: $transition-slow;
-        opacity: 0;
-        transform: translateY(20px);
+.formations__header {
+    display: flex; justify-content: space-between;
+    align-items: flex-end; margin-bottom: 56px;
+    gap: 24px; flex-wrap: wrap;
+}
 
-        &.is-visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
+.eyebrow {
+    font-family: var(--font-body);
+    font-size: 12px; font-weight: 600;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--blue); margin-bottom: 14px;
+}
 
-        &:hover {
-            border-color: var(--color-primary);
-            box-shadow: var(--shadow-sm);
-            transform: translateY(-2px);
-        }
+h2 {
+    font-family: var(--font-title);
+    font-size: clamp(2rem, 4.2vw, 3.25rem);
+    font-weight: 700; color: var(--blue-ink);
+    line-height: 1.08; letter-spacing: -0.02em;
+    margin: 0 0 12px; max-width: 520px;
+    em { font-style: italic; color: var(--gold-deep); }
+}
+
+.formations__sub {
+    font-size: 17px; color: var(--ink-muted);
+    max-width: 480px; margin: 0; font-weight: 300;
+}
+
+.btn-ghost {
+    font-family: var(--font-body); font-weight: 600;
+    font-size: 14px; color: var(--blue);
+    text-decoration: none; white-space: nowrap;
+    transition: color .2s var(--ease);
+    &:hover { color: var(--gold-deep); }
+}
+
+.formations__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.formation-card {
+    border-radius: 16px; overflow: hidden;
+    background: var(--white); border: 1px solid var(--border-soft);
+    cursor: pointer;
+    transition: transform .35s var(--ease), box-shadow .35s var(--ease), border-color .3s var(--ease);
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 16px 36px rgba(7,30,77,0.10);
+        border-color: var(--border-gold);
+
+        .formation-card__img { transform: scale(1.06); }
     }
 }
 
-@media screen and (max-width: $bp-md) {
-    .formation__grid {
-        grid-template-columns: 1fr;
-        gap: $space-6;
-    }
+.formation-card__img-wrap {
+    position: relative; aspect-ratio: 3/4;
+    overflow: hidden; background: var(--blue-wash);
+}
+
+.formation-card__img {
+    width: 100%; height: 100%; object-fit: cover;
+    display: block;
+    transition: transform .6s var(--ease);
+}
+
+.formation-card__tag {
+    position: absolute; top: 14px; left: 14px;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(6px);
+    padding: 6px 12px; border-radius: 999px;
+    font-family: var(--font-body);
+    font-size: 11px; font-weight: 600;
+    color: var(--blue-ink); letter-spacing: 0.04em; text-transform: uppercase;
+}
+
+.formation-card__body { padding: 20px; }
+
+.formation-card__title {
+    font-family: var(--font-title);
+    font-size: 17px; font-weight: 600;
+    color: var(--blue-ink); line-height: 1.25;
+    margin: 0 0 12px;
+}
+
+.formation-card__price-row {
+    display: flex; align-items: baseline; gap: 10px;
+}
+
+.formation-card__price {
+    font-family: var(--font-title); font-size: 22px; font-weight: 700;
+    color: var(--gold-deep);
+}
+
+.formation-card__old {
+    font-size: 13px; color: var(--ink-faint);
+    text-decoration: line-through;
+}
+
+@media (max-width: 980px) {
+    .formations__grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 600px) {
+    .formations__grid { grid-template-columns: 1fr; }
 }
 </style>

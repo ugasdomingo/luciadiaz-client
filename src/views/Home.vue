@@ -2,9 +2,11 @@
     <main class="home__page">
         <HeroComponent />
         <ServicesComponent />
+        <AboutBandComponent />
         <FormationComponent />
         <TestComponent />
         <PostComponent />
+        <CtaBandComponent />
     </main>
 </template>
 
@@ -12,12 +14,13 @@
 import { useCommonStore } from '../stores/common-store'
 import { onBeforeMount } from 'vue'
 
-// Import components
 import HeroComponent from '../components/home/HeroComponent.vue'
 import ServicesComponent from '../components/home/ServicesComponent.vue'
+import AboutBandComponent from '../components/home/AboutBandComponent.vue'
 import FormationComponent from '../components/home/FormationComponent.vue'
 import TestComponent from '../components/home/TestComponent.vue'
 import PostComponent from '../components/home/PostComponent.vue'
+import CtaBandComponent from '../components/home/CtaBandComponent.vue'
 
 const common_store = useCommonStore()
 
