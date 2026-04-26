@@ -23,7 +23,7 @@ const tests = [
                     Pequeñas ventanas hacia<br />
                     tu <em>mundo interior</em>.
                 </h2>
-                <p class="tests-preview__sub">Sin costo, sin compromiso. Recibirás tus resultados en el correo.</p>
+                <p class="tests-preview__sub">Sin costo. Recibirás tus resultados en el correo.</p>
             </div>
 
             <div class="tests-preview__grid">

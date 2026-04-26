@@ -9,7 +9,7 @@
                     <div class="eyebrow--gold">¿Lista(o) para empezar?</div>
                     <h2>El primer paso suele ser el <em>más valiente</em>.</h2>
                     <p>
-                        Una sesión inicial de 20 minutos, sin compromiso, para vernos y decidir si tiene sentido seguir.
+                        Una sesión inicial de 20 minutos para vernos y decidir si tiene sentido seguir.
                     </p>
                 </div>
 
