@@ -32,7 +32,7 @@ const get_date = (post) => {
                     :key="post._id"
                     class="blog-card"
                     :class="{ 'blog-card--big': i === 0 }"
-                    @click="router.push(`/blog/${post.slug}`)"
+                    @click="router.push(`/blog/${post._id}`)"
                 >
                     <div class="blog-card__img-wrap" :class="{ 'blog-card__img-wrap--big': i === 0 }">
                         <img :src="get_img(post)" :alt="post.title" class="blog-card__img" />
