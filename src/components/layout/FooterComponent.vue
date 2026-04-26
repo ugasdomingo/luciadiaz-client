@@ -23,7 +23,7 @@ const router = useRouter()
                     </div>
                     <p class="footer__tagline">
                         Acompaño a personas a conocerse, sostenerse y transformar lo que les duele.
-                        Consulta online y presencial en Madrid.
+                        Consulta 100% online.
                     </p>
                 </div>
 
@@ -45,7 +45,6 @@ const router = useRouter()
                     <ul class="footer__list">
                         <li><span class="footer__link">hola@luciadiaz.es</span></li>
                         <li><span class="footer__link">+34 600 000 000</span></li>
-                        <li><span class="footer__link">Calle Serrano, Madrid</span></li>
                         <li><span class="footer__link">L–V · 10:00 — 20:00</span></li>
                     </ul>
                 </div>

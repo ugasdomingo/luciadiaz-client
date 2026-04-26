@@ -42,7 +42,7 @@ const navigate = (path) => {
                 </div>
                 <div class="header__brand-text">
                     <span class="header__brand-name">Lucía Díaz</span>
-                    <span class="header__brand-sub">Psicología · Madrid</span>
+                    <span class="header__brand-sub">Psicología · Online</span>
                 </div>
             </RouterLink>
 

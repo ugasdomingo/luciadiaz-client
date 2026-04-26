@@ -188,7 +188,7 @@ export const courses = {
             subheadline: 'Un sábado para entender por qué reaccionas como lo haces y cómo cambiarlo desde la raíz.',
             cta_primary_label: 'Reservar con 30$',
             cta_secondary_label: 'Pagar completo',
-            location: 'Madrid',
+            location: 'Presencial',
         },
 
         mirror: {
@@ -253,7 +253,7 @@ export const courses = {
 
         logistics: {
             title: 'Cómo funciona',
-            location: 'Madrid (dirección exacta al inscribirse)',
+            location: 'Presencial (dirección exacta al inscribirse)',
             cupo: 'Solo 12 personas',
         },
 

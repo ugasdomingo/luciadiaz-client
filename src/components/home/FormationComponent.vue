@@ -9,7 +9,7 @@ const common_store = useCommonStore()
 const products = computed(() => common_store.products?.slice(0, 4) || [])
 
 const type_label = (type) => {
-    const labels = { course: 'Formación', ebook: 'Guía', bundle: 'Pack', service: 'Servicio', formation: 'Formación' }
+    const labels = { course: 'Formación', ebook: 'Guía', bundle: 'Pack', service: 'Servicio', formation: 'Formación', formation_presencial: 'Formación Presencial' }
     return labels[type] || 'Formación'
 }
 

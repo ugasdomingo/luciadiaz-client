@@ -187,8 +187,7 @@ const submit = async () => {
 
                 <section class="consent-doc__section">
                     <h3>MODALIDAD DE ATENCIÓN</h3>
-                    <p><strong>Presencial:</strong> Sesiones cara a cara en consulta ubicada en Madrid, España, regidas por la normativa española y el Código Deontológico del Colegio Oficial de Psicólogos de España.</p>
-                    <p><strong>Online:</strong> Sesiones mediante plataformas de videollamada, regidas por la normativa venezolana y el Código de Ética Profesional del Psicólogo en Venezuela.</p>
+                    <p><strong>Online:</strong> Sesiones mediante plataformas de videollamada, regidas por la normativa española y el Código Deontológico del Colegio Oficial de Psicólogos de España.</p>
                 </section>
 
                 <section class="consent-doc__section">
@@ -277,10 +276,6 @@ const submit = async () => {
                 <div class="consent-form__group">
                     <label>Modalidad de atención <span class="req">*</span></label>
                     <div class="consent-form__radios">
-                        <label class="radio-option">
-                            <input type="radio" v-model="form.modality" value="presencial" />
-                            <span>🏢 Presencial (Madrid)</span>
-                        </label>
                         <label class="radio-option">
                             <input type="radio" v-model="form.modality" value="online" />
                             <span>💻 Online (videollamada)</span>

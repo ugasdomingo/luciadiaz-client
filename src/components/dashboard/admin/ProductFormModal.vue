@@ -244,6 +244,7 @@ const handle_submit = async () => {
                                 <option value="bundle">Pack</option>
                                 <option value="service">Servicio</option>
                                 <option value="formation">Formación</option>
+                                <option value="formation_presencial">Formación Presencial</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -293,7 +294,7 @@ const handle_submit = async () => {
                     </div>
 
                     <!-- Fechas con precio propio (solo formaciones) -->
-                    <div v-if="form_data.type === 'formation'" class="form-group">
+                    <div v-if="form_data.type === 'formation' || form_data.type === 'formation_presencial'" class="form-group">
                         <label class="form-label">Fechas de formación</label>
                         <div class="dates-editor">
                             <div v-for="(item, index) in form_data.dates" :key="index" class="date-item">

@@ -15,7 +15,7 @@ const emit = defineEmits(['reserve'])
             <div class="therapy-card__badges">
                 <span class="therapy-card__duration">🕐 {{ therapy.duration }}</span>
                 <span v-for="mod in therapy.modalities" :key="mod" class="therapy-card__modality">
-                    {{ mod === 'Presencial Madrid' ? '📍 Madrid' : '💻 Online' }}
+                    💻 {{ mod }}
                 </span>
             </div>
         </div>
