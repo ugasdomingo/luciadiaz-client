@@ -1,13 +1,19 @@
 <script setup>
+import { useCommonStore } from '../../stores/common-store'
 import { useRouter } from 'vue-router'
-const router = useRouter()
+import { computed } from 'vue'
 
-const items = [
-    { title: 'Habitar tu cuerpo', price: '89€', img: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&q=80', tag: 'Formación' },
-    { title: 'Cartografía emocional', price: '19€', img: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=600&q=80', tag: 'Guía' },
-    { title: 'Pack autoconocimiento', price: '120€', old: '150€', img: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80', tag: 'Pack' },
-    { title: 'Arquetipos femeninos', price: '75€', img: 'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=600&q=80', tag: 'Formación' },
-]
+const router = useRouter()
+const common_store = useCommonStore()
+
+const products = computed(() => common_store.products?.slice(0, 4) || [])
+
+const type_label = (type) => {
+    const labels = { course: 'Formación', ebook: 'Guía', bundle: 'Pack', service: 'Servicio', formation: 'Formación' }
+    return labels[type] || 'Formación'
+}
+
+const format_price = (p) => `${p}€`
 </script>
 
 <template>
@@ -24,20 +30,24 @@ const items = [
 
             <div class="formations__grid">
                 <div
-                    v-for="(item, i) in items"
-                    :key="i"
+                    v-for="product in products"
+                    :key="product._id"
                     class="formation-card"
-                    @click="router.push('/productos')"
+                    @click="router.push(`/productos/${product.slug}`)"
                 >
                     <div class="formation-card__img-wrap">
-                        <img :src="item.img" :alt="item.title" class="formation-card__img" />
-                        <div class="formation-card__tag">{{ item.tag }}</div>
+                        <img
+                            :src="product.cover_image?.secure_url"
+                            :alt="product.title"
+                            class="formation-card__img"
+                        />
+                        <div class="formation-card__tag">{{ type_label(product.type) }}</div>
                     </div>
                     <div class="formation-card__body">
-                        <h4 class="formation-card__title">{{ item.title }}</h4>
+                        <h4 class="formation-card__title">{{ product.title }}</h4>
                         <div class="formation-card__price-row">
-                            <span class="formation-card__price">{{ item.price }}</span>
-                            <span v-if="item.old" class="formation-card__old">{{ item.old }}</span>
+                            <span class="formation-card__price">{{ format_price(product.presale_price ?? product.price) }}</span>
+                            <span v-if="product.presale_price" class="formation-card__old">{{ format_price(product.price) }}</span>
                         </div>
                     </div>
                 </div>

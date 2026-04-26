@@ -8,22 +8,11 @@ const common_store = useCommonStore()
 
 const posts = computed(() => common_store.posts?.slice(0, 3) || [])
 
-const fallback_posts = [
-    { cat: 'Autoconocimiento', title: 'Lo que escondes cuando dices "estoy bien"', read: '6 min', img: 'https://images.unsplash.com/photo-1528543606781-2f6e6857f318?w=700&q=80', date: '12 Abr' },
-    { cat: 'Relaciones', title: 'Apego seguro no es no tener miedo — es volver', read: '8 min', img: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=700&q=80', date: '05 Abr' },
-    { cat: 'Prácticas', title: 'Tres preguntas para ordenar un día difícil', read: '4 min', img: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=700&q=80', date: '29 Mar' },
-]
-
-const display_posts = computed(() => {
-    if (posts.value.length >= 3) return posts.value.slice(0, 3)
-    return fallback_posts
-})
-
-const get_img = (post) => post.img || post.image || fallback_posts[0].img
-const get_cat = (post) => post.cat || post.category || 'Psicología'
-const get_date = (post) => post.date ? new Date(post.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) : ''
-const get_read = (post) => post.read || post.read_time || '5 min'
-const get_id = (post) => post.id || post._id
+const get_img = (post) => post.post_cover?.secure_url || ''
+const get_date = (post) => {
+    if (!post.createdAt) return ''
+    return new Date(post.createdAt).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })
+}
 </script>
 
 <template>
@@ -39,21 +28,21 @@ const get_id = (post) => post.id || post._id
 
             <div class="blog-preview__grid">
                 <article
-                    v-for="(post, i) in display_posts"
-                    :key="i"
+                    v-for="(post, i) in posts"
+                    :key="post._id"
                     class="blog-card"
                     :class="{ 'blog-card--big': i === 0 }"
-                    @click="get_id(post) ? router.push(`/blog/${get_id(post)}`) : router.push('/blog')"
+                    @click="router.push(`/blog/${post.slug}`)"
                 >
                     <div class="blog-card__img-wrap" :class="{ 'blog-card__img-wrap--big': i === 0 }">
                         <img :src="get_img(post)" :alt="post.title" class="blog-card__img" />
-                        <div class="blog-card__cat">{{ get_cat(post) }}</div>
+                        <div class="blog-card__cat">{{ post.category }}</div>
                     </div>
                     <div class="blog-card__body" :class="{ 'blog-card__body--big': i === 0 }">
                         <h3 class="blog-card__title" :class="{ 'blog-card__title--big': i === 0 }">{{ post.title }}</h3>
                         <div class="blog-card__meta">
                             <span>{{ get_date(post) }}</span>
-                            <span>{{ get_read(post) }} de lectura</span>
+                            <span>{{ post.read_time || '5 min' }} de lectura</span>
                         </div>
                     </div>
                 </article>

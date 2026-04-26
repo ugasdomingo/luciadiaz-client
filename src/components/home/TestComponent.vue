@@ -1,11 +1,13 @@
 <script setup>
 import { useRouter } from 'vue-router'
+import { test_info } from '../../static/test-info.js'
+
 const router = useRouter()
 
 const tests = [
-    { emoji: '🧠', title: 'Arquetipos', desc: 'Descubre qué energía arquetípica te habita.', count: '12 preguntas', color: '#EEF4FC', ring: 'var(--blue)' },
-    { emoji: '🌡️', title: 'Temperamentos', desc: 'Tu ritmo emocional según Hipócrates, revisitado.', count: '18 preguntas', color: '#FFF8E1', ring: 'var(--gold)' },
-    { emoji: '✉️', title: 'Carta del inconsciente', desc: 'Una carta imaginaria desde lo que no dices.', count: '6 preguntas', color: '#F2EAFF', ring: '#7B5EBC' },
+    { ...test_info[0], emoji: '🧠', count: '12 preguntas', color: '#EEF4FC', ring: 'var(--blue)' },
+    { ...test_info[1], emoji: '🌡️', count: '18 preguntas', color: '#FFF8E1', ring: 'var(--gold)' },
+    { ...test_info[2], emoji: '✉️', count: '6 preguntas',  color: '#F2EAFF', ring: '#7B5EBC' },
 ]
 </script>
 
@@ -29,13 +31,13 @@ const tests = [
                     :key="i"
                     class="test-card"
                     :style="{ '--ring': t.ring, '--blob': t.color }"
-                    @click="router.push('/tests')"
+                    @click="router.push(t.link)"
                 >
                     <div class="test-card__blob" />
                     <div class="test-card__content">
                         <div class="test-card__emoji">{{ t.emoji }}</div>
-                        <h3 class="test-card__title">{{ t.title }}</h3>
-                        <p class="test-card__desc">{{ t.desc }}</p>
+                        <h3 class="test-card__title">{{ t.name }}</h3>
+                        <p class="test-card__desc">{{ t.brief }}</p>
                         <div class="test-card__footer">
                             <span class="test-card__count">{{ t.count }}</span>
                             <span class="test-card__cta">Comenzar test →</span>
