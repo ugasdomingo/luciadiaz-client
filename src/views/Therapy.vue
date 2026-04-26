@@ -42,7 +42,7 @@ const handle_reserve = async (therapy) => {
             <p class="therapy__header-tag">Consultas online</p>
             <h1 class="therapy__header-title">Encuentra tu espacio de bienestar</h1>
             <p class="therapy__header-sub">
-                Sesiones individuales, de pareja y orientación parental adaptadas a tus necesidades.
+                Sesiones individuales, de pareja y orientación para padres adaptadas a tus necesidades.
                 Reserva online y paga de forma segura.
             </p>
         </div>

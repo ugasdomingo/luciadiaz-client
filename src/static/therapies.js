@@ -5,7 +5,7 @@ export const therapies = [
         title: 'Terapia Individual',
         subtitle: 'Sesión personalizada',
         precio: 40,
-        duration: '45 min',
+        duration: '45-60 min',
         modalities: ['Online'],
         description:
             'Un espacio seguro y confidencial para trabajar tu bienestar emocional. Te acompaño a explorar tus patrones, sanar heridas y construir la vida que deseas.',
@@ -38,10 +38,10 @@ export const therapies = [
     {
         id: 3,
         slug: 'padres',
-        title: 'Orientación Parental',
+        title: 'Orientación para Padres',
         subtitle: 'Sesión de orientación',
         precio: 40,
-        duration: '45 min',
+        duration: '45-60 min',
         modalities: ['Online'],
         description:
             'Acompañamiento a padres y madres para comprender y mejorar la relación con sus hijos. Estrategias concretas adaptadas a cada etapa del desarrollo.',

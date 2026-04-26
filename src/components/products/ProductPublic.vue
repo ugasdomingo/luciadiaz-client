@@ -609,7 +609,7 @@ const handle_purchase = () => {
     background: var(--color-bg-card);
     padding: $space-4 $space-5;
     box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
-    z-index: 100;
+    z-index: 150;
     align-items: center;
     gap: $space-4;
 
