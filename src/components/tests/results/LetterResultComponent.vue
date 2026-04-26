@@ -1,6 +1,7 @@
 <script setup>
 import { ref, defineProps } from 'vue';
 import { useAuthStore } from '../../../stores/auth-store';
+import TestDisclaimerComponent from '../TestDisclaimerComponent.vue'
 
 const props = defineProps({
     letter_results: { type: Object || null, default: null },
@@ -13,6 +14,7 @@ const reasons = ref(props.letter_results.reasons)
 
 <template>
     <section class="letter-result-section">
+        <TestDisclaimerComponent />
         <h2>
             Felicidades {{ props.user_name || auth_store.user_data.user.name.split(" ")[0] }}, tu inconsciente te ha
             enviado una carta.

@@ -2,6 +2,7 @@
 import { ref, watch } from 'vue'
 import { archetype_questions } from '../../../static/questions/archetype-questions'
 import { useTestStore } from '../../../stores/test-store'
+import TestDisclaimerComponent from '../TestDisclaimerComponent.vue'
 
 const test_store = useTestStore()
 
@@ -55,6 +56,7 @@ const handle_submit = async () => {
 
 <template>
     <section class="archetype__form">
+        <TestDisclaimerComponent />
         <h2>Arquetipos de la personalidad</h2>
         <p class="test__show__info" @click="show_test_info = !show_test_info">
             {{

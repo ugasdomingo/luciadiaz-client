@@ -1,6 +1,7 @@
 <script setup>
 import { useRouter } from 'vue-router'
 import { test_info } from '../../static/test-info.js'
+import TestDisclaimerComponent from '../tests/TestDisclaimerComponent.vue'
 
 const router = useRouter()
 
@@ -45,6 +46,8 @@ const tests = [
                     </div>
                 </div>
             </div>
+
+            <TestDisclaimerComponent class="tests-preview__disclaimer" />
         </div>
     </section>
 </template>
@@ -159,6 +162,10 @@ h2 {
     font-size: 13px; font-weight: 700;
     color: var(--blue); display: flex; align-items: center; gap: 6px;
     transition: color .25s var(--ease);
+}
+
+.tests-preview__disclaimer {
+    margin-top: 40px;
 }
 
 @media (max-width: 980px) {

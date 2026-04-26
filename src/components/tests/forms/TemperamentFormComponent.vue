@@ -2,6 +2,7 @@
 import { ref, watch } from 'vue';
 import { temperament_questions } from '../../../static/questions/temperament-questions';
 import { useTestStore } from '../../../stores/test-store';
+import TestDisclaimerComponent from '../TestDisclaimerComponent.vue'
 
 const test_store = useTestStore()
 
@@ -53,6 +54,7 @@ const handle_submit = async () => {
 
 <template>
     <section class="temperament_form">
+        <TestDisclaimerComponent />
         <h2>Test de temperamento</h2>
         <p>Selecciona la opción que te identifique más en cada sección.</p>
         <form @submit.prevent="handle_submit">

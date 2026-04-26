@@ -1,6 +1,7 @@
 <script setup>
 import { ref, watch } from 'vue';
 import { useTestStore } from '../../../stores/test-store';
+import TestDisclaimerComponent from '../TestDisclaimerComponent.vue'
 
 const test_store = useTestStore()
 const goal = ref('')
@@ -31,6 +32,7 @@ watch(() => answers.value, () => {
 
 <template>
     <section class="letter_form">
+        <TestDisclaimerComponent />
         <h2>Carta del Inconsciente</h2>
         <p>
             Escribe primero lo que deseas lograr y luego escribe 6 razones por las cuales

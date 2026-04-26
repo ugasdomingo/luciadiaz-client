@@ -2,6 +2,7 @@
 import { ref, defineProps } from 'vue';
 import { useAuthStore } from '../../../stores/auth-store.js';
 import { temperament_results_info } from '../../../static/answers/temperament-results.js'
+import TestDisclaimerComponent from '../TestDisclaimerComponent.vue'
 
 const auth_store = useAuthStore()
 const props = defineProps({
@@ -16,6 +17,7 @@ const show_others = ref(false)
 
 <template>
     <section class="temperament-result-section">
+        <TestDisclaimerComponent />
         <h3>{{ props.user_name.split(" ")[0] || auth_store.user_data.user.name.split(" ")[0] }}, eres {{
             temperament_result.title }}.
         </h3>

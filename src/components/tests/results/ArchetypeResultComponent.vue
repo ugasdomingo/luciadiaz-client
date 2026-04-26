@@ -2,6 +2,7 @@
 import { defineProps, ref } from 'vue';
 import { archetype_results_info } from '../../../static/answers/archetype-results.js'
 import { useAuthStore } from '../../../stores/auth-store.js';
+import TestDisclaimerComponent from '../TestDisclaimerComponent.vue'
 
 const props = defineProps({
     archetype_results: { type: Object || null, default: null },
@@ -16,6 +17,7 @@ const show_others = ref(false)
 
 <template>
     <section class="archetype-result-section">
+        <TestDisclaimerComponent />
         <h3>
             {{ props.user_name.split(" ")[0] || auth_store.user_data.user.name.split(" ")[0] }}, eres {{
                 props.archetype_results.archetype }}.
