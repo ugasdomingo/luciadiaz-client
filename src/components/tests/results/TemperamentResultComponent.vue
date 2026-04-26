@@ -3,6 +3,7 @@ import { ref, defineProps } from 'vue';
 import { useAuthStore } from '../../../stores/auth-store.js';
 import { temperament_results_info } from '../../../static/answers/temperament-results.js'
 import TestDisclaimerComponent from '../TestDisclaimerComponent.vue'
+import TestClinicalDisclaimerComponent from '../TestClinicalDisclaimerComponent.vue'
 
 const auth_store = useAuthStore()
 const props = defineProps({
@@ -80,6 +81,7 @@ const show_others = ref(false)
                 </ul>
             </article>
         </div>
+        <TestClinicalDisclaimerComponent />
     </section>
 </template>
 

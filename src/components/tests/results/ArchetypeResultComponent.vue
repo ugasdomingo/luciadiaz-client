@@ -3,6 +3,7 @@ import { defineProps, ref } from 'vue';
 import { archetype_results_info } from '../../../static/answers/archetype-results.js'
 import { useAuthStore } from '../../../stores/auth-store.js';
 import TestDisclaimerComponent from '../TestDisclaimerComponent.vue'
+import TestClinicalDisclaimerComponent from '../TestClinicalDisclaimerComponent.vue'
 
 const props = defineProps({
     archetype_results: { type: Object || null, default: null },
@@ -70,6 +71,7 @@ const show_others = ref(false)
                 <p>Lo que le gusta: <strong>{{ archetype.archetype_like }}</strong></p>
             </article>
         </div>
+        <TestClinicalDisclaimerComponent />
     </section>
 </template>
 

@@ -2,6 +2,7 @@
 import { ref, defineProps } from 'vue';
 import { useAuthStore } from '../../../stores/auth-store';
 import TestDisclaimerComponent from '../TestDisclaimerComponent.vue'
+import TestClinicalDisclaimerComponent from '../TestClinicalDisclaimerComponent.vue'
 
 const props = defineProps({
     letter_results: { type: Object || null, default: null },
@@ -44,6 +45,7 @@ const reasons = ref(props.letter_results.reasons)
                 te ha pasado la ruta para lograrlo, solo tienes que seguirla.
             </p>
         </div>
+        <TestClinicalDisclaimerComponent />
     </section>
 </template>
 
