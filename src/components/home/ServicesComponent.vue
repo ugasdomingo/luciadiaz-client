@@ -1,7 +1,4 @@
 <script setup>
-import { useRouter } from 'vue-router'
-const router = useRouter()
-
 const items = [
     { id: 'terapias', path: '/terapias', title: 'Terapia', desc: 'Sesiones individuales, de pareja u orientación parental.', icon: '/icon/terapia.svg', tag: 'Desde 40€', bg: 'linear-gradient(135deg, #EEF4FC, #FFFFFF)', ring: 'var(--blue)' },
     { id: 'tests', path: '/tests', title: 'Tests', desc: 'Explora tu mundo interior en pequeños ejercicios guiados.', icon: '/icon/test.svg', tag: 'Gratis', bg: 'linear-gradient(135deg, #FFF8E1, #FFFFFF)', ring: 'var(--gold-bright)' },
@@ -20,12 +17,12 @@ const items = [
             </div>
 
             <div class="services__grid">
-                <div
+                <RouterLink
                     v-for="item in items"
                     :key="item.id"
+                    :to="item.path"
                     class="service-card"
                     :style="{ '--card-ring': item.ring }"
-                    @click="router.push(item.path)"
                 >
                     <div class="service-card__icon" :style="{ background: item.bg }">
                         <img :src="item.icon" :alt="item.title" />
@@ -36,7 +33,7 @@ const items = [
                         <span class="pill-gold">{{ item.tag }}</span>
                         <span class="service-card__arrow">→</span>
                     </div>
-                </div>
+                </RouterLink>
             </div>
         </div>
     </section>
@@ -93,6 +90,8 @@ h2 {
     border-radius: 20px; padding: 28px;
     border: 1px solid var(--border-soft);
     cursor: pointer;
+    text-decoration: none;
+    color: inherit;
     transition: transform .35s var(--ease), box-shadow .35s var(--ease), border-color .3s var(--ease);
     display: flex; flex-direction: column; min-height: 260px;
     position: relative; overflow: hidden;

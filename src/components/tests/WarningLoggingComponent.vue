@@ -32,13 +32,15 @@ import { RouterLink } from 'vue-router'
 
 <style scoped lang="scss">
 .warning__container {
-    width: 60%;
+    width: 100%;
+    max-width: 640px;
     min-height: 60vh;
     display: flex;
     flex-direction: column;
     padding: $space-8;
     border-radius: $radius-lg;
     margin: 0 auto;
+    box-sizing: border-box;
 
     h2 {
         padding: 0;
