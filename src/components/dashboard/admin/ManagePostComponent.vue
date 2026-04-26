@@ -73,8 +73,10 @@ const handle_update = async () => {
     form_data.append('content', content.value)
     form_data.append('category', category.value)
     form_data.append('tags', tags.value)
-    form_data.append('post_cover', post_cover.value)
     form_data.append('status', status.value)
+    if (post_cover.value instanceof File) {
+        form_data.append('post_cover', post_cover.value)
+    }
 
     await post_store.update_post(post_to_update.value._id, form_data)
 
