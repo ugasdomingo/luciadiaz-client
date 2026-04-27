@@ -128,7 +128,7 @@ onBeforeMount(() => {
             v-if="show_create_post" class="post-form">
             <input type="text" placeholder="Título" v-model="title" required>
             <input type="text" placeholder="Slug" v-model="slug" required>
-            <EditorComponent v-model="content" />
+            <EditorComponent v-model="content" :key="post_to_update?._id ?? 'new-post'" />
             <input type="text" placeholder="Categoría" v-model="category" required>
             <input type="text" placeholder="Tags" v-model="tags" required>
             <input type="file" accept="image/*" @change="handle_file_change">

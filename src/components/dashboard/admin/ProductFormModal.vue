@@ -265,7 +265,7 @@ const handle_submit = async () => {
                     <!-- Descripción -->
                     <div class="form-group">
                         <label class="form-label">Descripción *</label>
-                        <EditorComponent v-model="form_data.description" />
+                        <EditorComponent v-model="form_data.description" :key="`desc-${props.product?._id ?? 'new'}`" />
                     </div>
 
                     <!-- Categoría y Estado -->
@@ -366,7 +366,7 @@ const handle_submit = async () => {
                                 <input v-model="lesson.video_url" type="url"
                                     placeholder="URL del video (opcional)" class="lesson-input-small" />
                                 <div class="lesson-editor-label">Descripción del módulo (opcional)</div>
-                                <EditorComponent v-model="lesson.notes" />
+                                <EditorComponent v-model="lesson.notes" :key="`notes-${props.product?._id ?? 'new'}-${index}`" />
                                 <!-- PDF del módulo -->
                                 <div class="lesson-pdf-section">
                                     <span class="lesson-pdf-label">PDF descargable del módulo (opcional)</span>
