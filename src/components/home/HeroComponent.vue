@@ -9,7 +9,7 @@
             <div class="hero__copy">
                 <h1 class="hero__title">
                     Tu mente es <em>maravillosa</em>,<br />
-                    <span class="hero__swash">y más poderosa</span> y<br />
+                    <span class="hero__swash">y más poderosa</span><br />
                     de lo que crees.
                 </h1>
 
