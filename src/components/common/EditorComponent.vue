@@ -9,33 +9,21 @@ const emit = defineEmits(['update:modelValue'])
 
 const editor_ref = ref(null)
 
-// v-model interno: se inicializa con el valor actual del padre
-const internal_value = ref(props.modelValue)
-
-// Padre → Editor: cuando se carga un post/producto existente
+// Padre → Editor: solo cuando el padre cambia el contenido externamente
+// (ej. el usuario hace clic en "Editar" otro post/producto mientras el editor ya está montado)
+// NO se activa durante la escritura normal porque editor.getContent() === val en ese caso
 watch(() => props.modelValue, (val) => {
-    if (editor_ref.value) {
-        // El editor ya está listo: actualizamos directamente
-        if (val !== editor_ref.value.getContent()) {
-            editor_ref.value.setContent(val || '')
-        }
-    } else {
-        // El editor aún no se inicializó: actualizamos el valor interno
-        // para que lo tome al montar
-        internal_value.value = val
+    if (!editor_ref.value) return
+    if (editor_ref.value.getContent() !== val) {
+        editor_ref.value.setContent(val || '')
     }
-})
-
-// Editor → Padre
-watch(internal_value, (val) => {
-    emit('update:modelValue', val)
 })
 </script>
 
 <template>
     <div class="editor-wrapper">
         <Editor
-            v-model="internal_value"
+            :initial-value="props.modelValue"
             api-key="hgq60faxr9cutw0vi6tjcs6h4w4bwlbyhp5hp71rteepokoy"
             :init="{
                 toolbar_mode: 'sliding',
@@ -44,11 +32,15 @@ watch(internal_value, (val) => {
                 setup: (editor) => {
                     editor.on('init', () => {
                         editor_ref.value = editor
-                        // Garantiza que el contenido se cargue aunque v-model llegue tarde
+                        // Red de seguridad: si modelValue llegó después de que el editor montara
                         const content = props.modelValue || ''
                         if (content && editor.getContent() !== content) {
                             editor.setContent(content)
                         }
+                    })
+                    // Editor → Padre: solo eventos de usuario, setContent() NO dispara estos eventos
+                    editor.on('change input', () => {
+                        emit('update:modelValue', editor.getContent())
                     })
                 }
             }"
