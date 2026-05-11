@@ -2,18 +2,20 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useAuthStore } from '../../stores/auth-store';
-import { useUtilStore } from '../../stores/util-store';
 
 const router = useRouter();
 const route = useRoute();
 const auth_store = useAuthStore();
 
-const util_store = useUtilStore();
 const scrolled = ref(false);
 const menu_open = ref(false);
 
-// true cuando el fondo detrás del header es claro (Home) o cuando hay scroll
-const on_light_bg = computed(() => scrolled.value || util_store.is_home);
+// Rutas cuyo hero es oscuro (fondo azul) → header con texto claro
+const dark_hero_routes = ['/formaciones', '/tienda', '/tests', '/productos'];
+
+const on_light_bg = computed(() =>
+    scrolled.value || !dark_hero_routes.some(r => route.path.startsWith(r))
+);
 
 const links = [
     { id: 'terapias', label: 'Terapias', path: '/terapias' },
