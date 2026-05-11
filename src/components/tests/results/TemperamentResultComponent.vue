@@ -11,8 +11,12 @@ const props = defineProps({
     user_name: { type: String, required: true }
 })
 
-const temperament_result = ref(temperament_results_info.find(result => result.title === props.temperament_results.temperament))
-const other_temperaments = ref(temperament_results_info.filter(result => result.title !== props.temperament_results.temperament))
+const normalize = (s) => s?.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim()
+const temperament_result = ref(
+    temperament_results_info.find(r => r.title === props.temperament_results.temperament) ||
+    temperament_results_info.find(r => normalize(r.title) === normalize(props.temperament_results.temperament))
+)
+const other_temperaments = ref(temperament_results_info.filter(r => r.title !== temperament_result.value?.title))
 const show_others = ref(false)
 </script>
 

@@ -26,7 +26,7 @@ export const temperament_results_info = [
         class: 'melancolico'
     },
     {
-        title: 'Flemático',
+        title: 'Flegmático',
         slogan: 'Hagámoslo de la manera fácil',
         deseo: 'No tener conflictos, mantener la paz.',
         necesidades:
@@ -78,7 +78,7 @@ export const temperament_results_info = [
         class: 'colerico'
     },
     {
-        title: 'Sanguineo',
+        title: 'Sanguíneo',
         slogan: 'Hagámoslo de la manera divertida',
         deseo: 'Divertirse.',
         necesidades: 'Atención, afecto, aprobación, aceptación.',
