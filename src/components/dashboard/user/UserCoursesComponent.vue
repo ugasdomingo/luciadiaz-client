@@ -79,60 +79,67 @@ const user_name = computed(() => auth_store.user_data?.user?.name?.split(' ')[0]
 
 <template>
     <section class="user-courses">
-        <h2 class="section-title">Mis Aprendizajes</h2>
+        <div class="section-header">
+            <h2 class="section-header__title">Mis Aprendizajes</h2>
+            <p class="section-header__sub">Tu progreso en formaciones y contenido adquirido.</p>
+        </div>
 
-        <div v-if="!auth_store.user_data.progress" class="empty-state">
-            <div class="empty-content">
-                <span class="icon">🌱</span>
-                <h3>Tu camino empieza hoy</h3>
-                <p>
-                    {{ user_name }}, aún no tienes cursos activos.
-                    <span v-if="suggested_course">Te recomiendo empezar con <strong>{{ suggested_course.title
-                            }}</strong>.</span>
-                </p>
-
-                <RouterLink v-if="suggested_course" :to="`/formaciones/${suggested_course.slug}`" class="btn-primary">
-                    Descubrir este curso
-                </RouterLink>
-                <RouterLink v-else to="/formaciones" class="btn-primary">
-                    Ver catálogo completo
-                </RouterLink>
-            </div>
+        <!-- Estado vacío -->
+        <div v-if="!auth_store.user_data.progress" class="dash-empty">
+            <div class="dash-empty__icon">🌱</div>
+            <h3 class="dash-empty__title">Tu camino empieza hoy</h3>
+            <p class="dash-empty__desc">
+                {{ user_name }}, aún no tienes cursos activos.
+                <span v-if="suggested_course">Te recomiendo empezar con <strong>{{ suggested_course.title }}</strong>.</span>
+            </p>
+            <RouterLink v-if="suggested_course" :to="`/formaciones/${suggested_course.slug}`" class="dash-cta">
+                Descubrir este curso
+            </RouterLink>
+            <RouterLink v-else to="/formaciones" class="dash-cta">
+                Ver catálogo completo
+            </RouterLink>
         </div>
 
         <div v-else class="courses-list">
-
             <div v-if="sorted_courses.in_progress.length > 0">
-                <h3 class="subsection-title">En curso</h3>
+                <div class="subsection-label">
+                    <span class="subsection-label__dot active" />
+                    En curso
+                </div>
                 <div class="courses-grid">
-                    <ProgressCardComponent v-for="item in sorted_courses.in_progress" :key="item._id"
-                        :progress="item" />
+                    <ProgressCardComponent v-for="item in sorted_courses.in_progress" :key="item._id" :progress="item" />
                 </div>
             </div>
 
             <div v-if="sorted_courses.completed.length > 0" class="completed-section">
-                <h3 class="subsection-title">Completados</h3>
+                <div class="subsection-label">
+                    <span class="subsection-label__dot done" />
+                    Completados
+                </div>
                 <div class="courses-grid">
                     <ProgressCardComponent v-for="item in sorted_courses.completed" :key="item._id" :progress="item" />
                 </div>
             </div>
         </div>
 
-        <!-- Guías y Ebooks comprados -->
+        <!-- Guías -->
         <div v-if="purchased_guides.length > 0" class="guides-section">
-            <h3 class="subsection-title">📄 Mis Guías</h3>
+            <div class="subsection-label">
+                <span class="subsection-label__dot guide" />
+                Mis Guías y Ebooks
+            </div>
             <div class="guides-list">
                 <div v-for="guide in purchased_guides" :key="guide.product_id" class="guide-item">
-                    <div class="guide-item__icon">📄</div>
+                    <div class="guide-item__icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z" stroke="currentColor" stroke-width="1.5"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                    </div>
                     <div class="guide-item__info">
                         <p class="guide-item__title">{{ guide.title }}</p>
-                        <span class="guide-item__badge">{{ guide.type === 'bundle' ? 'Pack' : 'Guía' }}</span>
+                        <span class="guide-item__type">{{ guide.type === 'bundle' ? 'Pack' : 'Guía PDF' }}</span>
                     </div>
-                    <button
-                        class="action-btn guide-item__btn"
-                        @click="download_guide(guide.slug)"
-                        :disabled="downloading[guide.slug]">
-                        {{ downloading[guide.slug] ? '...' : '⬇ Descargar' }}
+                    <button class="guide-item__btn" @click="download_guide(guide.slug)" :disabled="downloading[guide.slug]">
+                        <svg v-if="!downloading[guide.slug]" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 3v13M5 16l7 7 7-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 20h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                        {{ downloading[guide.slug] ? 'Descargando…' : 'Descargar' }}
                     </button>
                 </div>
             </div>
@@ -141,138 +148,191 @@ const user_name = computed(() => auth_store.user_data?.user?.name?.split(' ')[0]
 </template>
 
 <style scoped lang="scss">
-.user-courses {
-    padding: $space-4;
+.user-courses { padding: 0; }
+
+/* Header */
+.section-header {
+    margin-bottom: 36px;
+
+    &__title {
+        font-family: var(--font-title);
+        font-size: clamp(26px, 4vw, 36px);
+        font-weight: 700;
+        color: var(--blue-ink);
+        margin: 0 0 8px;
+        position: relative;
+        display: inline-block;
+
+        &::after {
+            content: '';
+            position: absolute;
+            bottom: -6px; left: 0;
+            width: 48px; height: 3px;
+            background: var(--gold-grad);
+            border-radius: $radius-full;
+        }
+    }
+
+    &__sub {
+        font-size: 14px;
+        color: var(--color-text-muted);
+        margin: 16px 0 0;
+    }
 }
 
-.guides-section {
-    margin-top: $space-10;
+/* Subsección label */
+.subsection-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: $fw-bold;
+    font-family: var(--font-body);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-muted);
+    margin: 36px 0 16px;
+
+    &__dot {
+        width: 8px; height: 8px;
+        border-radius: $radius-full;
+        flex-shrink: 0;
+        &.active { background: var(--color-warning); }
+        &.done   { background: var(--color-success); }
+        &.guide  { background: var(--color-primary); }
+    }
 }
+
+.completed-section { opacity: 0.85; }
+
+.courses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+}
+
+/* Estado vacío */
+.dash-empty {
+    background: white;
+    border-radius: var(--r-xl);
+    padding: 64px 32px;
+    text-align: center;
+    border: 1.5px solid var(--border);
+    box-shadow: var(--shadow-sm-new);
+
+    &__icon { font-size: 48px; display: block; margin-bottom: 16px; }
+
+    &__title {
+        font-family: var(--font-title);
+        font-size: 22px;
+        color: var(--blue-ink);
+        margin: 0 0 10px;
+    }
+
+    &__desc {
+        font-size: 14px;
+        color: var(--color-text-muted);
+        margin: 0 0 24px;
+        max-width: 440px;
+        margin-left: auto; margin-right: auto;
+        line-height: 1.7;
+    }
+}
+
+.dash-cta {
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 28px;
+    background: var(--gold-grad);
+    color: white;
+    text-decoration: none;
+    border-radius: $radius-full;
+    font-size: 13px;
+    font-weight: $fw-semibold;
+    font-family: var(--font-body);
+    box-shadow: var(--shadow-gold-new);
+    transition: transform 0.2s var(--ease), box-shadow 0.2s;
+    &:hover { transform: translateY(-2px); box-shadow: var(--shadow-gold-glow); }
+}
+
+/* Guías */
+.guides-section { margin-top: 12px; }
 
 .guides-list {
     display: flex;
     flex-direction: column;
-    gap: $space-3;
-    margin-top: $space-4;
+    gap: 10px;
 }
 
 .guide-item {
     display: grid;
     grid-template-columns: 44px 1fr auto;
     align-items: center;
-    gap: $space-4;
-    padding: $space-4 $space-5;
-    background: var(--color-bg-card);
-    border: 1px solid var(--color-border-light);
-    border-radius: $radius-md;
-    transition: $transition-fast;
+    gap: 16px;
+    padding: 16px 20px;
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-xs);
+    transition: border-color 0.2s, box-shadow 0.2s;
 
     &:hover {
-        border-color: var(--color-primary);
-        box-shadow: var(--shadow-sm);
+        border-color: var(--border-gold);
+        box-shadow: var(--shadow-sm-new);
     }
 
     &__icon {
-        font-size: $text-2xl;
-        text-align: center;
+        width: 44px; height: 44px;
+        background: var(--blue-wash);
+        border-radius: $radius-md;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--color-primary);
     }
 
-    &__info {
-        display: flex;
-        flex-direction: column;
-        gap: $space-1;
-    }
+    &__info { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
 
     &__title {
-        font-size: $text-sm;
+        font-size: 14px;
         font-weight: $fw-semibold;
-        color: var(--color-text);
+        color: var(--blue-ink);
         margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
-    &__badge {
-        font-size: $text-xs;
-        color: var(--color-text-muted);
+    &__type {
+        font-size: 11px;
+        color: var(--ink-muted);
+        font-family: var(--font-body);
     }
 
     &__btn {
-        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 9px 18px;
+        background: var(--gold-grad);
+        color: white;
+        border: none;
+        border-radius: $radius-full;
+        font-size: 12px;
+        font-weight: $fw-semibold;
+        font-family: var(--font-body);
+        cursor: pointer;
+        white-space: nowrap;
+        transition: opacity 0.2s, transform 0.2s;
+        box-shadow: var(--shadow-gold-new);
+
+        &:hover { opacity: 0.9; transform: translateY(-1px); }
+        &:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
     }
 
     @media (max-width: $bp-sm) {
         grid-template-columns: 36px 1fr;
-
-        &__btn { grid-column: 1 / -1; width: 100%; }
+        &__btn { grid-column: 1 / -1; justify-content: center; }
     }
-}
-
-.section-title {
-    font-family: 'Title', serif;
-    font-size: 2.2rem;
-    color: var(--color-primary);
-    margin-bottom: $space-8;
-}
-
-.subsection-title {
-    font-size: 1.2rem;
-    color: var(--color-text-muted);
-    margin-bottom: $space-4;
-    margin-top: $space-8;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-size: 0.9rem;
-    border-bottom: 1px solid var(--color-border-light);
-    padding-bottom: $space-2;
-}
-
-.empty-state {
-    background: var(--color-bg-card);
-    border-radius: var(--radius-md);
-    padding: $space-16 $space-8;
-    text-align: center;
-    box-shadow: var(--shadow-sm);
-
-    .icon {
-        font-size: $space-12;
-        display: block;
-        margin-bottom: $space-4;
-    }
-
-    h3 {
-        font-size: $text-2xl;
-        margin-bottom: $space-4;
-    }
-
-    p {
-        color: var(--color-text-muted);
-        margin-bottom: $space-8;
-        max-width: 500px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .btn-primary {
-        display: inline-block;
-        padding: 0.8rem $space-8;
-        background: var(--color-secondary);
-        color: var(--color-white);
-        text-decoration: none;
-        border-radius: var(--radius-full);
-        transition: transform $transition;
-
-        &:hover {
-            transform: translateY(-2px);
-        }
-    }
-}
-
-.courses-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: $space-8;
-}
-
-.completed-section {
-    opacity: 0.8; // Visualmente un poco menos destacado
 }
 </style>

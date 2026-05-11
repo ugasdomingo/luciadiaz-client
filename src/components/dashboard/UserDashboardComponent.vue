@@ -1,90 +1,112 @@
 <template>
     <div class="dashboard-layout">
 
-        <!-- Backdrop (móvil) -->
+        <!-- Backdrop móvil -->
         <div v-if="util_store.dashboard_sidebar_open"
             class="sidebar-backdrop"
             @click="util_store.close_dashboard_sidebar()" />
 
-        <!-- Sidebar / Aside -->
+        <!-- Sidebar -->
         <aside class="dashboard-sidebar"
             :class="{ 'dashboard-sidebar--open': util_store.dashboard_sidebar_open }">
 
-            <!-- Cerrar (solo móvil) -->
+            <div class="sidebar__gold-line" />
+            <div class="sidebar__deco" />
+
+            <!-- Cerrar en móvil -->
             <button class="sidebar-close" @click="util_store.close_dashboard_sidebar()" aria-label="Cerrar menú">
-                ✕
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
             </button>
 
-            <div class="user-profile">
-                <div class="avatar">{{ initial }}</div>
-                <h3>{{ auth_store.user_data?.user?.name }}</h3>
-                <p class="email">{{ auth_store.user_data?.user?.email }}</p>
-                <span v-if="auth_store.user_data?.user?.medical_record" class="hc-badge">
+            <!-- Perfil -->
+            <div class="sidebar__profile">
+                <div class="sidebar__avatar">{{ initial }}</div>
+                <h3 class="sidebar__name">{{ auth_store.user_data?.user?.name }}</h3>
+                <p class="sidebar__email">{{ auth_store.user_data?.user?.email }}</p>
+                <span v-if="auth_store.user_data?.user?.medical_record" class="sidebar__hc-badge">
                     HC: {{ auth_store.user_data.user.medical_record }}
                 </span>
             </div>
 
-            <nav class="dashboard-nav">
-                <button @click="set_view('courses')" :class="{ active: current_view === 'courses' }">
-                    📚 Mis Cursos
-                </button>
-                <button @click="set_view('orders')" :class="{ active: current_view === 'orders' }">
-                    🛍️ Mis Compras
-                </button>
-                <button v-if="is_patient" @click="set_view('tasks')"
-                    :class="{ active: current_view === 'tasks' }">
-                    📝 Tareas Terapéuticas
-                </button>
-                <button v-if="is_patient" @click="set_view('medical')"
-                    :class="{ active: current_view === 'medical' }">
-                    🏥 Historial Clínico
+            <!-- Navegación -->
+            <nav class="sidebar__nav">
+                <button @click="set_view('courses')" :class="['sidebar__nav-item', { active: current_view === 'courses' }]">
+                    <svg class="nav-icon" viewBox="0 0 20 20" fill="none"><path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2V5z" stroke="currentColor" stroke-width="1.5"/><path d="M8 15a2 2 0 002 2h5a2 2 0 002-2v-4a2 2 0 00-2-2h-1" stroke="currentColor" stroke-width="1.5"/></svg>
+                    <span>Mis Cursos</span>
                 </button>
 
-                <button @click="set_view('likes')" :class="{ active: current_view === 'likes' }">
-                    ♥ Mis Likes
-                </button>
-                <button @click="set_view('consent')"
-                    :class="{ active: current_view === 'consent', 'nav-btn--alert': !consent_signed }">
-                    📋 Consentimiento
-                    <span v-if="!consent_signed" class="nav-dot" title="Pendiente de firmar"></span>
+                <button @click="set_view('tests')" :class="['sidebar__nav-item', { active: current_view === 'tests' }]">
+                    <svg class="nav-icon" viewBox="0 0 20 20" fill="none"><rect x="3" y="2" width="14" height="16" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M7 7h6M7 10h6M7 13h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                    <span>Resultados de Tests</span>
                 </button>
 
-                <div class="divider"></div>
+                <button @click="set_view('orders')" :class="['sidebar__nav-item', { active: current_view === 'orders' }]">
+                    <svg class="nav-icon" viewBox="0 0 20 20" fill="none"><path d="M6 2L3 6v11a2 2 0 002 2h10a2 2 0 002-2V6l-3-4H6z" stroke="currentColor" stroke-width="1.5"/><path d="M3 6h14" stroke="currentColor" stroke-width="1.5"/><path d="M13 10a3 3 0 11-6 0" stroke="currentColor" stroke-width="1.5"/></svg>
+                    <span>Mis Compras</span>
+                </button>
 
-                <RouterLink to="/terapias" class="nav-link" @click="util_store.close_dashboard_sidebar()">
-                    📅 Agendar cita
+                <button v-if="is_patient" @click="set_view('tasks')" :class="['sidebar__nav-item', { active: current_view === 'tasks' }]">
+                    <svg class="nav-icon" viewBox="0 0 20 20" fill="none"><path d="M9 11l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><rect x="3" y="3" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/></svg>
+                    <span>Tareas Terapéuticas</span>
+                </button>
+
+                <button v-if="is_patient" @click="set_view('medical')" :class="['sidebar__nav-item', { active: current_view === 'medical' }]">
+                    <svg class="nav-icon" viewBox="0 0 20 20" fill="none"><path d="M10 3v14M3 10h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><rect x="2" y="2" width="16" height="16" rx="3" stroke="currentColor" stroke-width="1.5"/></svg>
+                    <span>Historial Clínico</span>
+                </button>
+
+                <button @click="set_view('likes')" :class="['sidebar__nav-item', { active: current_view === 'likes' }]">
+                    <svg class="nav-icon" viewBox="0 0 20 20" fill="none"><path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                    <span>Mis Likes</span>
+                </button>
+
+                <button @click="set_view('consent')" :class="['sidebar__nav-item', { active: current_view === 'consent', 'sidebar__nav-item--alert': !consent_signed }]">
+                    <svg class="nav-icon" viewBox="0 0 20 20" fill="none"><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 4h12a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2z" stroke="currentColor" stroke-width="1.5"/></svg>
+                    <span>Consentimiento</span>
+                    <span v-if="!consent_signed" class="nav-dot" />
+                </button>
+
+                <div class="sidebar__divider" />
+
+                <RouterLink to="/terapias" class="sidebar__nav-item sidebar__nav-item--link" @click="util_store.close_dashboard_sidebar()">
+                    <svg class="nav-icon" viewBox="0 0 20 20" fill="none"><rect x="2" y="4" width="16" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M14 2v4M6 2v4M2 9h16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                    <span>Agendar cita</span>
                 </RouterLink>
             </nav>
 
-            <div class="sidebar-bottom">
-                <button class="delete-account-btn" @click="show_delete_modal = true" title="Eliminar cuenta">
-                    🗑
+            <div class="sidebar__bottom">
+                <button class="sidebar__delete-btn" @click="show_delete_modal = true" title="Eliminar cuenta">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
                 </button>
-                <button class="logout-btn" @click="auth_store.logout()" aria-label="Cerrar sesión" title="Cerrar sesión">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                <span class="sidebar__bottom-label">Eliminar cuenta</span>
+                <button class="sidebar__logout-btn" @click="auth_store.logout()" aria-label="Cerrar sesión" title="Cerrar sesión">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
                         <polyline points="16 17 21 12 16 7"/>
                         <line x1="21" y1="12" x2="9" y2="12"/>
                     </svg>
+                    <span>Salir</span>
                 </button>
             </div>
         </aside>
 
         <!-- Modal eliminar cuenta -->
         <Teleport to="body">
-            <div v-if="show_delete_modal" class="delete-modal-overlay" @click.self="show_delete_modal = false">
+            <div v-if="show_delete_modal" class="delete-overlay" @click.self="show_delete_modal = false">
                 <div class="delete-modal">
+                    <div class="delete-modal__icon">🗑</div>
                     <h2>¿Eliminar tu cuenta?</h2>
                     <p class="delete-modal__warning">Esta acción es <strong>permanente e irreversible</strong>.</p>
                     <p class="delete-modal__detail">
-                        Se eliminarán todos tus datos asociados: compras, historial clínico,
+                        Se eliminarán todos tus datos: compras, historial clínico,
                         tareas terapéuticas, progreso en cursos y likes.
-                        No podrás recuperar esta información.
                     </p>
                     <div class="delete-modal__actions">
-                        <button class="btn-cancel" @click="show_delete_modal = false">Cancelar</button>
-                        <button class="btn-confirm-delete" @click="handle_delete">
-                            He leído — quiero eliminar mi cuenta
+                        <button class="delete-modal__cancel" @click="show_delete_modal = false">Cancelar</button>
+                        <button class="delete-modal__confirm" @click="handle_delete">
+                            Eliminar mi cuenta
                         </button>
                     </div>
                 </div>
@@ -93,19 +115,21 @@
 
         <!-- Contenido principal -->
         <section class="dashboard-content">
-            <!-- Botón menú del sidebar (solo mobile) -->
-            <button class="sidebar-menu-btn" @click="util_store.toggle_dashboard_sidebar()" aria-label="Abrir menú">
-                ☰ Menú
+            <button class="mobile-menu-btn" @click="util_store.toggle_dashboard_sidebar()" aria-label="Abrir menú">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                Menú
             </button>
 
-            <UserCoursesComponent v-if="current_view === 'courses'" />
-            <UserOrdersComponent v-else-if="current_view === 'orders'" />
-            <UserTaskComponent v-else-if="current_view === 'tasks'" />
-            <UserMedicalHistoryComponent v-else-if="current_view === 'medical'" />
-            <UserLikesComponent v-else-if="current_view === 'likes'" />
-            <UserConsentComponent v-else-if="current_view === 'consent'" @navigate="set_view" />
+            <Transition name="fade-view" mode="out-in">
+                <UserCoursesComponent v-if="current_view === 'courses'" key="courses" />
+                <UserTestResultsComponent v-else-if="current_view === 'tests'" key="tests" />
+                <UserOrdersComponent v-else-if="current_view === 'orders'" key="orders" />
+                <UserTaskComponent v-else-if="current_view === 'tasks'" key="tasks" />
+                <UserMedicalHistoryComponent v-else-if="current_view === 'medical'" key="medical" />
+                <UserLikesComponent v-else-if="current_view === 'likes'" key="likes" />
+                <UserConsentComponent v-else-if="current_view === 'consent'" key="consent" @navigate="set_view" />
+            </Transition>
         </section>
-
     </div>
 </template>
 
@@ -119,6 +143,7 @@ import UserMedicalHistoryComponent from './user/UserMedicalHistoryComponent.vue'
 import UserTaskComponent from './user/UserTaskComponent.vue'
 import UserLikesComponent from './user/UserLikesComponent.vue'
 import UserConsentComponent from './user/UserConsentComponent.vue'
+import UserTestResultsComponent from './user/UserTestResultsComponent.vue'
 
 const auth_store = useAuthStore()
 const util_store = useUtilStore()
@@ -133,6 +158,7 @@ const handle_delete = async () => {
         show_delete_modal.value = false
     }
 }
+
 const is_patient = computed(() => auth_store.user_data?.user?.role === 'patient')
 const initial = computed(() => auth_store.user_data?.user?.name?.charAt(0)?.toUpperCase() || '?')
 const consent_signed = computed(() => !!auth_store.user_data?.user?.consent_signed)
@@ -146,29 +172,33 @@ const set_view = (view) => {
 <style scoped lang="scss">
 .dashboard-layout {
     display: flex;
-    min-height: 80vh;
+    min-height: calc(100vh - var(--header-h, 80px));
 }
 
+/* ── Backdrop móvil ── */
 .sidebar-backdrop {
     display: none;
-
     @media (max-width: $bp-md) {
         display: block;
         position: fixed;
         inset: 0;
-        background: rgba(0, 0, 0, 0.5);
+        background: rgba(0,0,0,0.55);
         z-index: 95;
     }
 }
 
+/* ══════════════════════════════
+   SIDEBAR
+══════════════════════════════ */
 .dashboard-sidebar {
-    width: $sidebar-width;
-    background: var(--color-bg-card);
-    padding: $space-8;
-    border-right: 1px solid var(--color-border-light);
+    width: 272px;
+    background: var(--blue-ink);
+    padding: 36px 20px 28px;
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
 
     @media (max-width: $bp-md) {
         position: fixed;
@@ -176,268 +206,343 @@ const set_view = (view) => {
         left: 0;
         bottom: 0;
         z-index: 100;
-        padding-top: $space-4;
+        width: 290px;
+        padding-top: 20px;
         transform: translateX(-100%);
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+        box-shadow: 8px 0 40px rgba(0,0,0,0.4);
         overflow-y: auto;
-
         &--open { transform: translateX(0); }
     }
 }
 
+.sidebar__gold-line {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--gold-grad);
+}
+
+.sidebar__deco {
+    position: absolute;
+    top: -120px; right: -120px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(245,197,24,0.08), transparent 70%);
+    pointer-events: none;
+}
+
+/* Cerrar (móvil) */
 .sidebar-close {
     display: none;
     align-self: flex-end;
-    background: none;
-    border: 1px solid var(--color-border-light);
+    background: rgba(255,255,255,0.08);
+    border: none;
     border-radius: $radius-sm;
-    width: $space-8;
-    height: $space-8;
+    width: 32px; height: 32px;
     cursor: pointer;
-    font-size: $text-sm;
-    color: var(--color-text-muted);
-    margin-bottom: $space-6;
+    color: rgba(255,255,255,0.65);
     align-items: center;
     justify-content: center;
-    transition: $transition-fast;
-
-    &:hover { color: var(--color-text); }
-
+    transition: background 0.2s;
+    margin-bottom: 20px;
+    flex-shrink: 0;
+    &:hover { background: rgba(255,255,255,0.14); color: white; }
     @media (max-width: $bp-md) { display: flex; }
 }
 
-.user-profile {
+/* Perfil */
+.sidebar__profile {
     text-align: center;
-    margin-bottom: $space-8;
+    margin-bottom: 32px;
+    position: relative;
+    z-index: 1;
+}
 
-    .avatar {
-        width: 68px;
-        height: 68px;
-        background: var(--color-primary);
-        color: white;
-        border-radius: $radius-full;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: $text-2xl;
-        font-weight: $fw-bold;
-        margin: 0 auto $space-3;
+.sidebar__avatar {
+    width: 72px; height: 72px;
+    background: var(--blue-bright);
+    color: white;
+    border-radius: $radius-full;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-weight: $fw-bold;
+    font-family: var(--font-title);
+    margin: 0 auto 14px;
+    border: 2.5px solid rgba(245,197,24,0.5);
+    box-shadow: 0 0 0 4px rgba(245,197,24,0.1);
+}
+
+.sidebar__name {
+    font-family: var(--font-title);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--white);
+    margin: 0 0 4px;
+}
+
+.sidebar__email {
+    font-size: 11.5px;
+    color: rgba(255,255,255,0.5);
+    margin: 0 0 10px;
+    font-family: var(--font-body);
+    word-break: break-all;
+}
+
+.sidebar__hc-badge {
+    display: inline-block;
+    background: rgba(245,197,24,0.15);
+    border: 1px solid rgba(245,197,24,0.3);
+    color: var(--gold-light);
+    padding: 3px 10px;
+    border-radius: $radius-full;
+    font-size: 11px;
+    font-weight: $fw-semibold;
+    font-family: var(--font-body);
+    letter-spacing: 0.04em;
+}
+
+/* Navegación */
+.sidebar__nav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    position: relative;
+    z-index: 1;
+}
+
+.sidebar__nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-align: left;
+    background: none;
+    border: none;
+    padding: 11px 14px;
+    border-radius: $radius-md;
+    cursor: pointer;
+    color: rgba(255,255,255,0.6);
+    font-size: 13px;
+    font-family: var(--font-body);
+    font-weight: $fw-regular;
+    transition: background 0.18s, color 0.18s;
+    text-decoration: none;
+    line-height: 1;
+    position: relative;
+
+    &:hover {
+        background: rgba(255,255,255,0.06);
+        color: var(--gold-light);
+        .nav-icon { stroke: var(--gold-light); }
     }
 
-    h3    { font-size: $text-base; margin: 0 0 $space-1; }
-    .email { color: var(--color-text-muted); font-size: $text-xs; margin: 0; }
+    &.active {
+        background: rgba(245,197,24,0.12);
+        color: var(--gold-light);
+        font-weight: $fw-semibold;
+        .nav-icon { stroke: var(--gold-light); }
+    }
 
-    .hc-badge {
-        display: inline-block;
-        margin-top: $space-2;
-        background: var(--color-border-light);
-        padding: $space-1 $space-2;
-        border-radius: $radius-xs;
-        font-size: $text-xs;
+    &--alert {
+        color: rgba(245,197,24,0.8) !important;
+    }
+
+    &--link {
+        display: flex;
+        text-decoration: none;
     }
 }
 
-.dashboard-nav {
-    display: flex;
-    flex-direction: column;
-    gap: $space-1;
-
-    button, .nav-link {
-        text-align: left;
-        background: none;
-        border: none;
-        padding: $space-3 $space-4;
-        border-radius: $radius-sm;
-        cursor: pointer;
-        color: var(--color-text-muted);
-        font-size: $text-sm;
-        font-family: $font-body;
-        transition: $transition-fast;
-        text-decoration: none;
-        display: block;
-
-        &:hover {
-            background: var(--color-bg);
-            color: var(--color-primary);
-        }
-
-        &.active {
-            background: var(--overlay-primary-10);
-            color: var(--color-primary);
-            font-weight: $fw-semibold;
-        }
-    }
-
-    .divider {
-        height: 1px;
-        background: var(--color-border-light);
-        margin: $space-3 0;
-    }
-
-    .nav-btn--alert {
-        color: var(--color-secondary) !important;
-    }
+.nav-icon {
+    width: 16px; height: 16px;
+    stroke: rgba(255,255,255,0.5);
+    flex-shrink: 0;
+    transition: stroke 0.18s;
 }
 
 .nav-dot {
-    display: inline-block;
-    width: 7px;
-    height: 7px;
+    width: 7px; height: 7px;
     background: var(--color-error);
     border-radius: $radius-full;
-    margin-left: $space-2;
-    vertical-align: middle;
+    margin-left: auto;
     flex-shrink: 0;
 }
 
-.sidebar-menu-btn {
-    display: none;
-    align-items: center;
-    gap: $space-2;
-    background: none;
-    border: 1px solid var(--color-border);
-    border-radius: $radius-sm;
-    padding: $space-2 $space-4;
-    font-size: $text-sm;
-    font-family: $font-body;
-    color: var(--color-text-muted);
-    cursor: pointer;
-    margin-bottom: $space-4;
-    transition: $transition-fast;
-
-    &:hover { color: var(--color-text); border-color: var(--color-text-muted); }
-
-    @media (max-width: $bp-md) { display: inline-flex; }
+.sidebar__divider {
+    height: 1px;
+    background: rgba(255,255,255,0.08);
+    margin: 8px 0;
 }
 
-.dashboard-content {
-    flex: 1;
-    padding: $space-12;
-    min-width: 0;
-
-    @media (max-width: $bp-md) {
-        padding: $space-6 $space-4 $space-12;
-    }
-}
-
-.sidebar-bottom {
+/* Bottom */
+.sidebar__bottom {
     margin-top: auto;
-    padding-top: $space-6;
+    padding-top: 20px;
     display: flex;
     align-items: center;
-    gap: $space-2;
+    gap: 8px;
+    position: relative;
+    z-index: 1;
 }
 
-.delete-account-btn {
-    background: none;
-    border: 1px solid transparent;
-    border-radius: $radius-sm;
-    padding: $space-2;
-    cursor: pointer;
-    font-size: $text-base;
-    line-height: 1;
-    color: var(--color-text-muted);
-    transition: $transition-fast;
-
-    &:hover {
-        color: #dc2626;
-        border-color: #dc2626;
-        background: rgba(220, 38, 38, 0.06);
-    }
+.sidebar__bottom-label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+    font-family: var(--font-body);
 }
 
-.logout-btn {
-    margin-left: auto;
+.sidebar__delete-btn {
     background: none;
     border: none;
     cursor: pointer;
-    padding: $space-2;
-    color: var(--color-text-muted);
+    color: rgba(255,255,255,0.3);
+    padding: 6px;
     border-radius: $radius-sm;
-    transition: $transition-fast;
     display: flex;
     align-items: center;
-
-    &:hover { color: var(--color-error, #dc2626); }
+    transition: color 0.18s, background 0.18s;
+    flex-shrink: 0;
+    &:hover { color: #ef4444; background: rgba(239,68,68,0.1); }
 }
 
-// Modal eliminar cuenta
-.delete-modal-overlay {
+.sidebar__logout-btn {
+    margin-left: auto;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    cursor: pointer;
+    color: rgba(255,255,255,0.6);
+    border-radius: $radius-md;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    font-size: 12px;
+    font-family: var(--font-body);
+    font-weight: $fw-medium;
+    transition: color 0.18s, background 0.18s, border-color 0.18s;
+    &:hover { color: white; background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.2); }
+}
+
+/* ══════════════════════════════
+   CONTENIDO PRINCIPAL
+══════════════════════════════ */
+.dashboard-content {
+    flex: 1;
+    padding: 48px;
+    min-width: 0;
+    background: var(--color-bg);
+
+    @media (max-width: $bp-lg) { padding: 36px 28px; }
+    @media (max-width: $bp-md) { padding: 24px 16px 80px; }
+}
+
+.mobile-menu-btn {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    background: white;
+    border: 1px solid var(--color-border);
+    border-radius: $radius-md;
+    padding: 9px 16px;
+    font-size: 13px;
+    font-family: var(--font-body);
+    font-weight: $fw-medium;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    margin-bottom: 28px;
+    transition: border-color 0.18s, color 0.18s;
+    box-shadow: var(--shadow-xs);
+    &:hover { color: var(--blue-ink); border-color: var(--color-primary); }
+    @media (max-width: $bp-md) { display: inline-flex; }
+}
+
+/* Transición entre vistas */
+.fade-view-enter-active, .fade-view-leave-active {
+    transition: opacity 0.2s var(--ease), transform 0.2s var(--ease);
+}
+.fade-view-enter-from { opacity: 0; transform: translateY(8px); }
+.fade-view-leave-to  { opacity: 0; transform: translateY(-6px); }
+
+/* ══════════════════════════════
+   MODAL ELIMINAR CUENTA
+══════════════════════════════ */
+.delete-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0,0,0,0.65);
     z-index: 9999;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: $space-4;
+    padding: 20px;
 }
 
 .delete-modal {
-    background: var(--color-bg-card);
-    border-radius: $radius-lg;
-    padding: $space-10;
-    max-width: 480px;
+    background: var(--white);
+    border-radius: var(--r-xl);
+    padding: 40px;
+    max-width: 460px;
     width: 100%;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-lg-new);
+    text-align: center;
+
+    &__icon { font-size: 36px; margin-bottom: 16px; }
 
     h2 {
-        font-size: $text-xl;
-        margin: 0 0 $space-4;
+        font-family: var(--font-title);
+        font-size: 22px;
         color: #dc2626;
+        margin: 0 0 12px;
     }
 
     &__warning {
-        font-size: $text-base;
-        margin: 0 0 $space-3;
-        font-weight: $fw-semibold;
+        font-size: 15px;
+        color: var(--color-text);
+        margin: 0 0 10px;
     }
 
     &__detail {
-        font-size: $text-sm;
+        font-size: 14px;
         color: var(--color-text-muted);
-        margin: 0 0 $space-8;
         line-height: 1.6;
+        margin: 0 0 28px;
     }
 
     &__actions {
         display: flex;
-        gap: $space-3;
-        flex-wrap: wrap;
-
+        gap: 12px;
         @media (max-width: $bp-sm) { flex-direction: column-reverse; }
     }
-}
 
-.btn-cancel {
-    flex: 1;
-    padding: $space-3 $space-6;
-    border: 1px solid var(--color-border);
-    border-radius: $radius-sm;
-    background: none;
-    font-family: $font-body;
-    font-size: $text-sm;
-    cursor: pointer;
-    color: var(--color-text-muted);
-    transition: $transition-fast;
+    &__cancel {
+        flex: 1;
+        padding: 12px;
+        border: 1.5px solid var(--color-border);
+        border-radius: $radius-md;
+        background: none;
+        font-family: var(--font-body);
+        font-size: 14px;
+        cursor: pointer;
+        color: var(--color-text-muted);
+        transition: background 0.18s;
+        &:hover { background: var(--color-bg); }
+    }
 
-    &:hover { background: var(--color-bg); }
-}
-
-.btn-confirm-delete {
-    flex: 2;
-    padding: $space-3 $space-6;
-    border: none;
-    border-radius: $radius-sm;
-    background: #dc2626;
-    color: #fff;
-    font-family: $font-body;
-    font-size: $text-sm;
-    font-weight: $fw-semibold;
-    cursor: pointer;
-    transition: $transition-fast;
-
-    &:hover { background: #b91c1c; }
+    &__confirm {
+        flex: 2;
+        padding: 12px;
+        border: none;
+        border-radius: $radius-md;
+        background: #dc2626;
+        color: white;
+        font-family: var(--font-body);
+        font-size: 14px;
+        font-weight: $fw-semibold;
+        cursor: pointer;
+        transition: background 0.18s;
+        &:hover { background: #b91c1c; }
+    }
 }
 </style>

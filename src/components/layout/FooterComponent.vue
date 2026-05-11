@@ -116,9 +116,10 @@ onUnmounted(() => window.removeEventListener('scroll', update_fab))
                     · Todos los derechos reservados
                 </div>
                 <div class="footer__legal">
-                    <a href="#" class="footer__legal-link">Aviso legal</a>
-                    <a href="#" class="footer__legal-link">Privacidad</a>
-                    <a href="#" class="footer__legal-link">Cookies</a>
+                    <RouterLink to="/aviso-legal" class="footer__legal-link">Aviso legal</RouterLink>
+                    <RouterLink to="/privacidad" class="footer__legal-link">Privacidad</RouterLink>
+                    <RouterLink to="/terminos" class="footer__legal-link">Términos</RouterLink>
+                    <RouterLink to="/cookies" class="footer__legal-link">Cookies</RouterLink>
                 </div>
             </div>
         </div>

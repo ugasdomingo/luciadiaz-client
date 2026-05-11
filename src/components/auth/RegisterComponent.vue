@@ -1,13 +1,41 @@
 <script setup>
 import { useAuthStore } from '../../stores/auth-store'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 
 const auth_store = useAuthStore()
 const is_patient = ref(false)
 const show_password = ref(false)
+const policy_accepted = ref(false)
+
+onMounted(() => {
+    const stored = localStorage.getItem('cookies_consent')
+    if (stored) {
+        try {
+            const parsed = JSON.parse(stored)
+            if (parsed.accepted === true) {
+                policy_accepted.value = true
+            }
+        } catch {
+            // ignore malformed value
+        }
+    }
+})
 
 const register = async () => {
-    await auth_store.register({ name: auth_store.name, email: auth_store.email, password: auth_store.password, role: is_patient.value ? 'patient' : 'user', phone: auth_store.phone, policy_accepted: auth_store.policy_accepted })
+    const cookies_data = localStorage.getItem('cookies_consent')
+    let cookies_accepted_at = null
+    if (cookies_data) {
+        try { cookies_accepted_at = JSON.parse(cookies_data).date } catch { /* */ }
+    }
+    await auth_store.register({
+        name: auth_store.name,
+        email: auth_store.email,
+        password: auth_store.password,
+        role: is_patient.value ? 'patient' : 'user',
+        phone: auth_store.phone,
+        policy_accepted: policy_accepted.value,
+        cookies_accepted_at
+    })
 }
 </script>
 
@@ -48,11 +76,11 @@ const register = async () => {
         </div>
 
         <label class="policy-check">
-            <input type="checkbox" v-model="auth_store.policy_accepted" />
-            <span>He leído y acepto las <RouterLink to="/privacy-policy">políticas de privacidad</RouterLink></span>
+            <input type="checkbox" v-model="policy_accepted" />
+            <span>He leído y acepto la <RouterLink to="/privacidad">política de privacidad</RouterLink> y los <RouterLink to="/terminos">términos y condiciones</RouterLink></span>
         </label>
 
-        <button type="submit" class="action-btn submit-btn" :disabled="!auth_store.policy_accepted">
+        <button type="submit" class="action-btn submit-btn" :disabled="!policy_accepted">
             Crear cuenta
         </button>
 

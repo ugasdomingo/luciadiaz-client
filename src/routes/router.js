@@ -115,6 +115,31 @@ const routes = [
         component: () => import('../views/admin/OneUserInfo.vue'),
         meta: { requires_auth: true }
     },
+    // Legal Pages *************************************
+    {
+        path: '/aviso-legal',
+        name: 'AvisoLegal',
+        component: () => import('../views/legal/AvisoLegal.vue')
+    },
+    {
+        path: '/privacidad',
+        name: 'Privacidad',
+        component: () => import('../views/legal/Privacidad.vue')
+    },
+    {
+        path: '/privacy-policy',
+        redirect: '/privacidad'
+    },
+    {
+        path: '/terminos',
+        name: 'Terminos',
+        component: () => import('../views/legal/Terminos.vue')
+    },
+    {
+        path: '/cookies',
+        name: 'Cookies',
+        component: () => import('../views/legal/Cookies.vue')
+    },
     {
         path: '/:pathMatch(.*)*',
         name: 'NotFound',
