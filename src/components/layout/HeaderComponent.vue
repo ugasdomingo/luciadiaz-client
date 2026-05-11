@@ -1,14 +1,19 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useAuthStore } from '../../stores/auth-store';
+import { useUtilStore } from '../../stores/util-store';
 
 const router = useRouter();
 const route = useRoute();
 const auth_store = useAuthStore();
 
+const util_store = useUtilStore();
 const scrolled = ref(false);
 const menu_open = ref(false);
+
+// true cuando el fondo detrás del header es claro (Home) o cuando hay scroll
+const on_light_bg = computed(() => scrolled.value || util_store.is_home);
 
 const links = [
     { id: 'terapias', label: 'Terapias', path: '/terapias' },
@@ -36,7 +41,7 @@ const navigate = (path) => {
 </script>
 
 <template>
-    <header class="header" :class="{ 'header--scrolled': scrolled, 'header--on-light': util_store.is_home && !scrolled }">
+    <header class="header" :class="{ 'header--scrolled': scrolled, 'header--on-light': on_light_bg }">
         <div class="container header__inner">
             <!-- Logo -->
             <RouterLink to="/" class="header__brand">
@@ -216,15 +221,8 @@ const navigate = (path) => {
     transition: color 0.35s var(--ease);
 }
 
-.header--scrolled .header__brand-name,
-.header--on-light .header__brand-name {
-    color: var(--blue-ink);
-}
-
-.header--scrolled .header__brand-sub,
-.header--on-light .header__brand-sub {
-    color: var(--gold-deep);
-}
+.header--on-light .header__brand-name { color: var(--blue-ink); }
+.header--on-light .header__brand-sub  { color: var(--gold-deep); }
 
 .header__nav {
     display: flex;
@@ -251,13 +249,9 @@ const navigate = (path) => {
     }
 }
 
-.header--scrolled .header__nav-link,
-.header--on-light .header__nav-link {
-    color: var(--ink-soft);
-
-    &:hover { color: var(--blue-ink); }
-    &--active { color: var(--blue-ink); }
-}
+.header--on-light .header__nav-link          { color: var(--ink-soft); }
+.header--on-light .header__nav-link:hover    { color: var(--blue-ink); }
+.header--on-light .header__nav-link--active  { color: var(--blue-ink); }
 
 .header__nav-dot {
     position: absolute;
@@ -286,11 +280,8 @@ const navigate = (path) => {
     &:hover { color: white; }
 }
 
-.header--scrolled .header__mi-espacio,
-.header--on-light .header__mi-espacio {
-    color: var(--ink-soft);
-    &:hover { color: var(--blue-ink); }
-}
+.header--on-light .header__mi-espacio       { color: var(--ink-soft); }
+.header--on-light .header__mi-espacio:hover { color: var(--blue-ink); }
 
 .btn-header-gold {
     display: inline-flex;
@@ -350,11 +341,8 @@ const navigate = (path) => {
     }
 }
 
-.header--scrolled .burger,
-.header--on-light .burger {
-    span { background: var(--blue-ink); }
-    .burger__third { background: var(--gold); }
-}
+.header--on-light .burger span         { background: var(--blue-ink); }
+.header--on-light .burger .burger__third { background: var(--gold); }
 
 /* Mobile fullscreen menu */
 .mobile-menu {
