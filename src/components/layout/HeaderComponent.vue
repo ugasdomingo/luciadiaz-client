@@ -36,7 +36,7 @@ const navigate = (path) => {
 </script>
 
 <template>
-    <header class="header" :class="{ 'header--scrolled': scrolled }">
+    <header class="header" :class="{ 'header--scrolled': scrolled, 'header--on-light': util_store.is_home && !scrolled }">
         <div class="container header__inner">
             <!-- Logo -->
             <RouterLink to="/" class="header__brand">
@@ -200,8 +200,9 @@ const navigate = (path) => {
     font-family: var(--font-title);
     font-size: 20px;
     font-weight: 700;
-    color: var(--blue-ink);
+    color: white;
     letter-spacing: -0.01em;
+    transition: color 0.35s var(--ease);
 }
 
 .header__brand-sub {
@@ -210,8 +211,19 @@ const navigate = (path) => {
     font-weight: 500;
     letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: var(--gold-deep);
+    color: var(--gold-light);
     margin-top: 3px;
+    transition: color 0.35s var(--ease);
+}
+
+.header--scrolled .header__brand-name,
+.header--on-light .header__brand-name {
+    color: var(--blue-ink);
+}
+
+.header--scrolled .header__brand-sub,
+.header--on-light .header__brand-sub {
+    color: var(--gold-deep);
 }
 
 .header__nav {
@@ -225,18 +237,26 @@ const navigate = (path) => {
     padding: 10px 16px;
     font-size: 14px;
     font-weight: 500;
-    color: var(--ink-soft);
+    color: rgba(255, 255, 255, 0.85);
     text-decoration: none;
     transition: color 0.2s var(--ease);
     font-family: var(--font-body);
 
     &:hover {
-        color: var(--blue-ink);
+        color: white;
     }
 
     &--active {
-        color: var(--blue-ink);
+        color: white;
     }
+}
+
+.header--scrolled .header__nav-link,
+.header--on-light .header__nav-link {
+    color: var(--ink-soft);
+
+    &:hover { color: var(--blue-ink); }
+    &--active { color: var(--blue-ink); }
 }
 
 .header__nav-dot {
@@ -259,13 +279,17 @@ const navigate = (path) => {
 .header__mi-espacio {
     font-size: 13px;
     font-weight: 500;
-    color: var(--ink-soft);
+    color: rgba(255, 255, 255, 0.75);
     text-decoration: none;
     font-family: var(--font-body);
     transition: color 0.2s var(--ease);
-    &:hover {
-        color: var(--blue-ink);
-    }
+    &:hover { color: white; }
+}
+
+.header--scrolled .header__mi-espacio,
+.header--on-light .header__mi-espacio {
+    color: var(--ink-soft);
+    &:hover { color: var(--blue-ink); }
 }
 
 .btn-header-gold {
@@ -316,13 +340,20 @@ const navigate = (path) => {
         display: block;
         width: 22px;
         height: 2px;
-        background: var(--blue-ink);
+        background: white;
         border-radius: 2px;
+        transition: background 0.35s var(--ease);
     }
     .burger__third {
         width: 14px;
-        background: var(--gold);
+        background: var(--gold-light);
     }
+}
+
+.header--scrolled .burger,
+.header--on-light .burger {
+    span { background: var(--blue-ink); }
+    .burger__third { background: var(--gold); }
 }
 
 /* Mobile fullscreen menu */
