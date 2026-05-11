@@ -25,25 +25,32 @@ const routes = [
         name: 'BlogOne',
         component: () => import('../views/BlogOne.vue')
     },
-    // Catálogo de productos (ruta fija, filtros en el store)
-    {
-        path: '/productos',
-        name: 'ProductCatalog',
-        component: () => import('../views/ProductCatalog.vue')
-    },
+    // Detalle de producto individual
     {
         path: '/productos/:slug',
         name: 'ProductDetail',
         component: () => import('../views/ProductDetail.vue')
     },
-    // Alias: /formaciones y /guias redirigen a /productos
+    // Tienda virtual (todo excepto formaciones)
+    {
+        path: '/tienda',
+        name: 'Tienda',
+        component: () => import('../views/Tienda.vue')
+    },
+    // Formaciones (solo cursos)
     {
         path: '/formaciones',
-        redirect: '/productos'
+        name: 'Formaciones',
+        component: () => import('../views/Formaciones.vue')
     },
+    // Alias legacy
     {
         path: '/guias',
-        redirect: '/productos'
+        redirect: '/tienda'
+    },
+    {
+        path: '/productos',
+        redirect: '/tienda'
     },
 
     // Checkout

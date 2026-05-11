@@ -3,182 +3,178 @@
     <CourseLanding v-if="course_config" :course="course_config" :formation="product" />
 
     <div v-else class="product-public">
-        <!-- Hero / Portada -->
-        <section class="product-hero">
-            <div class="product-hero__image">
-                <img :src="product.cover_image?.secure_url || '/placeholder-product.jpg'" :alt="product.title">
-            </div>
-            <div class="product-hero__content">
-                <span class="product-badge">{{ type_label }}</span>
-                <h1 class="product-title">{{ product.title }}</h1>
-                <div class="product-description" v-html="product.description"></div>
 
-                <div class="product-meta">
-                    <span v-if="product.category" class="meta-item">
-                        📂 {{ product.category }}
-                    </span>
-                    <span v-if="product.start_date" class="meta-item">
-                        📅 Inicia: {{ formatted_start_date }}
-                    </span>
-                </div>
-
-                <!-- ── Banner: ya disponible para los de la waitlist ── -->
-                <div v-if="show_available_banner" class="waitlist-available-banner">
-                    <div class="waitlist-available-banner__icon">🎉</div>
-                    <div class="waitlist-available-banner__body">
-                        <p class="waitlist-available-banner__title">¡Ya está disponible!</p>
-                        <p class="waitlist-available-banner__sub">
-                            El producto que esperabas ya está a la venta. ¡Es tu momento!
-                        </p>
+        <!-- Hero -->
+        <div class="pp-hero">
+            <div class="pp-hero__deco" />
+            <div class="pp-hero__inner">
+                <div class="pp-hero__layout">
+                    <!-- Cover image -->
+                    <div class="pp-hero__cover" v-if="product.cover_image?.secure_url">
+                        <img :src="product.cover_image.secure_url" :alt="product.title" />
                     </div>
-                    <div class="waitlist-available-banner__cta">
-                        <div class="product-price">
-                            <span class="price-amount">{{ formatted_price }}</span>
-                        </div>
-                        <button @click="handle_purchase" class="action-btn">
-                            {{ cta_text }}
-                        </button>
-                        <LikeButtonComponent item_type="Product" :item_id="product._id" />
-                    </div>
-                </div>
-
-                <!-- ── Banner: en la lista de espera ── -->
-                <div v-else-if="show_waitlist_banner" class="waitlist-banner">
-                    <div class="waitlist-banner__header">
-                        <span class="waitlist-banner__icon">📋</span>
-                        <p class="waitlist-banner__title">Estás en la lista de espera</p>
-                    </div>
-                    <p class="waitlist-banner__sub">
-                        Te escribiremos por email en cuanto puedas acceder a la inscripción y completar el pago.
-                        No tienes que hacer nada más por ahora.
-                    </p>
-                    <div class="waitlist-banner__tips">
-                        <p class="waitlist-banner__tip">
-                            💡 <strong>Crea tu cuenta</strong> para acceder antes y tener todo listo cuando abra.
-                        </p>
-                    </div>
-                    <div class="waitlist-banner__actions">
-                        <RouterLink to="/acceso" class="action-btn">Crear cuenta</RouterLink>
-                        <LikeButtonComponent item_type="Product" :item_id="product._id" />
-                    </div>
-                </div>
-
-                <!-- ── CTA normal (no está en waitlist) ── -->
-                <template v-else>
-
-                    <!-- coming_soon: solo lista de espera, sin precio ni compra -->
-                    <div v-if="is_coming_soon" class="product-cta">
-                        <p class="product-coming-soon">⏳ Próximamente disponible</p>
-                        <div class="product-cta__actions">
-                            <button v-if="!auth_store.user_data"
-                                @click="show_waitlist_popup = true"
-                                class="action-btn">
-                                📋 Apuntarme a la lista de espera
-                            </button>
-                            <span v-else class="product-cta__logged-note">
-                                Te avisaremos cuando esté disponible
+                    <!-- Content -->
+                    <div class="pp-hero__content">
+                        <span class="pp-hero__chip">{{ type_label }}</span>
+                        <h1 class="pp-hero__title">{{ product.title }}</h1>
+                        <div class="pp-hero__meta">
+                            <span v-if="product.category" class="pp-hero__meta-item">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z" stroke="currentColor" stroke-width="1.5"/></svg>
+                                {{ product.category }}
                             </span>
-                            <LikeButtonComponent item_type="Product" :item_id="product._id" />
-                        </div>
-                    </div>
-
-                    <!-- pre_sale / active: precio real + botón de compra -->
-                    <div v-else class="product-cta">
-                        <div class="product-price">
-                            <span v-if="product.status === 'pre_sale'" class="price-tag">Pre-venta</span>
-                            <span class="price-amount">{{ formatted_price }}</span>
-                        </div>
-                        <div class="product-cta__actions">
-                            <button @click="handle_purchase" class="action-btn">
-                                {{ cta_text }}
-                            </button>
-                            <LikeButtonComponent item_type="Product" :item_id="product._id" />
-                        </div>
-                    </div>
-
-                </template>
-
-                <!-- Popup waitlist -->
-                <Teleport to="body">
-                    <div v-if="show_waitlist_popup" class="waitlist-overlay" @click.self="show_waitlist_popup = false">
-                        <div class="waitlist-popup">
-                            <button class="waitlist-popup__close" @click="show_waitlist_popup = false">✕</button>
-                            <h3>Lista de espera</h3>
-                            <p>Te avisaremos en cuanto esté disponible para la inscripción.</p>
-                            <input v-model="waitlist_email" type="email" placeholder="tu@correo.com"
-                                class="waitlist-popup__input" @keyup.enter="submit_waitlist" autofocus />
-                            <p v-if="waitlist_error" class="waitlist-popup__error">{{ waitlist_error }}</p>
-                            <button class="action-btn" @click="submit_waitlist" :disabled="waitlist_loading">
-                                {{ waitlist_loading ? '...' : '📋 Apuntarme' }}
-                            </button>
-                        </div>
-                    </div>
-                </Teleport>
-            </div>
-        </section>
-
-        <!-- Curriculum / Contenido (preview) -->
-        <section v-if="has_curriculum" class="product-curriculum">
-            <h2>Contenido del programa</h2>
-            <div class="curriculum-list">
-                <div v-for="(lesson, index) in product.curriculum" :key="index"
-                    class="curriculum-item"
-                    :class="{ 'curriculum-item--free': lesson.is_free_preview, 'curriculum-item--open': expanded_lesson === index }">
-
-                    <!-- Cabecera clicable -->
-                    <div class="curriculum-item__header" @click="expanded_lesson = expanded_lesson === index ? null : index">
-                        <span class="curriculum-number">{{ index + 1 }}</span>
-                        <h3 class="curriculum-title">{{ lesson.title }}</h3>
-                        <div class="curriculum-item__right">
-                            <span v-if="lesson.is_free_preview" class="curriculum-badge">
-                                👁️ Vista previa
+                            <span v-if="product.start_date" class="pp-hero__meta-item">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M16 2v4M8 2v4M3 10h18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                                Inicia: {{ formatted_start_date }}
                             </span>
-                            <span v-else class="curriculum-badge curriculum-badge--locked">
-                                🔒
-                            </span>
-                            <span class="curriculum-chevron" :class="{ 'curriculum-chevron--open': expanded_lesson === index }">▾</span>
-                        </div>
-                    </div>
-
-                    <!-- Panel expandible -->
-                    <div v-if="expanded_lesson === index" class="curriculum-body">
-                        <!-- Descripción (solo free preview) -->
-                        <div v-if="lesson.is_free_preview && lesson.notes" class="curriculum-notes" v-html="lesson.notes"></div>
-
-                        <!-- Indicadores de material -->
-                        <div v-if="lesson.has_video || lesson.has_pdf" class="curriculum-material">
-                            <span class="curriculum-material__label">Material de apoyo:</span>
-                            <span v-if="lesson.has_video" class="curriculum-material__tag">🎬 Video</span>
-                            <span v-if="lesson.has_pdf" class="curriculum-material__tag">📄 Guía PDF</span>
                         </div>
 
-                        <!-- Mensaje para contenido bloqueado -->
-                        <p v-if="!lesson.is_free_preview" class="curriculum-locked-msg">
-                            🔒 Accede a este módulo comprando el curso
-                        </p>
+                        <!-- ── Banner: ya disponible ── -->
+                        <div v-if="show_available_banner" class="pp-banner pp-banner--success">
+                            <p class="pp-banner__title">¡Ya está disponible!</p>
+                            <p class="pp-banner__sub">El producto que esperabas ya está a la venta. ¡Es tu momento!</p>
+                            <div class="pp-price-row">
+                                <span class="pp-price">{{ formatted_price }}</span>
+                                <button @click="handle_purchase" class="pp-btn pp-btn--gold">{{ cta_text }}</button>
+                                <LikeButtonComponent item_type="Product" :item_id="product._id" />
+                            </div>
+                        </div>
+
+                        <!-- ── Banner: en lista de espera ── -->
+                        <div v-else-if="show_waitlist_banner" class="pp-banner pp-banner--wait">
+                            <p class="pp-banner__title">Estás en la lista de espera</p>
+                            <p class="pp-banner__sub">Te escribiremos por email en cuanto puedas acceder a la inscripción.</p>
+                            <RouterLink to="/acceso" class="pp-btn pp-btn--outline">Crear cuenta</RouterLink>
+                        </div>
+
+                        <!-- ── CTA normal ── -->
+                        <template v-else>
+                            <div v-if="is_coming_soon" class="pp-coming">
+                                <span class="pp-coming__badge">Próximamente</span>
+                                <div class="pp-price-row">
+                                    <button v-if="!auth_store.user_data" @click="show_waitlist_popup = true" class="pp-btn pp-btn--outline">
+                                        Apuntarme a la lista de espera
+                                    </button>
+                                    <span v-else class="pp-coming__note">Te avisaremos cuando esté disponible</span>
+                                    <LikeButtonComponent item_type="Product" :item_id="product._id" />
+                                </div>
+                            </div>
+                            <div v-else class="pp-price-block">
+                                <span v-if="product.status === 'pre_sale'" class="pp-presale-tag">Pre-venta</span>
+                                <div class="pp-price-row">
+                                    <span class="pp-price">{{ formatted_price }}</span>
+                                    <button @click="handle_purchase" class="pp-btn pp-btn--gold">{{ cta_text }}</button>
+                                    <LikeButtonComponent item_type="Product" :item_id="product._id" />
+                                </div>
+                            </div>
+                        </template>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <!-- Información adicional -->
-        <section class="product-info">
-            <h2>¿Qué incluye?</h2>
-            <ul class="features-list">
-                <li v-if="product.type === 'course'">✓ Acceso de por vida al contenido</li>
-                <li v-if="product.type === 'course'">✓ Actualizaciones gratuitas</li>
-                <li v-if="product.type === 'ebook'">✓ Descarga inmediata en PDF</li>
-                <li v-if="product.certificate">✓ Certificado de finalización</li>
-                <li>✓ Acceso desde cualquier dispositivo</li>
-            </ul>
-        </section>
+        <!-- Body -->
+        <div class="pp-body">
 
-        <!-- CTA fijo en móvil (solo si hay precio / se puede comprar) -->
+            <!-- Description -->
+            <div class="pp-card">
+                <h2 class="pp-card__title">Descripción</h2>
+                <div class="pp-description" v-html="product.description"></div>
+            </div>
+
+            <!-- Curriculum -->
+            <div v-if="has_curriculum" class="pp-card">
+                <h2 class="pp-card__title">Contenido del programa</h2>
+                <div class="curriculum-list">
+                    <div v-for="(lesson, index) in product.curriculum" :key="index"
+                        class="curriculum-item"
+                        :class="{ 'curriculum-item--free': lesson.is_free_preview, 'curriculum-item--open': expanded_lesson === index }">
+                        <div class="curriculum-item__header" @click="expanded_lesson = expanded_lesson === index ? null : index">
+                            <span class="curriculum-number">{{ index + 1 }}</span>
+                            <h3 class="curriculum-title">{{ lesson.title }}</h3>
+                            <div class="curriculum-item__right">
+                                <span v-if="lesson.is_free_preview" class="curriculum-badge">Vista previa</span>
+                                <span v-else class="curriculum-badge curriculum-badge--locked">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M7 11V7a5 5 0 0110 0v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                                </span>
+                                <span class="curriculum-chevron" :class="{ 'curriculum-chevron--open': expanded_lesson === index }">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </span>
+                            </div>
+                        </div>
+                        <div v-if="expanded_lesson === index" class="curriculum-body">
+                            <div v-if="lesson.is_free_preview && lesson.notes" class="curriculum-notes" v-html="lesson.notes"></div>
+                            <div v-if="lesson.has_video || lesson.has_pdf" class="curriculum-material">
+                                <span class="curriculum-material__label">Material:</span>
+                                <span v-if="lesson.has_video" class="curriculum-material__tag">Video</span>
+                                <span v-if="lesson.has_pdf" class="curriculum-material__tag">PDF</span>
+                            </div>
+                            <p v-if="!lesson.is_free_preview" class="curriculum-locked-msg">Accede comprando el curso</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Includes -->
+            <div class="pp-card pp-card--features">
+                <h2 class="pp-card__title">¿Qué incluye?</h2>
+                <ul class="features-list">
+                    <li v-if="product.type === 'course'">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        Acceso de por vida al contenido
+                    </li>
+                    <li v-if="product.type === 'course'">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        Actualizaciones gratuitas
+                    </li>
+                    <li v-if="product.type === 'ebook'">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        Descarga inmediata en PDF
+                    </li>
+                    <li v-if="product.certificate">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        Certificado de finalización
+                    </li>
+                    <li>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        Acceso desde cualquier dispositivo
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Final CTA if not coming soon -->
+            <div v-if="!is_coming_soon && !show_waitlist_banner" class="pp-final-cta">
+                <div class="pp-final-cta__content">
+                    <h3>¿Lista/o para empezar?</h3>
+                    <p>Accede ahora y transforma tu bienestar.</p>
+                </div>
+                <div class="pp-final-cta__actions">
+                    <span class="pp-final-cta__price">{{ formatted_price }}</span>
+                    <button @click="handle_purchase" class="pp-btn pp-btn--gold pp-btn--lg">{{ cta_text }}</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Popup waitlist -->
+        <Teleport to="body">
+            <div v-if="show_waitlist_popup" class="waitlist-overlay" @click.self="show_waitlist_popup = false">
+                <div class="waitlist-popup">
+                    <button class="waitlist-popup__close" @click="show_waitlist_popup = false">✕</button>
+                    <h3>Lista de espera</h3>
+                    <p>Te avisaremos en cuanto esté disponible para la inscripción.</p>
+                    <input v-model="waitlist_email" type="email" placeholder="tu@correo.com"
+                        class="waitlist-popup__input" @keyup.enter="submit_waitlist" autofocus />
+                    <p v-if="waitlist_error" class="waitlist-popup__error">{{ waitlist_error }}</p>
+                    <button class="action-btn" @click="submit_waitlist" :disabled="waitlist_loading">
+                        {{ waitlist_loading ? '...' : 'Apuntarme' }}
+                    </button>
+                </div>
+            </div>
+        </Teleport>
+
+        <!-- CTA fijo móvil -->
         <div v-if="!is_coming_soon" class="cta-mobile">
             <div class="cta-mobile__price">{{ formatted_price }}</div>
-            <button @click="handle_purchase" class="action-btn cta-mobile__button">
-                {{ cta_text }}
-            </button>
+            <button @click="handle_purchase" class="pp-btn pp-btn--gold cta-mobile__button">{{ cta_text }}</button>
         </div>
     </div>
 </template>
@@ -292,282 +288,409 @@ const handle_purchase = () => {
 
 <style scoped lang="scss">
 .product-public {
-    max-width: $max-width;
-    margin: 0 auto;
-    padding: $space-10 20px;
-    padding-bottom: 100px; // Espacio para CTA móvil
-
-    @media (max-width: $bp-md) {
-        padding: 90px $space-4 100px; // 90px para limpiar el header fijo
-    }
+    background: var(--color-bg);
+    min-height: 100vh;
+    padding-bottom: 80px;
 }
 
-.product-hero {
-    display: grid;
-    grid-template-columns: 280px 1fr;
-    gap: 48px;
-    margin-bottom: 60px;
-    align-items: start;
+/* ── Hero ── */
+.pp-hero {
+    background: var(--blue-ink);
+    padding: 100px 28px 64px;
+    position: relative;
+    overflow: hidden;
 
-    @media (max-width: 968px) {
-        grid-template-columns: 1fr;
-        gap: 24px;
+    &__deco {
+        position: absolute;
+        top: -200px; left: 50%;
+        transform: translateX(-50%);
+        width: 800px; height: 800px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(245,197,24,0.07), transparent 65%);
+        pointer-events: none;
     }
 
-    &__image {
+    &__inner {
+        position: relative;
+        z-index: 1;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    &__layout {
+        display: grid;
+        grid-template-columns: 220px 1fr;
+        gap: 48px;
+        align-items: start;
+
+        @media (max-width: $bp-md) {
+            grid-template-columns: 1fr;
+            gap: 28px;
+        }
+    }
+
+    &__cover {
         border-radius: $radius-lg;
         overflow: hidden;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-        max-width: 280px;
-
-        @media (max-width: 968px) {
-            max-width: 200px;
-            margin: 0 auto;
-        }
+        box-shadow: 0 16px 48px rgba(0,0,0,0.35);
+        flex-shrink: 0;
 
         img {
             width: 100%;
             height: auto;
             display: block;
         }
+
+        @media (max-width: $bp-md) {
+            max-width: 180px;
+        }
     }
 
     &__content {
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        gap: 16px;
+        padding-top: 8px;
+    }
+
+    &__chip {
+        display: inline-block;
+        align-self: flex-start;
+        font-size: 11px;
+        font-weight: $fw-bold;
+        font-family: var(--font-body);
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: var(--gold-light);
+        background: rgba(245,197,24,0.12);
+        border: 1px solid rgba(245,197,24,0.25);
+        padding: 5px 14px;
+        border-radius: $radius-full;
+    }
+
+    &__title {
+        font-family: var(--font-title);
+        font-size: clamp(30px, 5vw, 52px);
+        font-weight: 700;
+        color: white;
+        margin: 0;
+        line-height: 1.15;
+    }
+
+    &__meta {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    &__meta-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        color: rgba(255,255,255,0.55);
+        font-family: var(--font-body);
     }
 }
 
-.product-badge {
-    display: inline-block;
-    padding: 6px $space-4;
-    border-radius: $radius-full;
-    font-size: $text-xs;
-    font-weight: $fw-bold;
-    text-transform: uppercase;
-    background: var(--color-bg);
-    color: var(--color-primary);
-    margin-bottom: $space-4;
+/* ── Price & CTA elements ── */
+.pp-price {
+    font-family: var(--font-title);
+    font-size: 36px;
+    font-weight: 700;
+    color: white;
 }
 
-.product-title {
-    font-size: 42px;
-    font-weight: $fw-extrabold;
-    line-height: 1.2;
-    margin: 0 0 $space-4;
-    color: var(--color-text-heading);
-
-    @media (max-width: $bp-md) {
-        font-size: $text-4xl;
-    }
-}
-
-.product-description {
-    font-size: $text-lg;
-    line-height: 1.6;
-    color: var(--color-text-muted);
-    margin: 0 0 $space-6;
-}
-
-.product-meta {
-    display: flex;
-    gap: $space-5;
-    margin-bottom: $space-8;
-    flex-wrap: wrap;
-
-    .meta-item {
-        font-size: $text-sm;
-        color: var(--color-text-muted);
-    }
-}
-
-.product-cta {
+.pp-price-row {
     display: flex;
     align-items: center;
-    gap: $space-5;
-
-    @media (max-width: 568px) {
-        flex-direction: column;
-        align-items: stretch;
-    }
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 8px;
 }
 
-.product-price {
-    .price-amount {
-        font-size: $text-4xl;
-        font-weight: $fw-extrabold;
-        color: var(--color-text-heading);
-    }
-}
+.pp-price-block { display: flex; flex-direction: column; gap: 8px; }
 
-
-.product-coming-soon {
-    font-size: $text-base;
-    font-weight: $fw-semibold;
-    color: var(--color-text-muted);
-    margin: 0 0 $space-4;
-}
-
-.price-tag {
+.pp-presale-tag {
     display: inline-block;
-    font-size: $text-xs;
+    font-size: 11px;
     font-weight: $fw-bold;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    background: var(--color-secondary);
-    color: var(--color-bg-card);
-    padding: $space-1 $space-3;
-    border-radius: $radius-xs;
-    margin-bottom: $space-2;
+    letter-spacing: 0.08em;
+    background: var(--gold-grad);
+    color: white;
+    padding: 4px 12px;
+    border-radius: $radius-full;
+    align-self: flex-start;
+    font-family: var(--font-body);
 }
 
-.product-cta__logged-note {
-    font-size: $text-sm;
-    color: var(--color-text-muted);
-    font-style: italic;
-}
+.pp-coming {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 
-.product-curriculum {
-    margin-bottom: 60px;
-
-    h2 {
-        font-size: 28px;
+    &__badge {
+        display: inline-block;
+        font-size: 12px;
         font-weight: $fw-bold;
-        margin: 0 0 $space-6;
-        color: var(--color-text-heading);
+        font-family: var(--font-body);
+        color: rgba(255,255,255,0.6);
+        background: rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.2);
+        padding: 5px 14px;
+        border-radius: $radius-full;
+        align-self: flex-start;
+    }
+
+    &__note {
+        font-size: 13px;
+        color: rgba(255,255,255,0.5);
+        font-style: italic;
+        font-family: var(--font-body);
     }
 }
 
+/* Banners */
+.pp-banner {
+    border-radius: $radius-lg;
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 4px;
+
+    &--success {
+        background: rgba(16,185,129,0.12);
+        border: 1px solid rgba(16,185,129,0.3);
+    }
+
+    &--wait {
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    &__title {
+        font-size: 16px;
+        font-weight: $fw-bold;
+        color: white;
+        font-family: var(--font-body);
+        margin: 0;
+    }
+
+    &__sub {
+        font-size: 13px;
+        color: rgba(255,255,255,0.65);
+        font-family: var(--font-body);
+        margin: 0;
+        line-height: 1.6;
+    }
+}
+
+/* Buttons */
+.pp-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 13px 24px;
+    border-radius: $radius-full;
+    font-size: 14px;
+    font-weight: $fw-bold;
+    font-family: var(--font-body);
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    transition: transform 0.2s, opacity 0.2s, box-shadow 0.2s;
+
+    &--gold {
+        background: var(--gold-grad);
+        color: white;
+        box-shadow: var(--shadow-gold-new);
+        &:hover { transform: translateY(-2px); box-shadow: var(--shadow-gold-glow); }
+    }
+
+    &--outline {
+        background: transparent;
+        color: white;
+        border: 1.5px solid rgba(255,255,255,0.4);
+        &:hover { border-color: white; }
+    }
+
+    &--lg {
+        padding: 16px 36px;
+        font-size: 16px;
+    }
+}
+
+/* ── Body ── */
+.pp-body {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 48px 28px 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    @media (max-width: $bp-sm) { padding: 28px 16px 80px; }
+}
+
+/* Cards */
+.pp-card {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: var(--r-xl);
+    padding: 32px;
+    box-shadow: var(--shadow-md-new);
+
+    @media (max-width: $bp-sm) { padding: 20px 16px; }
+
+    &__title {
+        font-family: var(--font-title);
+        font-size: 20px;
+        color: var(--blue-ink);
+        margin: 0 0 20px;
+    }
+
+    &--features { border-top: 3px solid var(--gold); }
+}
+
+.pp-description {
+    font-size: 15px;
+    line-height: 1.75;
+    color: var(--color-text);
+    font-family: var(--font-body);
+
+    :deep(p) { margin: 0 0 12px; &:last-child { margin-bottom: 0; } }
+    :deep(ul), :deep(ol) { padding-left: 20px; margin: 8px 0; }
+    :deep(li) { margin-bottom: 6px; line-height: 1.6; }
+    :deep(strong) { color: var(--blue-ink); }
+}
+
+/* Curriculum */
 .curriculum-list {
     display: flex;
     flex-direction: column;
-    gap: $space-4;
+    gap: 10px;
 }
 
 .curriculum-item {
-    background: var(--color-bg-card);
+    background: var(--color-bg);
     border-radius: $radius-md;
-    border: 1px solid var(--color-border-light);
+    border: 1.5px solid var(--border);
     overflow: hidden;
-    transition: $transition-fast;
+    transition: border-color 0.2s;
 
-    &:hover { box-shadow: var(--shadow-sm); }
-
+    &:hover { border-color: rgba(30,86,160,0.3); }
     &--free { border-left: 3px solid var(--color-success); }
-
     &--open { border-color: var(--color-primary); }
 
     &__header {
         display: flex;
         align-items: center;
-        gap: $space-4;
-        padding: $space-4 $space-5;
+        gap: 14px;
+        padding: 14px 18px;
         cursor: pointer;
         user-select: none;
-
-        &:hover { background: var(--color-bg); }
     }
 
     &__right {
         display: flex;
         align-items: center;
-        gap: $space-3;
+        gap: 10px;
         flex-shrink: 0;
         margin-left: auto;
     }
 }
 
 .curriculum-number {
-    width: 32px;
-    height: 32px;
+    width: 30px; height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--color-border);
+    background: var(--blue-ink);
+    color: white;
     border-radius: $radius-full;
     font-weight: $fw-bold;
-    font-size: $text-sm;
+    font-size: 13px;
     flex-shrink: 0;
 }
 
 .curriculum-title {
     flex: 1;
-    font-size: $text-base;
+    font-size: 14px;
     font-weight: $fw-semibold;
     margin: 0;
-    color: var(--color-text);
+    color: var(--blue-ink);
+    font-family: var(--font-body);
 }
 
 .curriculum-badge {
-    font-size: $text-xs;
-    padding: $space-1 $space-3;
-    border-radius: $radius-xs;
-    background: var(--color-success);
-    color: var(--color-bg-card);
-    font-weight: $fw-semibold;
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: $radius-full;
+    background: rgba(16,185,129,0.12);
+    color: var(--color-success);
+    font-weight: $fw-bold;
+    font-family: var(--font-body);
 
     &--locked {
         background: transparent;
-        color: var(--color-text-muted);
-        font-size: $text-base;
+        color: var(--ink-muted);
         padding: 0;
     }
 }
 
 .curriculum-chevron {
-    color: var(--color-text-muted);
-    font-size: $text-sm;
-    transition: transform $transition-fast;
+    color: var(--ink-muted);
+    transition: transform 0.25s;
+    display: flex;
     &--open { transform: rotate(180deg); }
 }
 
 .curriculum-body {
-    padding: $space-4 $space-5 $space-5;
-    border-top: 1px solid var(--color-border-light);
+    padding: 14px 18px 18px;
+    border-top: 1px solid var(--border);
+    background: white;
     animation: fade-down 0.2s ease;
-    background: var(--color-bg);
 }
 
 .curriculum-notes {
-    font-size: $text-sm;
+    font-size: 13px;
     color: var(--color-text);
     line-height: 1.65;
-    margin-bottom: $space-3;
+    margin-bottom: 12px;
+    font-family: var(--font-body);
 
-    :deep(p) { margin: 0 0 $space-2; &:last-child { margin-bottom: 0; } }
-    :deep(ul), :deep(ol) { padding-left: $space-5; margin: $space-1 0; }
+    :deep(p) { margin: 0 0 8px; &:last-child { margin-bottom: 0; } }
 }
 
 .curriculum-material {
     display: flex;
     align-items: center;
-    gap: $space-2;
+    gap: 8px;
     flex-wrap: wrap;
-    margin-top: $space-3;
+    margin-top: 10px;
 
-    &__label {
-        font-size: $text-xs;
-        color: var(--color-text-muted);
-        font-weight: $fw-semibold;
-    }
+    &__label { font-size: 12px; color: var(--ink-muted); font-weight: $fw-semibold; font-family: var(--font-body); }
 
     &__tag {
-        font-size: $text-xs;
-        padding: $space-1 $space-2;
-        background: var(--color-bg-card);
-        border: 1px solid var(--color-border);
-        border-radius: $radius-xs;
-        color: var(--color-text);
+        font-size: 12px;
+        padding: 3px 10px;
+        background: var(--blue-wash);
+        border: 1px solid rgba(30,86,160,0.15);
+        border-radius: $radius-full;
+        color: var(--color-primary);
         font-weight: $fw-semibold;
+        font-family: var(--font-body);
     }
 }
 
 .curriculum-locked-msg {
-    font-size: $text-xs;
-    color: var(--color-text-muted);
-    margin: $space-3 0 0;
+    font-size: 12px;
+    color: var(--ink-muted);
+    margin: 10px 0 0;
     font-style: italic;
+    font-family: var(--font-body);
 }
 
 @keyframes fade-down {
@@ -575,207 +698,150 @@ const handle_purchase = () => {
     to   { opacity: 1; transform: translateY(0); }
 }
 
-.product-info {
-    h2 {
-        font-size: 28px;
-        font-weight: $fw-bold;
-        margin: 0 0 $space-6;
-        color: var(--color-text-heading);
-    }
-}
-
+/* Features */
 .features-list {
     list-style: none;
     padding: 0;
     margin: 0;
-    display: grid;
-    gap: $space-4;
-
-    li {
-        font-size: $text-base;
-        color: var(--color-text);
-        padding: $space-4 $space-5;
-        background: var(--color-bg);
-        border-radius: $radius-sm;
-    }
-}
-
-.cta-mobile {
-    display: none;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: var(--color-bg-card);
-    padding: $space-4 $space-5;
-    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
-    z-index: 150;
-    align-items: center;
-    gap: $space-4;
-
-    @media (max-width: $bp-md) {
-        display: flex;
-    }
-
-    &__price {
-        font-size: $text-2xl;
-        font-weight: $fw-extrabold;
-        color: var(--color-text-heading);
-    }
-
-    &__button {
-        flex: 1;
-    }
-}
-
-.product-cta__actions {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: $space-3;
-    margin-top: $space-4;
-}
-
-// ── Banner: en espera ─────────────────────────────────────────────────
-.waitlist-banner {
-    margin-top: $space-6;
-    background: var(--color-bg);
-    border: 1px solid var(--color-border);
-    border-left: 4px solid var(--color-primary);
-    border-radius: $radius-lg;
-    padding: $space-6;
     display: flex;
     flex-direction: column;
-    gap: $space-4;
+    gap: 12px;
 
-    &__header {
+    li {
         display: flex;
         align-items: center;
-        gap: $space-3;
-    }
-
-    &__icon {
-        font-size: $text-2xl;
-        line-height: 1;
-    }
-
-    &__title {
-        font-size: $text-lg;
-        font-weight: $fw-bold;
-        color: var(--color-text-heading);
-        margin: 0;
-    }
-
-    &__sub {
-        font-size: $text-sm;
-        color: var(--color-text-muted);
-        line-height: 1.6;
-        margin: 0;
-    }
-
-    &__tips {
-        background: var(--color-bg-card);
-        border-radius: $radius-md;
-        padding: $space-3 $space-4;
-    }
-
-    &__tip {
-        font-size: $text-sm;
+        gap: 12px;
+        font-size: 14px;
         color: var(--color-text);
-        margin: 0;
-        line-height: 1.5;
+        font-family: var(--font-body);
+        padding: 12px 16px;
+        background: var(--color-bg);
+        border-radius: $radius-md;
+
+        svg { color: var(--color-success); flex-shrink: 0; }
+    }
+}
+
+/* Final CTA */
+.pp-final-cta {
+    background: var(--blue-ink);
+    border-radius: var(--r-xl);
+    padding: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+
+    @media (max-width: $bp-sm) { padding: 24px 20px; }
+
+    &__content {
+        h3 {
+            font-family: var(--font-title);
+            font-size: 20px;
+            color: white;
+            margin: 0 0 6px;
+        }
+        p {
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+            font-family: var(--font-body);
+            margin: 0;
+        }
     }
 
     &__actions {
         display: flex;
         align-items: center;
-        gap: $space-3;
+        gap: 16px;
         flex-wrap: wrap;
+    }
+
+    &__price {
+        font-family: var(--font-title);
+        font-size: 28px;
+        font-weight: 700;
+        color: white;
     }
 }
 
-// ── Banner: ya disponible ─────────────────────────────────────────────
-.waitlist-available-banner {
-    margin-top: $space-6;
-    background: linear-gradient(135deg, rgba(34, 197, 94, 0.06) 0%, rgba(34, 197, 94, 0.02) 100%);
-    border: 1px solid rgba(34, 197, 94, 0.3);
-    border-radius: $radius-lg;
-    padding: $space-6;
-    display: flex;
-    flex-direction: column;
-    gap: $space-4;
+/* Mobile CTA bar */
+.cta-mobile {
+    display: none;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: white;
+    border-top: 1px solid var(--border);
+    padding: 12px 20px;
+    box-shadow: 0 -4px 16px rgba(0,0,0,0.1);
+    z-index: 150;
+    align-items: center;
+    gap: 16px;
 
-    &__icon {
-        font-size: $text-3xl;
-        line-height: 1;
+    @media (max-width: $bp-md) { display: flex; }
+
+    &__price {
+        font-family: var(--font-title);
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--blue-ink);
     }
 
-    &__body {
-        display: flex;
-        flex-direction: column;
-        gap: $space-1;
-    }
-
-    &__title {
-        font-size: $text-xl;
-        font-weight: $fw-bold;
-        color: var(--color-success);
-        margin: 0;
-    }
-
-    &__sub {
-        font-size: $text-sm;
-        color: var(--color-text-muted);
-        margin: 0;
-        line-height: 1.6;
-    }
-
-    &__cta {
-        display: flex;
-        align-items: center;
-        gap: $space-4;
-        flex-wrap: wrap;
-    }
+    &__button { flex: 1; }
 }
 
 /* Waitlist popup */
 .waitlist-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.45);
+    background: rgba(0,0,0,0.5);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 2000;
-    padding: $space-4;
+    padding: 20px;
 }
 
 .waitlist-popup {
-    background: var(--color-bg-card);
-    border-radius: $radius-lg;
-    padding: $space-8;
-    max-width: 380px;
+    background: white;
+    border-radius: var(--r-xl);
+    padding: 36px;
+    max-width: 400px;
     width: 100%;
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: $space-3;
-    box-shadow: var(--shadow-lg);
+    gap: 14px;
+    box-shadow: var(--shadow-md-new);
+
+    h3 {
+        font-family: var(--font-title);
+        font-size: 20px;
+        color: var(--blue-ink);
+        margin: 0;
+    }
+
+    p {
+        font-size: 14px;
+        color: var(--ink-muted);
+        margin: 0;
+        font-family: var(--font-body);
+        line-height: 1.6;
+    }
 
     &__close {
         position: absolute;
-        top: $space-3;
-        right: $space-3;
+        top: 16px; right: 16px;
         background: none;
         border: none;
-        font-size: $text-lg;
+        font-size: 18px;
         cursor: pointer;
-        color: var(--color-text-muted);
+        color: var(--ink-muted);
+        line-height: 1;
     }
 
-    &__input { width: 100%; max-width: 100%; }
-
-    &__error { color: var(--color-error); font-size: $text-xs; margin: 0; }
+    &__input { width: 100%; max-width: 100%; box-sizing: border-box; }
+    &__error { color: var(--color-error); font-size: 12px; margin: 0; font-family: var(--font-body); }
 
     .action-btn { width: 100%; max-width: 100%; }
 }

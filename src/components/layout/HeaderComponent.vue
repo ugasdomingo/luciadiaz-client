@@ -13,8 +13,8 @@ const menu_open = ref(false);
 const links = [
     { id: 'terapias', label: 'Terapias', path: '/terapias' },
     { id: 'tests', label: 'Tests', path: '/tests' },
-    { id: 'formaciones', label: 'Formaciones', path: '/productos' },
-    { id: 'blog', label: 'Blog', path: '/blog' }
+    { id: 'formaciones', label: 'Formaciones', path: '/formaciones' },
+    { id: 'tienda', label: 'Tienda', path: '/tienda' }
 ];
 
 const is_active = (path) =>
