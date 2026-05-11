@@ -22,7 +22,6 @@ const faqs = computed(() => {
 
 const is_paid_workshop = computed(() => props.course.type === 'paid_workshop')
 
-// --- Paid workshop computed ---
 const available_places = computed(() => {
     if (!is_paid_workshop.value || !props.formation) return null
     const enrolled = props.formation.users_enrolled?.length || 0
@@ -34,15 +33,14 @@ const is_full = computed(() => available_places.value === 0)
 const places_message = computed(() => {
     if (!is_paid_workshop.value) return null
     const places = available_places.value
-    if (places === 0) return '✋ Plazas agotadas'
-    if (places <= 3) return `🔥 ¡ÚLTIMAS ${places} PLAZAS!`
-    if (places <= 7) return `⚠️ Solo quedan ${places} plazas disponibles`
-    return '✓ Plazas disponibles'
+    if (places === 0) return 'Plazas agotadas'
+    if (places <= 3) return `¡Últimas ${places} plazas!`
+    if (places <= 7) return `Solo quedan ${places} plazas`
+    return 'Plazas disponibles'
 })
 
 const whatsapp_link = computed(() => util_store.whatsapp_link)
 
-// --- Date formatting ---
 const formatted_date = computed(() => {
     if (!props.formation?.start_date) return 'Fecha por confirmar'
     const date = new Date(props.formation.start_date)
@@ -64,7 +62,6 @@ const days_until = computed(() => {
     return `Faltan ${diff} días`
 })
 
-// Replace [FECHA] placeholder in texts
 const replace_date = (text) => {
     if (!text) return ''
     return text.replace(/\[FECHA\]/g, formatted_date.value)
@@ -78,288 +75,304 @@ const inscription_route = computed(() => `/inscripcion/${props.formation?.slug |
 </script>
 
 <template>
-    <div class="course-landing">
+    <div class="cl">
 
-        <!-- ========== HERO ========== -->
-        <section class="hero">
-            <div class="hero__container">
-                <h1 class="hero__headline">{{ course.hero.headline }}</h1>
-                <p class="hero__subheadline">{{ course.hero.subheadline }}</p>
+        <!-- ── HERO ── -->
+        <section class="cl-hero">
+            <div class="cl-hero__deco" />
+            <div class="cl-hero__inner">
+                <span class="cl-chip">
+                    {{ is_paid_workshop ? 'Taller Presencial' : 'Curso Online Gratuito' }}
+                </span>
+                <h1 class="cl-hero__headline">{{ course.hero.headline }}</h1>
+                <p class="cl-hero__sub">{{ course.hero.subheadline }}</p>
 
                 <!-- Free course CTA -->
-                <div v-if="!is_paid_workshop" class="hero__cta">
-                    <RouterLink :to="inscription_route" class="cta-btn cta-btn--primary">
+                <div v-if="!is_paid_workshop" class="cl-hero__cta">
+                    <RouterLink :to="inscription_route" class="cl-btn cl-btn--gold cl-btn--lg">
                         {{ course.hero.cta_primary_label }}
                     </RouterLink>
                 </div>
 
                 <!-- Paid workshop CTAs -->
                 <template v-else>
-                    <div v-if="!is_full" class="hero__ctas">
-                        <a :href="course.paypal_reserva_url" class="cta-btn cta-btn--primary" target="_blank">
+                    <div v-if="!is_full" class="cl-hero__cta cl-hero__cta--row">
+                        <a :href="course.paypal_reserva_url" class="cl-btn cl-btn--gold cl-btn--lg" target="_blank">
                             {{ course.hero.cta_primary_label }}
                         </a>
-                        <a :href="formation?.paypal_button" class="cta-btn cta-btn--secondary" target="_blank">
-                            {{ course.hero.cta_secondary_label }} ({{ formation?.price }}$)
+                        <a :href="formation?.paypal_button" class="cl-btn cl-btn--outline cl-btn--lg" target="_blank">
+                            {{ course.hero.cta_secondary_label }} ({{ formation?.price }}€)
                         </a>
                     </div>
-                    <div v-else class="hero__full">
-                        <p class="full-message">✋ Plazas agotadas para esta fecha</p>
-                        <a :href="whatsapp_link" class="cta-btn cta-btn--whatsapp" target="_blank">
-                            Contactar por WhatsApp para próximas fechas
+                    <div v-else class="cl-hero__cta">
+                        <p class="cl-hero__full-msg">Plazas agotadas para esta fecha</p>
+                        <a :href="whatsapp_link" class="cl-btn cl-btn--whatsapp cl-btn--lg" target="_blank">
+                            Contactar para próximas fechas
                         </a>
                     </div>
                 </template>
 
-                <!-- Info quick strip -->
-                <div class="hero__info">
+                <!-- Info strip -->
+                <div class="cl-hero__strip">
                     <template v-if="!is_paid_workshop">
-                        <span v-for="(item, i) in course.hero.info_items" :key="i">
+                        <span v-for="(item, i) in course.hero.info_items" :key="i" class="cl-hero__strip-item">
                             {{ replace_date(item) }}
                         </span>
                     </template>
                     <template v-else>
-                        <span>{{ places_message }}</span>
-                        <span>📍 {{ course.hero.location }}</span>
-                        <span>📅 {{ formatted_date }} ({{ days_until }})</span>
+                        <span class="cl-hero__strip-item">{{ places_message }}</span>
+                        <span class="cl-hero__strip-item">{{ course.hero.location }}</span>
+                        <span class="cl-hero__strip-item">{{ formatted_date }} · {{ days_until }}</span>
                     </template>
                 </div>
             </div>
         </section>
 
-        <!-- ========== MIRROR ========== -->
-        <section class="mirror">
-            <div class="mirror__container">
-                <h2 class="mirror__title">{{ course.mirror.title }}</h2>
+        <!-- ── MIRROR ── -->
+        <section class="cl-mirror">
+            <div class="cl-container">
+                <h2 class="cl-section-title">{{ course.mirror.title }}</h2>
 
-                <!-- Apego: categorized items -->
                 <template v-if="course.mirror.categories">
-                    <div class="mirror__category" v-for="(cat, ci) in course.mirror.categories" :key="ci">
-                        <h3 class="mirror__category-title">{{ cat.title }}</h3>
-                        <div class="mirror__items">
-                            <div class="check-item" v-for="(item, ii) in cat.items" :key="ii">
-                                <span class="check-icon">✓</span>
+                    <div v-for="(cat, ci) in course.mirror.categories" :key="ci" class="cl-mirror__cat">
+                        <h3 class="cl-mirror__cat-title">{{ cat.title }}</h3>
+                        <div class="cl-check-grid">
+                            <div v-for="(item, ii) in cat.items" :key="ii" class="cl-check-item">
+                                <span class="cl-check-icon">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                                        <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </span>
                                 <p>{{ item }}</p>
                             </div>
                         </div>
                     </div>
                 </template>
 
-                <!-- Despierta: flat items -->
                 <template v-else-if="course.mirror.items">
-                    <div class="mirror__checks">
-                        <div class="check-item" v-for="(item, ii) in course.mirror.items" :key="ii">
-                            <span class="check-icon">✓</span>
+                    <div class="cl-check-grid cl-check-grid--flat">
+                        <div v-for="(item, ii) in course.mirror.items" :key="ii" class="cl-check-item">
+                            <span class="cl-check-icon">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                                    <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </span>
                             <p>{{ item }}</p>
                         </div>
                     </div>
                 </template>
 
-                <p class="mirror__conclusion" v-html="course.mirror.conclusion" />
+                <p class="cl-mirror__conclusion" v-html="course.mirror.conclusion" />
             </div>
         </section>
 
-        <!-- ========== BENEFITS (workshop only) ========== -->
-        <section v-if="is_paid_workshop && course.benefits" class="benefits">
-            <div class="benefits__container">
-                <h2 class="benefits__title">{{ course.benefits.title }}</h2>
-                <div class="benefits__grid">
-                    <div class="benefit-card" v-for="(benefit, bi) in course.benefits.items" :key="bi">
-                        <span class="benefit-number">{{ bi + 1 }}</span>
-                        <p class="benefit-text">{{ benefit }}</p>
+        <!-- ── BENEFITS (workshop only) ── -->
+        <section v-if="is_paid_workshop && course.benefits" class="cl-benefits">
+            <div class="cl-container">
+                <h2 class="cl-section-title cl-section-title--white">{{ course.benefits.title }}</h2>
+                <div class="cl-benefits__grid">
+                    <div v-for="(benefit, bi) in course.benefits.items" :key="bi" class="cl-benefit-card">
+                        <span class="cl-benefit-num">{{ bi + 1 }}</span>
+                        <p>{{ benefit }}</p>
                     </div>
                 </div>
-                <p class="benefits__footer">{{ course.benefits.footer }}</p>
+                <p v-if="course.benefits.footer" class="cl-benefits__footer">{{ course.benefits.footer }}</p>
             </div>
         </section>
 
-        <!-- ========== CONTENT BLOCKS ========== -->
-        <section class="content">
-            <div class="content__container">
-                <h2 class="content__title">{{ course.content.title }}</h2>
-                <div class="content__blocks">
-                    <div class="content-block" v-for="(block, bi) in course.content.blocks" :key="bi">
-                        <div class="content-block__header">
-                            <span class="content-block__number">{{ bi + 1 }}</span>
-                            <h3 class="content-block__title">{{ block.title }}</h3>
+        <!-- ── CONTENT BLOCKS ── -->
+        <section class="cl-content">
+            <div class="cl-container cl-container--narrow">
+                <h2 class="cl-section-title">{{ course.content.title }}</h2>
+                <div class="cl-blocks">
+                    <div v-for="(block, bi) in course.content.blocks" :key="bi" class="cl-block">
+                        <div class="cl-block__head">
+                            <span class="cl-block__num">{{ bi + 1 }}</span>
+                            <h3 class="cl-block__title">{{ block.title }}</h3>
                         </div>
-                        <p class="content-block__description">{{ block.description }}</p>
-                        <div v-if="block.patterns" class="content-block__patterns">
-                            <div class="pattern-item" v-for="(pattern, pi) in block.patterns" :key="pi">
+                        <p class="cl-block__desc">{{ block.description }}</p>
+                        <div v-if="block.patterns" class="cl-patterns">
+                            <div v-for="(pattern, pi) in block.patterns" :key="pi" class="cl-pattern">
                                 <strong>{{ pattern.title }}</strong>
                                 <p>{{ pattern.description }}</p>
                             </div>
                         </div>
                     </div>
                 </div>
-                <p v-if="course.content.footer" class="content__footer">{{ course.content.footer }}</p>
+                <p v-if="course.content.footer" class="cl-content__footer">{{ course.content.footer }}</p>
             </div>
         </section>
 
-        <!-- ========== INCLUDES (free course only) ========== -->
-        <section v-if="!is_paid_workshop && course.includes" class="includes">
-            <div class="includes__container">
-                <h2 class="includes__title">{{ course.includes.title }}</h2>
-                <div class="includes__grid">
-                    <div class="include-card" v-for="(item, ii) in course.includes.items" :key="ii">
-                        <span class="include-icon">{{ item.icon }}</span>
+        <!-- ── INCLUDES (free course only) ── -->
+        <section v-if="!is_paid_workshop && course.includes" class="cl-includes">
+            <div class="cl-container">
+                <h2 class="cl-section-title cl-section-title--white">{{ course.includes.title }}</h2>
+                <div class="cl-includes__grid">
+                    <div v-for="(item, ii) in course.includes.items" :key="ii" class="cl-include-card">
+                        <span class="cl-include-icon">{{ item.icon }}</span>
                         <h4>{{ replace_date(item.title) }}</h4>
                         <p>{{ replace_date(item.description) }}</p>
                     </div>
                 </div>
-                <div class="includes__cta">
-                    <RouterLink :to="inscription_route" class="cta-btn cta-btn--secondary">
+                <div class="cl-includes__cta">
+                    <RouterLink :to="inscription_route" class="cl-btn cl-btn--outline cl-btn--lg">
                         {{ course.includes.cta_label }}
                     </RouterLink>
                 </div>
             </div>
         </section>
 
-        <!-- ========== TARGET (free course only) ========== -->
-        <section v-if="!is_paid_workshop && course.target" class="target">
-            <div class="target__container">
-                <div class="target__column">
-                    <h3 class="target__subtitle">{{ course.target.yes_title }}</h3>
-                    <div class="target__list">
-                        <div class="target-item target-item--yes" v-for="(item, ti) in course.target.yes" :key="ti">
-                            <span class="target-icon">✓</span>
-                            <p>{{ item }}</p>
+        <!-- ── TARGET (free course only) ── -->
+        <section v-if="!is_paid_workshop && course.target" class="cl-target">
+            <div class="cl-container">
+                <div class="cl-target__grid">
+                    <div class="cl-target__col">
+                        <h3 class="cl-target__title cl-target__title--yes">{{ course.target.yes_title }}</h3>
+                        <div class="cl-target__list">
+                            <div v-for="(item, ti) in course.target.yes" :key="ti" class="cl-target-item cl-target-item--yes">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                    <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <p>{{ item }}</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="target__column">
-                    <h3 class="target__subtitle">{{ course.target.no_title }}</h3>
-                    <div class="target__list">
-                        <div class="target-item target-item--no" v-for="(item, ti) in course.target.no" :key="ti">
-                            <span class="target-icon">✗</span>
-                            <p>{{ item }}</p>
+                    <div class="cl-target__col">
+                        <h3 class="cl-target__title cl-target__title--no">{{ course.target.no_title }}</h3>
+                        <div class="cl-target__list">
+                            <div v-for="(item, ti) in course.target.no" :key="ti" class="cl-target-item cl-target-item--no">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                    <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                                <p>{{ item }}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- ========== FACILITATOR ========== -->
-        <section class="facilitator">
-            <div class="facilitator__container">
-                <h2 class="facilitator__title">Quién facilita</h2>
-                <div class="facilitator__content">
-                    <div class="facilitator__photo">
+        <!-- ── FACILITATOR ── -->
+        <section class="cl-facilitator">
+            <div class="cl-container">
+                <h2 class="cl-section-title">Quién facilita</h2>
+                <div class="cl-facilitator__inner">
+                    <div class="cl-facilitator__photo">
                         <img :src="facilitator.photo" :alt="facilitator.name" />
                     </div>
-                    <div class="facilitator__info">
-                        <h3 class="facilitator__name">{{ facilitator.name }}</h3>
-                        <p class="facilitator__title-role">{{ facilitator.title }}</p>
-                        <p class="facilitator__bio" v-html="facilitator.bio.replace(/\n/g, '<br>')" />
-                        <a :href="facilitator.instagram" class="facilitator__instagram" target="_blank" rel="noopener">
-                            📸 {{ facilitator.instagram_handle }}
+                    <div class="cl-facilitator__info">
+                        <p class="cl-facilitator__role">{{ facilitator.title }}</p>
+                        <h3 class="cl-facilitator__name">{{ facilitator.name }}</h3>
+                        <p class="cl-facilitator__bio" v-html="facilitator.bio.replace(/\n/g, '<br>')" />
+                        <a :href="facilitator.instagram" class="cl-facilitator__ig" target="_blank" rel="noopener">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                <rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="1.5"/>
+                                <circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="1.5"/>
+                                <circle cx="17.5" cy="6.5" r="1" fill="currentColor"/>
+                            </svg>
+                            {{ facilitator.instagram_handle }}
                         </a>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- ========== PROCESS (free course only) ========== -->
-        <section v-if="!is_paid_workshop && course.process" class="process">
-            <div class="process__container">
-                <h2 class="process__title">{{ course.process.title }}</h2>
-                <div class="process__steps">
-                    <div class="step" v-for="(step, si) in course.process.steps" :key="si">
-                        <span class="step__number">{{ si + 1 }}</span>
-                        <h4 class="step__title">{{ step.title }}</h4>
-                        <p class="step__description">{{ replace_date(step.description) }}</p>
+        <!-- ── PROCESS (free course only) ── -->
+        <section v-if="!is_paid_workshop && course.process" class="cl-process">
+            <div class="cl-container">
+                <h2 class="cl-section-title cl-section-title--white">{{ course.process.title }}</h2>
+                <div class="cl-process__steps">
+                    <div v-for="(step, si) in course.process.steps" :key="si" class="cl-step">
+                        <span class="cl-step__num">{{ si + 1 }}</span>
+                        <h4 class="cl-step__title">{{ step.title }}</h4>
+                        <p class="cl-step__desc">{{ replace_date(step.description) }}</p>
                     </div>
                 </div>
-                <div class="process__cta">
-                    <RouterLink :to="inscription_route" class="cta-btn cta-btn--primary cta-btn--large">
+                <div class="cl-process__cta">
+                    <RouterLink :to="inscription_route" class="cl-btn cl-btn--gold cl-btn--lg">
                         Inscribirme ahora
                     </RouterLink>
                 </div>
             </div>
         </section>
 
-        <!-- ========== LOGISTICS (workshop only) ========== -->
-        <section v-if="is_paid_workshop && course.logistics" class="logistics">
-            <div class="logistics__container">
-                <h2 class="logistics__title">{{ course.logistics.title }}</h2>
-                <div class="logistics__grid">
-                    <div class="logistics-card">
-                        <span class="logistics-icon">📅</span>
+        <!-- ── LOGISTICS (workshop only) ── -->
+        <section v-if="is_paid_workshop && course.logistics" class="cl-logistics">
+            <div class="cl-container cl-container--narrow">
+                <h2 class="cl-section-title">{{ course.logistics.title }}</h2>
+                <div class="cl-logistics__grid">
+                    <div class="cl-logistics-card">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M16 2v4M8 2v4M3 10h18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
                         <h4>Fecha</h4>
                         <p>{{ formatted_date }}</p>
                     </div>
-                    <div class="logistics-card">
-                        <span class="logistics-icon">🕐</span>
+                    <div class="cl-logistics-card">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/><path d="M12 6v6l4 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
                         <h4>Horario</h4>
                         <p>{{ formation?.duration }}</p>
                     </div>
-                    <div class="logistics-card">
-                        <span class="logistics-icon">📍</span>
+                    <div class="cl-logistics-card">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="1.5"/></svg>
                         <h4>Lugar</h4>
                         <p>{{ course.logistics.location }}</p>
                     </div>
-                    <div class="logistics-card">
-                        <span class="logistics-icon">👥</span>
+                    <div class="cl-logistics-card">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
                         <h4>Cupo</h4>
                         <p>{{ course.logistics.cupo }}</p>
                     </div>
                 </div>
 
-                <!-- Pricing block -->
-                <div class="pricing">
-                    <h3 class="pricing__title">Inversión</h3>
-                    <div class="pricing__content">
-                        <div class="pricing__options">
-                            <div class="pricing-option">
-                                <span class="pricing-label">Reserva tu lugar</span>
-                                <span class="pricing-value pricing-value--accent">30$</span>
-                                <span class="pricing-note">Pagas el resto el día del curso</span>
-                            </div>
-                            <div class="pricing-separator">o</div>
-                            <div class="pricing-option">
-                                <span class="pricing-label">Pago completo</span>
-                                <span class="pricing-value">{{ formation?.price }}$</span>
-                                <span class="pricing-note">Aseguras tu plaza ahora</span>
-                            </div>
+                <div class="cl-pricing">
+                    <h3 class="cl-pricing__title">Inversión</h3>
+                    <div class="cl-pricing__options">
+                        <div class="cl-pricing-opt">
+                            <span class="cl-pricing-opt__label">Reserva tu lugar</span>
+                            <span class="cl-pricing-opt__price">30€</span>
+                            <span class="cl-pricing-opt__note">Pagas el resto el día del curso</span>
+                        </div>
+                        <div class="cl-pricing-sep">o</div>
+                        <div class="cl-pricing-opt">
+                            <span class="cl-pricing-opt__label">Pago completo</span>
+                            <span class="cl-pricing-opt__price">{{ formation?.price }}€</span>
+                            <span class="cl-pricing-opt__note">Aseguras tu plaza ahora</span>
                         </div>
                     </div>
-
-                    <div v-if="!is_full" class="pricing__ctas">
-                        <a :href="course.paypal_reserva_url" class="cta-btn cta-btn--primary cta-btn--large" target="_blank">
-                            Reservar con 30$
-                        </a>
-                        <a :href="formation?.paypal_button" class="cta-btn cta-btn--secondary cta-btn--large" target="_blank">
-                            Pagar completo ({{ formation?.price }}$)
-                        </a>
+                    <div v-if="!is_full" class="cl-pricing__ctas">
+                        <a :href="course.paypal_reserva_url" class="cl-btn cl-btn--gold cl-btn--lg" target="_blank">Reservar con 30€</a>
+                        <a :href="formation?.paypal_button" class="cl-btn cl-btn--outline-dark cl-btn--lg" target="_blank">Pagar completo</a>
                     </div>
-                    <div v-else class="pricing__full">
-                        <p class="full-message">✋ Plazas agotadas para esta fecha</p>
-                        <a :href="whatsapp_link" class="cta-btn cta-btn--whatsapp cta-btn--large" target="_blank">
-                            Contactar para próximas fechas
-                        </a>
+                    <div v-else class="cl-pricing__full">
+                        <p>Plazas agotadas para esta fecha</p>
+                        <a :href="whatsapp_link" class="cl-btn cl-btn--whatsapp cl-btn--lg" target="_blank">Contactar para próximas fechas</a>
                     </div>
-
-                    <div class="pricing__security">
-                        <span>🔒 Pago seguro vía PayPal</span>
-                        <span>{{ places_message }}</span>
-                    </div>
+                    <p class="cl-pricing__security">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M7 11V7a5 5 0 0110 0v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                        Pago seguro · {{ places_message }}
+                    </p>
                 </div>
             </div>
         </section>
 
-        <!-- ========== FAQ ========== -->
-        <section class="faq">
-            <div class="faq__container">
-                <h2 class="faq__title">Preguntas frecuentes</h2>
-                <div class="faq__list">
-                    <div class="faq-item" v-for="(item, fi) in faqs" :key="fi"
-                        :class="{ 'faq-item--open': open_faq === fi }" @click="toggleFaq(fi)">
-                        <div class="faq-item__question">
+        <!-- ── FAQ ── -->
+        <section v-if="faqs.length" class="cl-faq">
+            <div class="cl-container cl-container--narrow">
+                <h2 class="cl-section-title">Preguntas frecuentes</h2>
+                <div class="cl-faq__list">
+                    <div v-for="(item, fi) in faqs" :key="fi"
+                        class="cl-faq-item"
+                        :class="{ 'cl-faq-item--open': open_faq === fi }"
+                        @click="toggleFaq(fi)">
+                        <div class="cl-faq-item__q">
                             <h4>{{ item.question }}</h4>
-                            <span class="faq-item__icon">{{ open_faq === fi ? '−' : '+' }}</span>
+                            <span class="cl-faq-item__chevron" :class="{ 'cl-faq-item__chevron--open': open_faq === fi }">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                    <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </span>
                         </div>
-                        <transition name="faq-slide">
-                            <div v-if="open_faq === fi" class="faq-item__answer">
+                        <transition name="cl-faq-slide">
+                            <div v-if="open_faq === fi" class="cl-faq-item__a">
                                 <p v-html="replace_date(item.answer)" />
                             </div>
                         </transition>
@@ -368,32 +381,29 @@ const inscription_route = computed(() => `/inscripcion/${props.formation?.slug |
             </div>
         </section>
 
-        <!-- ========== FINAL CTA ========== -->
-        <section class="final-cta">
-            <div class="final-cta__container">
-                <h2 class="final-cta__title">{{ course.final_cta.title }}</h2>
-                <p v-if="course.final_cta.text" class="final-cta__text" v-html="course.final_cta.text" />
-                <p class="final-cta__examples">
-                    <span v-for="(line, li) in course.final_cta.examples.split('\n')" :key="li">
-                        {{ line }}<br />
-                    </span>
-                </p>
-                <p class="final-cta__urgency">{{ course.final_cta.urgency }}</p>
-
-                <div v-if="!is_paid_workshop" class="final-cta__buttons">
-                    <RouterLink :to="inscription_route" class="cta-btn cta-btn--primary cta-btn--xl">
+        <!-- ── FINAL CTA ── -->
+        <section class="cl-final">
+            <div class="cl-final__deco" />
+            <div class="cl-container cl-container--narrow cl-final__inner">
+                <h2 class="cl-final__title">{{ course.final_cta.title }}</h2>
+                <p v-if="course.final_cta.text" class="cl-final__text" v-html="course.final_cta.text" />
+                <ul class="cl-final__examples">
+                    <li v-for="(line, li) in course.final_cta.examples.split('\n').filter(l => l.trim())" :key="li">
+                        {{ line }}
+                    </li>
+                </ul>
+                <p class="cl-final__urgency">{{ course.final_cta.urgency }}</p>
+                <div v-if="!is_paid_workshop" class="cl-final__cta">
+                    <RouterLink :to="inscription_route" class="cl-btn cl-btn--gold cl-btn--xl">
                         {{ course.final_cta.cta_label }}
                     </RouterLink>
                 </div>
-                <div v-else-if="!is_full" class="final-cta__buttons">
-                    <a :href="formation?.paypal_button" class="cta-btn cta-btn--primary cta-btn--xl" target="_blank">
+                <div v-else-if="!is_full" class="cl-final__cta">
+                    <a :href="formation?.paypal_button" class="cl-btn cl-btn--gold cl-btn--xl" target="_blank">
                         {{ course.final_cta.cta_label }}
                     </a>
                 </div>
-
-                <p v-if="course.final_cta.note" class="final-cta__note">
-                    {{ replace_date(course.final_cta.note) }}
-                </p>
+                <p v-if="course.final_cta.note" class="cl-final__note">{{ replace_date(course.final_cta.note) }}</p>
             </div>
         </section>
 
@@ -401,1109 +411,989 @@ const inscription_route = computed(() => `/inscripcion/${props.formation?.slug |
 </template>
 
 <style scoped lang="scss">
-$gradient-hero: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
-$gradient-cta: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-secondary-dark) 100%);
-
-.course-landing {
+.cl {
     width: 100%;
-    margin: 0;
-    padding: 0;
-    background: var(--color-white);
+    background: var(--color-bg);
 }
 
-// ========== HERO ==========
-.hero {
-    width: 100%;
-    min-height: 90vh;
-    background: $gradient-hero;
-    display: flex;
+/* ── Shared layout ── */
+.cl-container {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 0 28px;
+
+    &--narrow { max-width: 860px; }
+
+    @media (max-width: $bp-sm) { padding: 0 16px; }
+}
+
+.cl-chip {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: $fw-bold;
+    font-family: var(--font-body);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--gold-light);
+    background: rgba(245,197,24,0.12);
+    border: 1px solid rgba(245,197,24,0.25);
+    padding: 5px 14px;
+    border-radius: $radius-full;
+    margin-bottom: 20px;
+}
+
+.cl-section-title {
+    font-family: var(--font-title);
+    font-size: clamp(26px, 4vw, 38px);
+    font-weight: 700;
+    color: var(--blue-ink);
+    text-align: center;
+    margin: 0 0 40px;
+    line-height: 1.2;
+
+    &--white { color: white; }
+}
+
+/* ── Buttons ── */
+.cl-btn {
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: $space-32 $space-8 $space-16;
-    position: relative;
-
-    &::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background:
-            radial-gradient(circle at 20% 50%, rgba(30, 86, 160, 0.15) 0%, transparent 50%),
-            radial-gradient(circle at 80% 80%, rgba(46, 122, 212, 0.15) 0%, transparent 50%);
-        pointer-events: none;
-    }
-
-    &__container {
-        max-width: 900px;
-        width: 100%;
-        text-align: center;
-        position: relative;
-        z-index: 1;
-    }
-
-    &__headline {
-        font-size: 3.2rem;
-        font-family: $font-title;
-        color: var(--color-white);
-        line-height: 1.2;
-        margin: 0 0 $space-6;
-        font-weight: $fw-semibold;
-    }
-
-    &__subheadline {
-        font-size: 1.3rem;
-        font-family: $font-body;
-        color: rgba(255, 255, 255, 0.95);
-        line-height: 1.6;
-        margin: 0 0 $space-12;
-        font-weight: $fw-light;
-    }
-
-    &__cta {
-        margin-bottom: $space-8;
-    }
-
-    &__ctas {
-        display: flex;
-        gap: $space-6;
-        justify-content: center;
-        flex-wrap: wrap;
-        margin-bottom: $space-8;
-    }
-
-    &__full {
-        display: flex;
-        flex-direction: column;
-        gap: $space-6;
-        align-items: center;
-        margin-bottom: $space-8;
-
-        .full-message {
-            font-size: 1.3rem;
-            color: var(--color-white);
-            font-weight: $fw-medium;
-            margin: 0;
-        }
-    }
-
-    &__info {
-        display: flex;
-        gap: $space-6;
-        justify-content: center;
-        flex-wrap: wrap;
-        font-size: 0.95rem;
-        color: rgba(255, 255, 255, 0.9);
-        font-family: $font-body;
-
-        span {
-            display: flex;
-            align-items: center;
-            gap: $space-2;
-        }
-    }
-}
-
-// ========== BOTONES CTA ==========
-.cta-btn {
-    padding: $space-4 $space-10;
-    font-size: 1.1rem;
-    font-family: $font-body;
-    font-weight: $fw-semibold;
-    border-radius: $space-3;
+    padding: 13px 28px;
+    border-radius: $radius-full;
+    font-size: 14px;
+    font-weight: $fw-bold;
+    font-family: var(--font-body);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
     text-decoration: none;
-    transition: $transition-slow;
-    display: inline-block;
     border: none;
     cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
 
-    &--primary {
-        background: $gradient-cta;
-        color: var(--color-white);
-        box-shadow: 0 4px 15px rgba(212, 160, 23, 0.4);
-
-        &:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(212, 160, 23, 0.6);
-        }
+    &--gold {
+        background: var(--gold-grad);
+        color: white;
+        box-shadow: var(--shadow-gold-new);
+        &:hover { transform: translateY(-2px); box-shadow: var(--shadow-gold-glow); color: var(--blue-ink); }
     }
 
-    &--secondary {
-        background: var(--color-white);
-        color: var(--color-primary);
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    &--outline {
+        background: transparent;
+        color: rgba(255,255,255,0.9);
+        border: 1.5px solid rgba(255,255,255,0.4);
+        &:hover { border-color: white; color: white; }
+    }
 
-        &:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-        }
+    &--outline-dark {
+        background: transparent;
+        color: var(--blue-ink);
+        border: 1.5px solid rgba(30,86,160,0.3);
+        &:hover { border-color: var(--blue-ink); }
     }
 
     &--whatsapp {
         background: #25D366;
-        color: var(--color-white);
-        box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
-
-        &:hover {
-            background: #20ba5a;
-            transform: translateY(-3px);
-        }
+        color: white;
+        &:hover { background: #20ba5a; transform: translateY(-2px); }
     }
 
-    &--large {
-        padding: $space-5 $space-12;
-        font-size: 1.2rem;
+    &--lg { padding: 16px 36px; font-size: 15px; }
+    &--xl { padding: 18px 48px; font-size: 16px; }
+}
+
+/* ── HERO ── */
+.cl-hero {
+    background: var(--blue-ink);
+    min-height: 92vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 120px 28px 80px;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+
+    @media (max-width: $bp-sm) { padding: 100px 16px 60px; }
+
+    &__deco {
+        position: absolute;
+        top: -160px; left: 50%;
+        transform: translateX(-50%);
+        width: 900px; height: 900px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(245,197,24,0.07), transparent 60%);
+        pointer-events: none;
     }
 
-    &--xl {
-        padding: $space-6 $space-16;
-        font-size: 1.3rem;
+    &__inner {
+        position: relative;
+        z-index: 1;
+        max-width: 840px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    &__headline {
+        font-family: var(--font-title);
+        font-size: clamp(28px, 5.5vw, 58px);
+        font-weight: 700;
+        color: white;
+        line-height: 1.15;
+        margin: 0 0 24px;
+    }
+
+    &__sub {
+        font-family: var(--font-body);
+        font-size: clamp(16px, 2vw, 20px);
+        color: rgba(255,255,255,0.72);
+        line-height: 1.7;
+        margin: 0 0 40px;
+        max-width: 680px;
+    }
+
+    &__cta { margin-bottom: 32px; }
+
+    &__cta--row {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    &__full-msg {
+        font-family: var(--font-body);
+        font-size: 16px;
+        color: rgba(255,255,255,0.7);
+        margin: 0 0 16px;
+    }
+
+    &__strip {
+        display: flex;
+        gap: 24px;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 8px;
+    }
+
+    &__strip-item {
+        font-family: var(--font-body);
+        font-size: 13px;
+        color: rgba(255,255,255,0.6);
+        display: flex;
+        align-items: center;
+        gap: 6px;
     }
 }
 
-// ========== MIRROR ==========
-.mirror {
-    padding: $space-24 $space-8;
-    background: var(--color-white);
+/* ── MIRROR ── */
+.cl-mirror {
+    padding: 80px 28px;
+    background: white;
 
-    &__container {
-        max-width: 1100px;
-        margin: 0 auto;
-    }
+    @media (max-width: $bp-sm) { padding: 56px 16px; }
 
-    &__title {
-        font-size: 2.5rem;
-        text-align: center;
-        margin: 0 0 $space-16;
-        color: var(--color-primary);
-    }
+    &__cat { margin-bottom: 48px; }
 
-    &__category {
-        margin-bottom: $space-12;
-
-        &:last-of-type { margin-bottom: $space-16; }
-    }
-
-    &__category-title {
-        font-size: $text-2xl;
-        color: var(--color-primary-light);
-        margin: 0 0 $space-6;
-        font-family: $font-title;
-    }
-
-    &__items,
-    &__checks {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-        gap: $space-4;
+    &__cat-title {
+        font-family: var(--font-title);
+        font-size: 18px;
+        color: var(--blue-ink);
+        margin: 0 0 20px;
     }
 
     &__conclusion {
-        font-size: 1.3rem;
+        font-family: var(--font-body);
+        font-size: 18px;
         text-align: center;
-        color: var(--color-primary-dark);
-        margin: $space-12 0 0;
-        line-height: 1.6;
+        color: var(--ink);
+        line-height: 1.65;
+        margin: 40px 0 0;
 
-        :deep(strong) {
-            color: var(--color-primary);
-            font-weight: $fw-semibold;
-        }
+        :deep(strong) { color: var(--blue-ink); }
     }
 }
 
-.check-item {
+.cl-check-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 12px;
+
+    &--flat { margin-top: 8px; }
+
+    @media (max-width: $bp-sm) { grid-template-columns: 1fr; }
+}
+
+.cl-check-item {
     display: flex;
     align-items: flex-start;
-    gap: $space-4;
-    padding: $space-6;
+    gap: 12px;
+    padding: 14px 18px;
     background: var(--color-bg);
-    border-radius: $space-3;
-    transition: $transition-slow;
+    border-radius: $radius-md;
+    border: 1.5px solid var(--border);
+    transition: border-color 0.2s;
 
-    &:hover {
-        transform: translateX(5px);
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-    }
-
-    .check-icon {
-        flex-shrink: 0;
-        width: 24px;
-        height: 24px;
-        background: var(--color-primary);
-        color: var(--color-white);
-        border-radius: $radius-full;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        font-size: 0.9rem;
-    }
+    &:hover { border-color: rgba(30,86,160,0.25); }
 
     p {
         margin: 0;
-        font-size: 1.05rem;
-        color: var(--color-primary-dark);
-        line-height: 1.5;
+        font-size: 14px;
+        font-family: var(--font-body);
+        color: var(--ink);
+        line-height: 1.55;
     }
 }
 
-// ========== BENEFITS ==========
-.benefits {
-    padding: $space-24 $space-8;
-    background: linear-gradient(180deg, #f0f4f8 0%, var(--color-white) 100%);
+.cl-check-icon {
+    flex-shrink: 0;
+    width: 22px; height: 22px;
+    background: var(--blue-ink);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+}
 
-    &__container {
-        max-width: $max-width;
-        margin: 0 auto;
-    }
+/* ── BENEFITS ── */
+.cl-benefits {
+    padding: 80px 28px;
+    background: var(--blue-ink);
+    position: relative;
+    overflow: hidden;
 
-    &__title {
-        font-size: 2.5rem;
-        text-align: center;
-        margin: 0 auto $space-16;
-        color: var(--color-primary);
-        max-width: 900px;
-        display: block;
+    &::before {
+        content: '';
+        position: absolute;
+        bottom: -160px; right: -100px;
+        width: 600px; height: 600px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(245,197,24,0.06), transparent 65%);
+        pointer-events: none;
     }
 
     &__grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-        gap: $space-8;
-        margin-bottom: $space-12;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 16px;
+        position: relative;
+        z-index: 1;
+        @media (max-width: $bp-sm) { grid-template-columns: 1fr; }
     }
 
     &__footer {
-        font-size: 1.2rem;
+        font-family: var(--font-body);
+        font-size: 16px;
+        color: rgba(255,255,255,0.65);
         text-align: center;
-        color: var(--color-primary-dark);
-        margin: $space-12 0 0;
-        font-weight: $fw-medium;
+        margin: 32px 0 0;
+        font-style: italic;
     }
 }
 
-.benefit-card {
-    background: var(--color-white);
-    padding: $space-8;
-    border-radius: $radius-lg;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    transition: $transition-slow;
+.cl-benefit-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--r-xl);
+    padding: 24px;
     display: flex;
-    gap: $space-4;
+    gap: 16px;
+    align-items: flex-start;
 
-    &:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 30px rgba(30, 86, 160, 0.15);
-    }
-
-    .benefit-number {
-        flex-shrink: 0;
-        width: $space-10;
-        height: $space-10;
-        background: $gradient-cta;
-        color: var(--color-white);
-        border-radius: $radius-full;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        font-size: 1.2rem;
-    }
-
-    .benefit-text {
+    p {
         margin: 0;
-        font-size: 1.05rem;
-        color: var(--color-primary-dark);
+        font-size: 14px;
+        font-family: var(--font-body);
+        color: rgba(255,255,255,0.82);
         line-height: 1.6;
     }
 }
 
-// ========== CONTENT ==========
-.content {
-    padding: $space-24 $space-8;
-    background: linear-gradient(180deg, #f0f4f8 0%, var(--color-white) 100%);
+.cl-benefit-num {
+    flex-shrink: 0;
+    width: 32px; height: 32px;
+    background: var(--gold-grad);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: $fw-bold;
+    font-size: 14px;
+    font-family: var(--font-body);
+}
 
-    &__container {
-        max-width: 1000px;
-        margin: 0 auto;
-    }
+/* ── CONTENT BLOCKS ── */
+.cl-content {
+    padding: 80px 28px;
+    background: var(--color-bg);
 
-    &__title {
-        font-size: 2.5rem;
-        text-align: center;
-        margin: 0 0 $space-16;
-        color: var(--color-primary);
-    }
-
-    &__blocks {
-        display: flex;
-        flex-direction: column;
-        gap: $space-8;
-    }
+    @media (max-width: $bp-sm) { padding: 56px 16px; }
 
     &__footer {
-        font-size: 1.2rem;
+        font-family: var(--font-body);
+        font-size: 15px;
+        color: var(--ink-muted);
         text-align: center;
-        color: var(--color-primary-dark);
-        margin: $space-12 0 0;
-        font-weight: $fw-medium;
+        margin: 32px 0 0;
+        font-style: italic;
     }
 }
 
-.content-block {
-    background: var(--color-white);
-    padding: $space-8;
-    border-radius: $radius-lg;
-    border-left: 4px solid var(--color-primary);
-    transition: $transition-slow;
+.cl-blocks {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
 
-    &:hover {
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        border-left-color: var(--color-secondary);
-    }
+.cl-block {
+    background: white;
+    border-radius: var(--r-xl);
+    border: 1.5px solid var(--border);
+    padding: 28px 32px;
+    box-shadow: var(--shadow-md-new);
 
-    &__header {
+    @media (max-width: $bp-sm) { padding: 20px 18px; }
+
+    &__head {
         display: flex;
         align-items: center;
-        gap: $space-4;
-        margin-bottom: $space-4;
+        gap: 14px;
+        margin-bottom: 12px;
     }
 
-    &__number {
+    &__num {
         flex-shrink: 0;
-        width: 36px;
-        height: 36px;
-        background: var(--color-primary);
-        color: var(--color-white);
-        border-radius: $radius-full;
+        width: 32px; height: 32px;
+        background: var(--blue-ink);
+        color: white;
+        border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-weight: bold;
+        font-weight: $fw-bold;
+        font-size: 14px;
+        font-family: var(--font-body);
     }
 
     &__title {
+        font-family: var(--font-title);
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--blue-ink);
         margin: 0;
-        font-size: 1.4rem;
-        color: var(--color-primary);
     }
 
-    &__description {
+    &__desc {
+        font-family: var(--font-body);
+        font-size: 14px;
+        color: var(--ink-soft);
+        line-height: 1.7;
         margin: 0;
-        font-size: 1.05rem;
-        color: var(--color-primary-dark);
-        line-height: 1.6;
-    }
-
-    &__patterns {
-        margin-top: $space-6;
-        display: flex;
-        flex-direction: column;
-        gap: $space-4;
-        padding-left: $space-4;
     }
 }
 
-.pattern-item {
-    padding: $space-4;
+.cl-patterns {
+    margin-top: 16px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+
+    @media (max-width: $bp-sm) { grid-template-columns: 1fr; }
+}
+
+.cl-pattern {
     background: var(--color-bg);
-    border-radius: $space-2;
+    border-radius: $radius-md;
+    border: 1px solid var(--border);
+    padding: 14px 18px;
 
     strong {
         display: block;
-        color: var(--color-primary-light);
-        margin-bottom: $space-2;
-        font-size: 1.05rem;
+        font-family: var(--font-body);
+        font-size: 13px;
+        font-weight: $fw-bold;
+        color: var(--blue-ink);
+        margin-bottom: 6px;
     }
 
     p {
         margin: 0;
-        font-size: 0.95rem;
-        color: var(--color-primary-dark);
-        line-height: 1.5;
+        font-family: var(--font-body);
+        font-size: 13px;
+        color: var(--ink-soft);
+        line-height: 1.6;
     }
 }
 
-// ========== INCLUDES ==========
-.includes {
-    padding: $space-24 $space-8;
-    background: var(--color-white);
+/* ── INCLUDES ── */
+.cl-includes {
+    padding: 80px 28px;
+    background: var(--blue-ink);
+    position: relative;
+    overflow: hidden;
 
-    &__container {
-        max-width: 1100px;
-        margin: 0 auto;
-    }
-
-    &__title {
-        font-size: 2.5rem;
-        text-align: center;
-        margin: 0 0 $space-16;
-        color: var(--color-primary);
+    &::before {
+        content: '';
+        position: absolute;
+        top: -120px; left: -80px;
+        width: 500px; height: 500px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(245,197,24,0.06), transparent 65%);
+        pointer-events: none;
     }
 
     &__grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: $space-8;
-        margin-bottom: $space-12;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 20px;
+        position: relative;
+        z-index: 1;
+        margin-bottom: 40px;
+
+        @media (max-width: $bp-sm) { grid-template-columns: 1fr; }
     }
 
     &__cta {
         text-align: center;
+        position: relative;
+        z-index: 1;
     }
 }
 
-.include-card {
-    background: var(--color-bg);
-    padding: $space-8;
-    border-radius: $radius-lg;
-    text-align: center;
-    transition: $transition-slow;
+.cl-include-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--r-xl);
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 
-    &:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    }
-
-    .include-icon {
-        font-size: $space-12;
-        display: block;
-        margin-bottom: $space-4;
+    .cl-include-icon {
+        font-size: 28px;
     }
 
     h4 {
-        margin: 0 0 $space-2;
-        font-size: 1.2rem;
-        color: var(--color-primary);
+        font-family: var(--font-body);
+        font-size: 15px;
+        font-weight: $fw-bold;
+        color: white;
+        margin: 0;
     }
 
     p {
+        font-family: var(--font-body);
+        font-size: 13px;
+        color: rgba(255,255,255,0.6);
+        line-height: 1.6;
         margin: 0;
-        font-size: $text-base;
-        color: var(--color-primary-dark);
-        line-height: 1.5;
     }
 }
 
-// ========== TARGET ==========
-.target {
-    padding: $space-24 $space-8;
-    background: linear-gradient(180deg, var(--color-white) 0%, #f0f4f8 100%);
+/* ── TARGET ── */
+.cl-target {
+    padding: 80px 28px;
+    background: white;
 
-    &__container {
-        max-width: 1100px;
-        margin: 0 auto;
+    @media (max-width: $bp-sm) { padding: 56px 16px; }
+
+    &__grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-        gap: $space-12;
-    }
-
-    &__subtitle {
-        font-size: $space-8;
-        color: var(--color-primary);
-        margin: 0 0 $space-8;
-        text-align: center;
-    }
-
-    &__list {
-        display: flex;
-        flex-direction: column;
-        gap: $space-4;
-    }
-}
-
-.target-item {
-    display: flex;
-    align-items: flex-start;
-    gap: $space-4;
-    padding: $space-6;
-    background: var(--color-white);
-    border-radius: $space-3;
-    transition: $transition-slow;
-
-    &:hover {
-        transform: translateX(5px);
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-    }
-
-    .target-icon {
-        flex-shrink: 0;
-        width: 28px;
-        height: 28px;
-        border-radius: $radius-full;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        font-size: 1.1rem;
-    }
-
-    &--yes .target-icon {
-        background: var(--color-success);
-        color: var(--color-white);
-    }
-
-    &--no .target-icon {
-        background: var(--color-error);
-        color: var(--color-white);
-    }
-
-    p {
-        margin: 0;
-        font-size: 1.05rem;
-        color: var(--color-primary-dark);
-        line-height: 1.5;
-    }
-}
-
-// ========== FACILITATOR ==========
-.facilitator {
-    padding: $space-24 $space-8;
-    background: var(--color-white);
-
-    &__container {
-        max-width: 1000px;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        max-width: 860px;
         margin: 0 auto;
+
+        @media (max-width: $bp-sm) { grid-template-columns: 1fr; gap: 32px; }
     }
+
+    &__col { display: flex; flex-direction: column; gap: 12px; }
 
     &__title {
-        font-size: 2.5rem;
-        text-align: center;
-        margin: 0 0 $space-16;
-        color: var(--color-primary);
+        font-family: var(--font-title);
+        font-size: 20px;
+        margin: 0 0 16px;
+
+        &--yes { color: #10b981; }
+        &--no  { color: #ef4444; }
     }
 
-    &__content {
+    &__list { display: flex; flex-direction: column; gap: 10px; }
+}
+
+.cl-target-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: $radius-md;
+
+    svg { flex-shrink: 0; margin-top: 2px; }
+
+    p {
+        margin: 0;
+        font-family: var(--font-body);
+        font-size: 14px;
+        line-height: 1.55;
+    }
+
+    &--yes {
+        background: rgba(16,185,129,0.07);
+        border: 1px solid rgba(16,185,129,0.2);
+        svg { color: #10b981; }
+        p { color: var(--ink); }
+    }
+
+    &--no {
+        background: rgba(239,68,68,0.06);
+        border: 1px solid rgba(239,68,68,0.15);
+        svg { color: #ef4444; }
+        p { color: var(--ink); }
+    }
+}
+
+/* ── FACILITATOR ── */
+.cl-facilitator {
+    padding: 80px 28px;
+    background: var(--color-bg);
+
+    @media (max-width: $bp-sm) { padding: 56px 16px; }
+
+    &__inner {
         display: grid;
-        grid-template-columns: 300px 1fr;
-        gap: $space-12;
+        grid-template-columns: 200px 1fr;
+        gap: 48px;
         align-items: start;
+        max-width: 860px;
+        margin: 0 auto;
+
+        @media (max-width: $bp-sm) { grid-template-columns: 1fr; gap: 28px; }
     }
 
-    &__photo img {
-        width: 100%;
-        height: auto;
-        border-radius: $radius-lg;
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    &__photo {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 3px solid transparent;
+        background: var(--gold-grad);
+        padding: 3px;
+        flex-shrink: 0;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            display: block;
+        }
+
+        @media (max-width: $bp-sm) { margin: 0 auto; }
     }
 
-    &__info {
-        display: flex;
-        flex-direction: column;
-        gap: $space-4;
+    &__role {
+        font-family: var(--font-body);
+        font-size: 11px;
+        font-weight: $fw-bold;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: var(--gold-deep);
+        margin: 0 0 8px;
     }
 
     &__name {
-        font-size: $space-8;
-        color: var(--color-primary);
-        margin: 0;
-    }
-
-    &__title-role {
-        font-size: 1.2rem;
-        color: var(--color-secondary-dark);
-        margin: 0;
-        font-weight: $fw-medium;
+        font-family: var(--font-title);
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--blue-ink);
+        margin: 0 0 16px;
     }
 
     &__bio {
-        font-size: 1.05rem;
-        color: var(--color-primary-dark);
-        line-height: 1.7;
-        margin: $space-4 0;
+        font-family: var(--font-body);
+        font-size: 15px;
+        color: var(--ink-soft);
+        line-height: 1.75;
+        margin: 0 0 20px;
     }
 
-    &__instagram {
+    &__ig {
         display: inline-flex;
         align-items: center;
-        gap: $space-2;
-        color: var(--color-primary);
+        gap: 8px;
+        font-family: var(--font-body);
+        font-size: 14px;
+        font-weight: $fw-semibold;
+        color: var(--blue-ink);
         text-decoration: none;
-        font-weight: $fw-medium;
-        transition: $transition-slow;
-
-        &:hover {
-            color: var(--color-secondary);
-            transform: translateX(5px);
-        }
+        transition: color 0.2s;
+        &:hover { color: var(--color-primary); }
     }
 }
 
-// ========== PROCESS ==========
-.process {
-    padding: $space-24 $space-8;
-    background: linear-gradient(180deg, #f0f4f8 0%, var(--color-white) 100%);
+/* ── PROCESS ── */
+.cl-process {
+    padding: 80px 28px;
+    background: var(--blue-ink);
+    position: relative;
+    overflow: hidden;
 
-    &__container {
-        max-width: 1000px;
-        margin: 0 auto;
-    }
-
-    &__title {
-        font-size: 2.5rem;
-        text-align: center;
-        margin: 0 0 $space-16;
-        color: var(--color-primary);
+    &::before {
+        content: '';
+        position: absolute;
+        top: -120px; right: -80px;
+        width: 500px; height: 500px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(245,197,24,0.07), transparent 65%);
+        pointer-events: none;
     }
 
     &__steps {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: $space-8;
-        margin-bottom: $space-12;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 24px;
+        position: relative;
+        z-index: 1;
+        margin-bottom: 48px;
+
+        @media (max-width: $bp-sm) { grid-template-columns: 1fr; }
     }
 
     &__cta {
         text-align: center;
+        position: relative;
+        z-index: 1;
     }
 }
 
-.step {
-    background: var(--color-white);
-    padding: $space-8;
-    border-radius: $radius-lg;
-    text-align: center;
-    transition: $transition-slow;
+.cl-step {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--r-xl);
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 
-    &:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    }
-
-    &__number {
-        display: inline-flex;
+    &__num {
+        width: 36px; height: 36px;
+        background: var(--gold-grad);
+        color: white;
+        border-radius: 50%;
+        display: flex;
         align-items: center;
         justify-content: center;
-        width: 60px;
-        height: 60px;
-        background: $gradient-cta;
-        color: var(--color-white);
-        border-radius: $radius-full;
-        font-size: $space-8;
-        font-weight: bold;
-        margin-bottom: $space-6;
+        font-weight: $fw-bold;
+        font-size: 16px;
+        font-family: var(--font-body);
     }
 
     &__title {
-        margin: 0 0 $space-4;
-        font-size: 1.3rem;
-        color: var(--color-primary);
+        font-family: var(--font-title);
+        font-size: 18px;
+        color: white;
+        margin: 0;
     }
 
-    &__description {
+    &__desc {
+        font-family: var(--font-body);
+        font-size: 14px;
+        color: rgba(255,255,255,0.62);
+        line-height: 1.65;
         margin: 0;
-        font-size: $text-base;
-        color: var(--color-primary-dark);
-        line-height: 1.6;
     }
 }
 
-// ========== LOGISTICS ==========
-.logistics {
-    padding: $space-24 $space-8;
-    background: var(--color-white);
+/* ── LOGISTICS ── */
+.cl-logistics {
+    padding: 80px 28px;
+    background: white;
 
-    &__container {
-        max-width: 1000px;
-        margin: 0 auto;
-    }
-
-    &__title {
-        font-size: 2.5rem;
-        text-align: center;
-        margin: 0 0 $space-12;
-        color: var(--color-primary);
-    }
+    @media (max-width: $bp-sm) { padding: 56px 16px; }
 
     &__grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: $space-8;
-        margin-bottom: $space-16;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-bottom: 48px;
+
+        @media (max-width: $bp-md) { grid-template-columns: repeat(2, 1fr); }
+        @media (max-width: $bp-sm) { grid-template-columns: 1fr 1fr; }
     }
 }
 
-.logistics-card {
+.cl-logistics-card {
     background: var(--color-bg);
-    padding: $space-8;
-    border-radius: $radius-lg;
-    text-align: center;
-    transition: $transition-slow;
+    border-radius: var(--r-xl);
+    border: 1.5px solid var(--border);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 
-    &:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    }
-
-    .logistics-icon {
-        font-size: $space-12;
-        display: block;
-        margin-bottom: $space-4;
-    }
+    svg { color: var(--blue-ink); }
 
     h4 {
-        margin: 0 0 $space-2;
-        font-size: 1.2rem;
-        color: var(--color-primary);
+        font-family: var(--font-body);
+        font-size: 11px;
+        font-weight: $fw-bold;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--ink-muted);
+        margin: 0;
     }
 
     p {
+        font-family: var(--font-body);
+        font-size: 15px;
+        font-weight: $fw-semibold;
+        color: var(--blue-ink);
         margin: 0;
-        font-size: $text-base;
-        color: var(--color-primary-dark);
     }
 }
 
-// ========== PRICING ==========
-.pricing {
-    background: $gradient-hero;
-    padding: $space-16;
-    border-radius: $space-6;
-    box-shadow: 0 8px 40px rgba(30, 86, 160, 0.3);
+.cl-pricing {
+    background: var(--color-bg);
+    border-radius: var(--r-xl);
+    border: 1.5px solid var(--border);
+    padding: 36px;
+
+    @media (max-width: $bp-sm) { padding: 24px 18px; }
 
     &__title {
-        font-size: $space-8;
+        font-family: var(--font-title);
+        font-size: 22px;
+        color: var(--blue-ink);
+        margin: 0 0 24px;
         text-align: center;
-        margin: 0 0 $space-8;
-        color: var(--color-white);
-    }
-
-    &__content {
-        margin-bottom: $space-12;
     }
 
     &__options {
         display: flex;
         align-items: center;
+        gap: 24px;
+        margin-bottom: 32px;
         justify-content: center;
-        gap: $space-12;
         flex-wrap: wrap;
     }
 
     &__ctas {
         display: flex;
-        gap: $space-6;
+        gap: 16px;
         justify-content: center;
         flex-wrap: wrap;
-        margin-bottom: $space-8;
+        margin-bottom: 16px;
     }
 
     &__full {
         text-align: center;
-        margin-bottom: $space-8;
-
-        .full-message {
-            font-size: 1.3rem;
-            color: var(--color-white);
-            margin-bottom: $space-6;
+        p {
+            font-family: var(--font-body);
+            color: var(--ink-muted);
+            margin: 0 0 16px;
         }
     }
 
     &__security {
         display: flex;
-        gap: $space-8;
+        align-items: center;
         justify-content: center;
-        flex-wrap: wrap;
-        font-size: 0.95rem;
-        color: rgba(255, 255, 255, 0.9);
+        gap: 8px;
+        font-family: var(--font-body);
+        font-size: 12px;
+        color: var(--ink-muted);
+        margin: 16px 0 0;
     }
 }
 
-.pricing-option {
+.cl-pricing-opt {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: $space-2;
-}
+    gap: 4px;
 
-.pricing-label {
-    font-size: $text-base;
-    color: rgba(255, 255, 255, 0.9);
-}
+    &__label {
+        font-family: var(--font-body);
+        font-size: 12px;
+        font-weight: $fw-semibold;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--ink-muted);
+    }
 
-.pricing-value {
-    font-size: $space-12;
-    font-weight: $fw-bold;
-    color: var(--color-white);
-    font-family: $font-title;
+    &__price {
+        font-family: var(--font-title);
+        font-size: 36px;
+        font-weight: 700;
+        color: var(--blue-ink);
+    }
 
-    &--accent {
-        color: var(--color-secondary);
+    &__note {
+        font-family: var(--font-body);
+        font-size: 12px;
+        color: var(--ink-muted);
     }
 }
 
-.pricing-note {
-    font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.8);
+.cl-pricing-sep {
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--ink-muted);
+    padding: 0 8px;
 }
 
-.pricing-separator {
-    font-size: $space-6;
-    color: rgba(255, 255, 255, 0.6);
-    font-weight: $fw-light;
-}
-
-// ========== FAQ ==========
-.faq {
-    padding: $space-24 $space-8;
+/* ── FAQ ── */
+.cl-faq {
+    padding: 80px 28px;
     background: var(--color-bg);
 
-    &__container {
-        max-width: 900px;
-        margin: 0 auto;
-    }
-
-    &__title {
-        font-size: 2.5rem;
-        text-align: center;
-        margin: 0 0 $space-12;
-        color: var(--color-primary);
-    }
+    @media (max-width: $bp-sm) { padding: 56px 16px; }
 
     &__list {
         display: flex;
         flex-direction: column;
-        gap: $space-4;
+        gap: 12px;
     }
 }
 
-.faq-item {
-    background: var(--color-white);
-    border-radius: $space-3;
+.cl-faq-item {
+    background: white;
+    border-radius: var(--r-xl);
+    border: 1.5px solid var(--border);
     overflow: hidden;
     cursor: pointer;
-    transition: $transition-slow;
+    transition: border-color 0.2s;
 
-    &:hover {
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-    }
+    &:hover { border-color: rgba(30,86,160,0.3); }
+    &--open { border-color: var(--blue-ink); }
 
-    &__question {
+    &__q {
         display: flex;
-        justify-content: space-between;
         align-items: center;
-        padding: $space-6 $space-8;
-        gap: $space-4;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 20px 24px;
 
         h4 {
+            font-family: var(--font-body);
+            font-size: 15px;
+            font-weight: $fw-semibold;
+            color: var(--blue-ink);
             margin: 0;
-            font-size: 1.1rem;
-            color: var(--color-primary-dark);
-            font-family: $font-body;
-            font-weight: $fw-medium;
+            flex: 1;
         }
     }
 
-    &__icon {
+    &__chevron {
         flex-shrink: 0;
-        width: $space-8;
-        height: $space-8;
-        background: var(--color-primary);
-        color: var(--color-white);
-        border-radius: $radius-full;
+        color: var(--ink-muted);
+        transition: transform 0.25s;
         display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: $space-6;
-        font-weight: $fw-light;
-        transition: $transition-slow;
+
+        &--open { transform: rotate(180deg); }
     }
 
-    &--open &__icon {
-        background: var(--color-secondary);
-    }
-
-    &__answer {
-        padding: 0 $space-8 $space-6;
+    &__a {
+        padding: 0 24px 20px;
+        border-top: 1px solid var(--border);
 
         p {
-            margin: 0;
-            font-size: $text-base;
-            color: var(--color-primary-dark);
+            margin: 16px 0 0;
+            font-family: var(--font-body);
+            font-size: 14px;
+            color: var(--ink-soft);
             line-height: 1.7;
         }
     }
 }
 
-.faq-slide-enter-active,
-.faq-slide-leave-active {
-    transition: $transition-slow;
-}
+.cl-faq-slide-enter-active,
+.cl-faq-slide-leave-active { transition: opacity 0.2s; }
+.cl-faq-slide-enter-from,
+.cl-faq-slide-leave-to { opacity: 0; }
 
-.faq-slide-enter-from,
-.faq-slide-leave-to {
-    opacity: 0;
-    transform: translateY(-10px);
-}
-
-// ========== FINAL CTA ==========
-.final-cta {
-    padding: $space-24 $space-8;
-    background: $gradient-hero;
+/* ── FINAL CTA ── */
+.cl-final {
+    background: var(--blue-ink);
+    padding: 96px 28px 80px;
+    text-align: center;
     position: relative;
+    overflow: hidden;
 
-    &::before {
-        content: '';
+    @media (max-width: $bp-sm) { padding: 72px 16px 60px; }
+
+    &__deco {
         position: absolute;
-        inset: 0;
-        background:
-            radial-gradient(circle at 30% 40%, rgba(30, 86, 160, 0.15) 0%, transparent 50%),
-            radial-gradient(circle at 70% 70%, rgba(46, 122, 212, 0.15) 0%, transparent 50%);
+        bottom: -160px; left: 50%;
+        transform: translateX(-50%);
+        width: 800px; height: 800px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(245,197,24,0.08), transparent 60%);
         pointer-events: none;
     }
 
-    &__container {
-        max-width: 800px;
-        margin: 0 auto;
-        text-align: center;
+    &__inner {
         position: relative;
         z-index: 1;
     }
 
     &__title {
-        font-size: 2.5rem;
-        color: var(--color-white);
-        margin: 0 0 $space-8;
+        font-family: var(--font-title);
+        font-size: clamp(22px, 4vw, 38px);
+        font-weight: 700;
+        color: white;
+        margin: 0 0 20px;
+        line-height: 1.25;
     }
 
     &__text {
-        font-size: 1.4rem;
-        color: rgba(255, 255, 255, 0.95);
-        margin: 0 0 $space-8;
+        font-family: var(--font-body);
+        font-size: 18px;
+        color: rgba(255,255,255,0.8);
+        margin: 0 0 28px;
         line-height: 1.6;
 
-        :deep(strong) {
-            color: var(--color-secondary);
-            font-weight: $fw-semibold;
-        }
+        :deep(strong) { color: white; }
     }
 
     &__examples {
-        font-size: 1.2rem;
-        color: rgba(255, 255, 255, 0.9);
-        margin: 0 0 $space-8;
-        line-height: 1.8;
+        list-style: none;
+        padding: 0;
+        margin: 0 0 28px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: center;
+
+        li {
+            font-family: var(--font-body);
+            font-size: 15px;
+            color: rgba(255,255,255,0.6);
+            line-height: 1.5;
+        }
     }
 
     &__urgency {
-        font-size: 1.3rem;
-        color: var(--color-white);
-        margin: 0 0 $space-12;
-        font-weight: $fw-medium;
+        font-family: var(--font-body);
+        font-size: 16px;
+        font-weight: $fw-semibold;
+        color: rgba(255,255,255,0.85);
+        margin: 0 0 36px;
     }
 
-    &__buttons {
-        display: flex;
-        justify-content: center;
-        margin-bottom: $space-6;
-    }
+    &__cta { margin-bottom: 28px; }
 
     &__note {
-        font-size: 0.95rem;
-        color: rgba(255, 255, 255, 0.8);
+        font-family: var(--font-body);
+        font-size: 13px;
+        color: rgba(255,255,255,0.45);
         margin: 0;
-        line-height: 1.6;
+        line-height: 1.7;
         white-space: pre-line;
-    }
-}
-
-// ========== RESPONSIVE ==========
-@media screen and (max-width: $bp-lg) {
-    .facilitator__content {
-        grid-template-columns: 1fr;
-        gap: $space-8;
-
-        .facilitator__photo {
-            max-width: 300px;
-            margin: 0 auto;
-        }
-    }
-
-    .target__container {
-        grid-template-columns: 1fr;
-    }
-
-    .mirror__items,
-    .mirror__checks {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media screen and (max-width: $bp-md) {
-    .hero {
-        padding: $space-24 $space-6 $space-12;
-        box-sizing: border-box;
-
-        &__headline {
-            font-size: 2.2rem;
-        }
-
-        &__subheadline {
-            font-size: 1.1rem;
-        }
-
-        &__ctas {
-            flex-direction: column;
-            width: 100%;
-
-            .cta-btn {
-                width: fit-content;
-                max-width: 100%;
-                align-self: center;
-            }
-        }
-
-        &__info {
-            flex-direction: column;
-            gap: $space-2;
-        }
-    }
-
-    .benefits__grid,
-    .process__steps,
-    .includes__grid,
-    .logistics__grid {
-        grid-template-columns: 1fr;
-    }
-
-    .pricing {
-        padding: $space-8 $space-6;
-
-        &__options {
-            flex-direction: column;
-            gap: $space-8;
-        }
-
-        &__ctas {
-            flex-direction: column;
-            width: 100%;
-
-            .cta-btn {
-                width: fit-content;
-                max-width: 100%;
-                text-align: center;
-            }
-        }
-    }
-
-    .final-cta {
-        padding: $space-16 $space-6;
-
-        &__title {
-            font-size: $space-8;
-        }
-
-        &__text,
-        &__examples {
-            font-size: 1.1rem;
-        }
-    }
-
-    section {
-        padding: $space-16 $space-6;
-    }
-
-    h2 {
-        font-size: $space-8 !important;
     }
 }
 </style>

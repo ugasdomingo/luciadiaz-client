@@ -268,3 +268,8 @@ export const courses = {
         faq_import: 'despierta-tu-mente',
     },
 }
+
+// Slug aliases — maps DB product slugs to course configs above
+export const course_aliases = {
+    'formacion-apego': 'apego',
+}

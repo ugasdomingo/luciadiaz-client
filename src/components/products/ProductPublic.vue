@@ -186,7 +186,7 @@ import { useAuthStore } from '../../stores/auth-store'
 import { useLikeStore } from '../../stores/like-store'
 import CourseLanding from '../landings/CourseLanding.vue'
 import LikeButtonComponent from '../common/LikeButtonComponent.vue'
-import { courses } from '../../static/courses.js'
+import { courses, course_aliases } from '../../static/courses.js'
 
 const props = defineProps({
     product: { type: Object, required: true }
@@ -255,7 +255,10 @@ const submit_waitlist = async () => {
 }
 
 // Si el producto tiene una landing personalizada (free_course / paid_workshop), la usamos
-const course_config = computed(() => courses[props.product.slug] ?? null)
+const course_config = computed(() => {
+    const slug = props.product.slug
+    return courses[slug] ?? courses[course_aliases[slug]] ?? null
+})
 
 const type_label = computed(() => {
     const types = { course: 'Formación Online', ebook: 'Guía Digital', bundle: 'Pack Completo', service: 'Servicio' }
