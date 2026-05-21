@@ -31,7 +31,7 @@ onUnmounted(() => window.removeEventListener('scroll', update_fab))
                             <img src="/logo.png" alt="Lucía Díaz" />
                         </div>
                         <div>
-                            <div class="footer__brand-name">Lucia Diaz</div>
+                            <div class="footer__brand-name">Lucía Díaz</div>
                             <div class="footer__brand-tag">
                                 Psicóloga venezolana
                             </div>
@@ -112,7 +112,7 @@ onUnmounted(() => window.removeEventListener('scroll', update_fab))
 
             <div class="footer__bottom">
                 <div class="footer__copy">
-                    © {{ new Date().getFullYear() }} Lucia Diaz · F.P.V - 16.657
+                    © {{ new Date().getFullYear() }} Lucía Díaz · F.P.V - 16.657
                     · Todos los derechos reservados
                 </div>
                 <div class="footer__legal">

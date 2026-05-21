@@ -43,7 +43,7 @@ export const archetype_questions = [
     },
     {
         key: 'r6',
-        pregunta: '6. En actividades cotidianas te caraterizas por:',
+        pregunta: '6. En actividades cotidianas te caracterizas por:',
         a: 'Ser ansioso, muy rápido, poco ordenado y te aburres con facilidad.',
         b: 'Tranquilo, te gustan los momentos de contemplación o conversación con amigos.',
         c: 'Ser más bien metódico, calmado y muy ordenado.',
@@ -51,8 +51,8 @@ export const archetype_questions = [
     },
     {
         key: 'r7',
-        pregunta: '7. Qué actitud asumes frente a los errores de los otros?',
-        a: 'Poco tolerante,acusas inmediatamente, los hechos son los hechos.',
+        pregunta: '7. ¿Qué actitud asumes frente a los errores de los otros?',
+        a: 'Poco tolerante, acusas inmediatamente; los hechos son los hechos.',
         b: 'Corriges evitando hacerlo sentir mal, te involucras, aunque tengas que hacer sacrificios.',
         c: 'Corriges, sufres mucho, piensas que es falta de precisión.',
         d: 'Haces frecuentemente caso omiso y tomas en cuenta a la persona y su esfuerzo personal.'

@@ -15,7 +15,7 @@ const handle_submit = async () => {
     <main class="pages">
         <h2>Verificación de inicio de sesión</h2>
         <form @submit.prevent="handle_submit">
-            <input type="text" v-model="login_token" placeholder="Introduce el código que te llego al correo" />
+            <input type="text" v-model="login_token" placeholder="Introduce el código que te llegó al correo" />
             <button type="submit" class="action-btn">Verificar</button>
         </form>
     </main>

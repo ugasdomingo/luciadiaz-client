@@ -16,7 +16,7 @@ export const services = [
     {
         id: 3,
         title: 'Conocer tu mente en profundidad',
-        description: 'Realiza nuestros test y descubre cosas de ti que no sabías.',
+        description: 'Realiza nuestros tests y descubre cosas de ti que no sabías.',
         icon: '/icon/icon-test.svg',
         route: '/tests'
     },

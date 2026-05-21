@@ -28,7 +28,7 @@ const handle_submit = async () => {
         <h2>Anamnesis para niños</h2>
         <p>
             Esta información es para recoger la historia de tu peque, la
-            cual sera vital para generar un panorama del comportamiento del
+            cual será vital para generar un panorama del comportamiento del
             niño(a) y a partir de ahí poder crear un plan de acción.
         </p>
         <p class="note">

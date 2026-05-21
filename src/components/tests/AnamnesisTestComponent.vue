@@ -19,7 +19,7 @@ onMounted(async () => {
         <div v-if="auth_store.user_data.test_results.find(test => test.test_name === 'Anamnesis')">
             <h2>Ya has completado el test de Anamnesis</h2>
             <p>Gracias por tu tiempo</p>
-            <p>Si tienes algunda duda o necesitas modificar algo, por favor contacta conmigo</p>
+            <p>Si tienes alguna duda o necesitas modificar algo, por favor contacta conmigo.</p>
         </div>
         <AnamnesisFormComponent v-else />
     </section>

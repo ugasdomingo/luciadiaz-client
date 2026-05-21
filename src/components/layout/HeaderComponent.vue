@@ -57,9 +57,9 @@ const navigate = (path) => {
                     </div>
                 </div>
                 <div class="header__brand-text">
-                    <span class="header__brand-name">Lucia Diaz</span>
+                    <span class="header__brand-name">Lucía Díaz</span>
                     <span class="header__brand-sub"
-                        >Psicologa F.P.V - 16.657</span
+                        >Psicóloga F.P.V - 16.657</span
                     >
                 </div>
             </RouterLink>

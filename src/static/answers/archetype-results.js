@@ -1,7 +1,7 @@
 export const archetype_results_info = [
     {
         archetype_name: 'Sabio Rey',
-        archetype_description: 'TENER RAZON',
+        archetype_description: 'TENER RAZÓN',
         archetype_emotions: [
             'Estudioso',
             'Metódico',
@@ -35,7 +35,7 @@ export const archetype_results_info = [
     },
     {
         archetype_name: 'Amante',
-        archetype_description: 'EVITAR CONCLICTO',
+        archetype_description: 'EVITAR CONFLICTO',
         archetype_emotions: [
             'Fiel a compromisos',
             'Trabajo en grupo',

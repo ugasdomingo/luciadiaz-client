@@ -45,7 +45,7 @@ export const temperament_questions = [
         key: 'r7',
         a: 'Entusiasta',
         b: 'Autosuficiente',
-        c: 'Díficil de Complacer',
+        c: 'Difícil de complacer',
         d: 'Vacilante'
     },
     {
@@ -129,14 +129,14 @@ export const temperament_questions = [
         key: 'r19',
         a: 'Inspirador',
         b: 'Apocado',
-        c: 'Obstentoso',
+        c: 'Ostentoso',
         d: 'Divagador'
     },
     {
         key: 'r20',
         a: 'Convincente',
-        b: 'Abstraido',
-        c: 'Peresozo',
+        b: 'Abstraído',
+        c: 'Perezoso',
         d: 'Equilibrado'
     },
     {
@@ -204,7 +204,7 @@ export const temperament_questions = [
     },
     {
         key: 'r30',
-        a: 'Insipído',
+        a: 'Insípido',
         b: 'Descuidado',
         c: 'Culto',
         d: 'Inofensivo'
