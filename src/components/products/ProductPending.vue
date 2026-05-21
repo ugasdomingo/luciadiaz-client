@@ -172,10 +172,7 @@ const submitNewProof = async () => {
         return
     }
 
-    const success = await order_store.update_payment_proof(order._id, {
-        public_id: 'proof_' + Date.now(),
-        secure_url: newProof.value.base64
-    })
+    const success = await order_store.update_payment_proof(order._id, newProof.value.file)
 
     if (success) {
         showReupload.value = false

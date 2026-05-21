@@ -30,6 +30,22 @@ const sorted_orders = computed(() => {
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
     )
 })
+
+const handle_proof_change = async (order, event) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    if (file.size > 5 * 1024 * 1024) {
+        util_store.set_message('El archivo no debe superar 5MB', 'error')
+        event.target.value = ''
+        return
+    }
+
+    const ok = await order_store.update_payment_proof(order._id, file)
+    if (ok) {
+        event.target.value = ''
+    }
+}
 </script>
 
 <template>
@@ -98,6 +114,11 @@ const sorted_orders = computed(() => {
                             :to="`/productos/${order.products[0].product_id.slug}`" class="btn-pending">
                             Ver estado del pago
                         </RouterLink>
+                        <label v-if="order.payment_status === 'pending' && order.payment_method === 'offline'"
+                            class="btn-upload-proof">
+                            {{ order.payment_proof?.secure_url ? 'Reenviar comprobante' : 'Subir comprobante' }}
+                            <input type="file" accept="image/*,application/pdf" @change="handle_proof_change(order, $event)">
+                        </label>
                     </div>
                 </div>
             </div>
@@ -350,7 +371,7 @@ const sorted_orders = computed(() => {
     strong { color: var(--blue-ink); font-size: 16px; }
 }
 
-.btn-access, .btn-pending {
+.btn-access, .btn-pending, .btn-upload-proof {
     font-size: 13px;
     font-weight: $fw-semibold;
     font-family: var(--font-body);
@@ -359,6 +380,19 @@ const sorted_orders = computed(() => {
     text-decoration: none;
     transition: transform 0.2s, opacity 0.2s;
     &:hover { transform: translateY(-1px); opacity: 0.9; }
+}
+
+.btn-upload-proof {
+    display: inline-flex;
+    align-items: center;
+    background: var(--blue-wash);
+    color: var(--color-primary);
+    border: 1.5px solid rgba(30,86,160,0.18);
+    cursor: pointer;
+
+    input {
+        display: none;
+    }
 }
 
 .btn-access {

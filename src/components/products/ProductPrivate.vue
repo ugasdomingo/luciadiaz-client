@@ -57,8 +57,13 @@ const mark_as_completed = async (lessonId) => {
 const download_guide = async () => {
     downloading.value = true
     try {
-        const data = await product_store.get_download_url(props.product.slug)
-        window.open(data.download_url, '_blank')
+        const blob = await product_store.download_guide_file(props.product.slug)
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = `${props.product.slug}.pdf`
+        a.click()
+        setTimeout(() => URL.revokeObjectURL(url), 15000)
     } catch {
         util_store.set_message('No se pudo obtener el enlace de descarga. Inténtalo de nuevo.', 'error')
     } finally {
@@ -99,11 +104,11 @@ onMounted(async () => {
                     </div>
 
                     <!-- Descarga directa desde hero (ebook) -->
-                    <div v-if="(product.type === 'ebook' || product.type === 'bundle') && (product.download_file?.public_id || product.download_url)" class="product-hero__download">
+                    <div v-if="(product.type === 'ebook' || product.type === 'bundle') && product.has_download" class="product-hero__download">
                         <button @click="download_guide" class="action-btn" :disabled="downloading">
-                            {{ downloading ? 'Generando enlace...' : '⬇ Descargar PDF' }}
+                            {{ downloading ? 'Descargando...' : '⬇ Descargar PDF' }}
                         </button>
-                        <span class="download-hint">Enlace seguro · expira en 5 min</span>
+                        <span class="download-hint">Descarga privada desde tu compra</span>
                     </div>
                 </div>
             </div>

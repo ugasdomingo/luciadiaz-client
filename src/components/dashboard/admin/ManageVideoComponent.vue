@@ -75,11 +75,11 @@ const handle_file_change = (event) => {
         </form>
         <h2 @click="toggle_update_video">Actualizar Video <span>{{ show_update_video ? '-' : '+' }}</span></h2>
         <section v-if="show_update_video" class="section__container__posts">
-            <div v-for="video in video_store.videos" :key="video.id">
+            <div v-for="video in video_store.videos" :key="video._id">
                 <VideoCardComponent :video="video" />
-                <div class="section__container__posts__actions" v-if="auth_store.user.role === 'Admin'">
+                <div class="section__container__posts__actions" v-if="auth_store.is_admin">
                     <button @click="video_to_update = video" class="action-btn">Editar</button>
-                    <button @click="video_store.delete_video(video.id)" class="nobg-btn">Eliminar</button>
+                    <button @click="video_store.delete_video(video._id)" class="nobg-btn">Eliminar</button>
                 </div>
             </div>
         </section>

@@ -98,14 +98,18 @@ export const useOrderStore = defineStore('order', () => {
     const update_payment_proof = async (order_id, payment_proof) => {
         try {
             util_store.set_loading(true)
-            const response = await api.patch(`/orders/${order_id}/update-proof`, { payment_proof })
+            const form_data = new FormData()
+            form_data.append('payment_proof', payment_proof)
+            const response = await api.patch(`/orders/${order_id}/update-proof`, form_data, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            })
 
             util_store.set_message(response.data.message, 'success')
 
             // Actualizar en my_orders local
             const index = my_orders.value.findIndex(o => o._id === order_id)
             if (index !== -1) {
-                my_orders.value[index].payment_proof = payment_proof
+                my_orders.value[index] = response.data.data
             }
 
             return true

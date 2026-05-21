@@ -94,7 +94,7 @@
 
         <!-- Modal eliminar cuenta -->
         <Teleport to="body">
-            <div v-if="show_delete_modal" class="delete-overlay" @click.self="show_delete_modal = false">
+            <div v-if="show_delete_modal" class="delete-overlay" @click.self="close_delete_modal">
                 <div class="delete-modal">
                     <div class="delete-modal__icon">🗑</div>
                     <h2>¿Eliminar tu cuenta?</h2>
@@ -103,9 +103,22 @@
                         Se eliminarán todos tus datos: compras, historial clínico,
                         tareas terapéuticas, progreso en cursos y likes.
                     </p>
+                    <label class="delete-modal__confirm-label" for="delete-confirmation">
+                        Escribe ELIMINAR para confirmar
+                    </label>
+                    <input
+                        id="delete-confirmation"
+                        v-model="delete_confirmation"
+                        class="delete-modal__confirm-input"
+                        autocomplete="off"
+                    />
                     <div class="delete-modal__actions">
-                        <button class="delete-modal__cancel" @click="show_delete_modal = false">Cancelar</button>
-                        <button class="delete-modal__confirm" @click="handle_delete">
+                        <button class="delete-modal__cancel" @click="close_delete_modal">Cancelar</button>
+                        <button
+                            class="delete-modal__confirm"
+                            @click="handle_delete"
+                            :disabled="delete_confirmation !== 'ELIMINAR'"
+                        >
                             Eliminar mi cuenta
                         </button>
                     </div>
@@ -150,13 +163,22 @@ const util_store = useUtilStore()
 
 const current_view = ref('courses')
 const show_delete_modal = ref(false)
+const delete_confirmation = ref('')
 
 const handle_delete = async () => {
+    if (delete_confirmation.value !== 'ELIMINAR') return
     try {
         await auth_store.delete_account()
     } catch {
         show_delete_modal.value = false
+    } finally {
+        delete_confirmation.value = ''
     }
+}
+
+const close_delete_modal = () => {
+    show_delete_modal.value = false
+    delete_confirmation.value = ''
 }
 
 const is_patient = computed(() => auth_store.user_data?.user?.role === 'patient')
@@ -507,7 +529,32 @@ const set_view = (view) => {
         font-size: 14px;
         color: var(--color-text-muted);
         line-height: 1.6;
-        margin: 0 0 28px;
+        margin: 0 0 20px;
+    }
+
+    &__confirm-label {
+        display: block;
+        text-align: left;
+        font-size: 12px;
+        font-weight: $fw-semibold;
+        color: var(--color-text);
+        margin: 0 0 8px;
+    }
+
+    &__confirm-input {
+        width: 100%;
+        border: 1.5px solid var(--color-border);
+        border-radius: $radius-md;
+        padding: 12px 14px;
+        margin-bottom: 24px;
+        font-family: var(--font-body);
+        font-size: 14px;
+        box-sizing: border-box;
+
+        &:focus {
+            outline: none;
+            border-color: #dc2626;
+        }
     }
 
     &__actions {
@@ -543,6 +590,7 @@ const set_view = (view) => {
         cursor: pointer;
         transition: background 0.18s;
         &:hover { background: #b91c1c; }
+        &:disabled { opacity: 0.45; cursor: not-allowed; background: #dc2626; }
     }
 }
 </style>

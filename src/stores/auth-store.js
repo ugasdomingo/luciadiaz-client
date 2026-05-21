@@ -52,6 +52,10 @@ export const useAuthStore = defineStore('auth', () => {
         try {
             util_store.set_loading(true)
             email.value = credentials.email
+            const redirect = router.currentRoute.value.query.redirect
+            if (typeof redirect === 'string' && redirect && redirect !== '/') {
+                util_store.set_last_page(redirect)
+            }
 
             const response = await api.post('/auth/login', credentials)
 
@@ -102,7 +106,9 @@ export const useAuthStore = defineStore('auth', () => {
             util_store.set_message(response.data.message, 'success')
 
             // Redirección inteligente
-            const target = util_store.last_page && util_store.last_page !== '/acceso'
+            const target = util_store.last_page &&
+                util_store.last_page !== '/' &&
+                util_store.last_page !== '/acceso'
                 ? util_store.last_page
                 : '/mi-espacio'
 
@@ -239,7 +245,7 @@ export const useAuthStore = defineStore('auth', () => {
     const delete_account = async () => {
         try {
             util_store.set_loading(true)
-            await api.delete('/users/me')
+            await api.delete('/user/me')
             logout()
         } catch (error) {
             const msg = error.response?.data?.message || 'Error al eliminar la cuenta'

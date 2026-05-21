@@ -1,8 +1,9 @@
 import { defineStore } from 'pinia'
-import { useAuthStore } from './auth-store'
+import { api } from '../service/axios'
+import { useUtilStore } from './util-store'
 
 export const useAppointmentStore = defineStore('appointments', () => {
-    const auth_store = useAuthStore()
+    const util_store = useUtilStore()
 
     /**
      * Inicia el pago Stripe para una terapia.
@@ -10,18 +11,11 @@ export const useAppointmentStore = defineStore('appointments', () => {
      */
     const init_therapy_payment = async (therapy_id) => {
         try {
-            const res = await fetch(`${import.meta.env.VITE_API_URL}/appointments/stripe/init`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${auth_store.token}`,
-                },
-                body: JSON.stringify({ therapy_id }),
-            })
-            const data = await res.json()
-            if (!res.ok) throw new Error(data.message || 'Error iniciando pago')
-            return data.data
+            const res = await api.post('/appointments/stripe/init', { therapy_id })
+            return res.data.data
         } catch (err) {
+            const msg = err.response?.data?.message || 'Error iniciando pago'
+            util_store.set_message(msg, 'error')
             console.error('[appointment-store] init_therapy_payment:', err)
             return null
         }
@@ -33,18 +27,11 @@ export const useAppointmentStore = defineStore('appointments', () => {
      */
     const confirm_therapy_payment = async (session_id) => {
         try {
-            const res = await fetch(`${import.meta.env.VITE_API_URL}/appointments/stripe/confirm`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${auth_store.token}`,
-                },
-                body: JSON.stringify({ session_id }),
-            })
-            const data = await res.json()
-            if (!res.ok) throw new Error(data.message || 'Error confirmando pago')
-            return data.data
+            const res = await api.post('/appointments/stripe/confirm', { session_id })
+            return res.data.data
         } catch (err) {
+            const msg = err.response?.data?.message || 'Error confirmando pago'
+            util_store.set_message(msg, 'error')
             console.error('[appointment-store] confirm_therapy_payment:', err)
             return null
         }

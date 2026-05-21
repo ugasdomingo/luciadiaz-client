@@ -173,12 +173,11 @@ export const useProductStore = defineStore('product', () => {
     }
 
     /**
-     * Obtener URL firmada de descarga (solo usuarios con compra)
-     * Devuelve { download_url, filename, expires_in }
+     * Descargar PDF protegido a traves del proxy del servidor.
      */
-    const get_download_url = async (slug) => {
-        const res = await api.get(`/products/${slug}/download`)
-        return res.data.data
+    const download_guide_file = async (slug) => {
+        const res = await api.get(`/products/${slug}/download`, { responseType: 'blob' })
+        return new Blob([res.data], { type: 'application/pdf' })
     }
 
     return {
@@ -198,6 +197,6 @@ export const useProductStore = defineStore('product', () => {
         create_product,
         update_product,
         delete_product,
-        get_download_url,
+        download_guide_file,
     }
 })
