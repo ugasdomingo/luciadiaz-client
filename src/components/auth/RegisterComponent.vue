@@ -57,6 +57,7 @@ const register = async () => {
                 <img :src="show_password ? '/icon/icon-eye-open.svg' : '/icon/icon-eye-close.svg'" alt="ver contraseña"
                     @click="show_password = !show_password" />
             </div>
+            <span class="field__hint">Mínimo 8 caracteres, con al menos una mayúscula, una minúscula y un número.</span>
         </div>
 
         <!-- Toggle paciente -->
@@ -114,6 +115,12 @@ const register = async () => {
         width: 100%;
         max-width: 100%;
         box-sizing: border-box;
+    }
+
+    &__hint {
+        font-size: $text-xs;
+        color: var(--color-text-muted);
+        line-height: 1.4;
     }
 }
 

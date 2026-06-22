@@ -13,7 +13,10 @@ export const useAuthStore = defineStore('auth', () => {
     const token = ref(null)
 
     // Campos temporales para formularios
+    const name = ref('')
     const email = ref('')
+    const password = ref('')
+    const phone = ref('')
 
     // ================= COMPUTED =================
 
@@ -38,6 +41,22 @@ export const useAuthStore = defineStore('auth', () => {
 
     const has_pending_order = (product_id) => {
         return pending_purchases.value.some(p => p.product_id === product_id)
+    }
+
+    // ================= HELPERS =================
+
+    /**
+     * Extrae un mensaje legible de un error de axios.
+     * El backend devuelve errores de validación como
+     * { message: 'Error de validación', errors: [{ field, message }] };
+     * en ese caso mostramos los mensajes concretos en lugar del genérico.
+     */
+    const _error_message = (error, fallback) => {
+        const data = error.response?.data
+        if (Array.isArray(data?.errors) && data.errors.length) {
+            return data.errors.map(e => e.message).join('. ')
+        }
+        return data?.message || fallback
     }
 
     // ================= ACCIONES DE AUTENTICACIÓN =================
@@ -67,7 +86,7 @@ export const useAuthStore = defineStore('auth', () => {
                 router.push('/go-to-email')
             }
         } catch (error) {
-            const msg = error.response?.data?.message || 'Error al iniciar sesión'
+            const msg = _error_message(error, 'Error al iniciar sesión')
             util_store.set_message(msg, 'error')
         } finally {
             util_store.set_loading(false)
@@ -86,7 +105,7 @@ export const useAuthStore = defineStore('auth', () => {
             router.push('/go-to-email')
 
         } catch (error) {
-            const msg = error.response?.data?.message || 'Error en el registro'
+            const msg = _error_message(error, 'Error en el registro')
             util_store.set_message(msg, 'error')
         } finally {
             util_store.set_loading(false)
@@ -172,7 +191,10 @@ export const useAuthStore = defineStore('auth', () => {
     const logout = () => {
         user_data.value = null
         token.value = null
+        name.value = ''
         email.value = ''
+        password.value = ''
+        phone.value = ''
 
         delete api.defaults.headers.common['Authorization']
         localStorage.removeItem('refresh_token')
@@ -281,7 +303,10 @@ export const useAuthStore = defineStore('auth', () => {
         // State
         user_data,
         token,
+        name,
         email,
+        password,
+        phone,
 
         // Computed
         current_user,
