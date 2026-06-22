@@ -32,6 +32,12 @@
 
             <!-- Navegación -->
             <nav class="sidebar__nav">
+                <button v-if="show_onboarding" @click="set_view('onboarding')" :class="['sidebar__nav-item', { active: current_view === 'onboarding' }]">
+                    <svg class="nav-icon" viewBox="0 0 20 20" fill="none"><path d="M10 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4L10 14.3 5.2 16.9l.9-5.4L2.2 7.7l5.4-.8L10 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                    <span>Primeros pasos</span>
+                    <span class="nav-dot" />
+                </button>
+
                 <button @click="set_view('courses')" :class="['sidebar__nav-item', { active: current_view === 'courses' }]">
                     <svg class="nav-icon" viewBox="0 0 20 20" fill="none"><path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2V5z" stroke="currentColor" stroke-width="1.5"/><path d="M8 15a2 2 0 002 2h5a2 2 0 002-2v-4a2 2 0 00-2-2h-1" stroke="currentColor" stroke-width="1.5"/></svg>
                     <span>Mis Cursos</span>
@@ -134,7 +140,8 @@
             </button>
 
             <Transition name="fade-view" mode="out-in">
-                <UserCoursesComponent v-if="current_view === 'courses'" key="courses" />
+                <UserOnboardingComponent v-if="current_view === 'onboarding'" key="onboarding" @navigate="set_view" />
+                <UserCoursesComponent v-else-if="current_view === 'courses'" key="courses" />
                 <UserTestResultsComponent v-else-if="current_view === 'tests'" key="tests" />
                 <UserOrdersComponent v-else-if="current_view === 'orders'" key="orders" />
                 <UserTaskComponent v-else-if="current_view === 'tasks'" key="tasks" />
@@ -147,7 +154,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useAuthStore } from '../../stores/auth-store.js'
 import { useUtilStore } from '../../stores/util-store.js'
 import UserCoursesComponent from './user/UserCoursesComponent.vue'
@@ -157,11 +164,11 @@ import UserTaskComponent from './user/UserTaskComponent.vue'
 import UserLikesComponent from './user/UserLikesComponent.vue'
 import UserConsentComponent from './user/UserConsentComponent.vue'
 import UserTestResultsComponent from './user/UserTestResultsComponent.vue'
+import UserOnboardingComponent from './user/UserOnboardingComponent.vue'
 
 const auth_store = useAuthStore()
 const util_store = useUtilStore()
 
-const current_view = ref('courses')
 const show_delete_modal = ref(false)
 const delete_confirmation = ref('')
 
@@ -185,10 +192,39 @@ const is_patient = computed(() => auth_store.user_data?.user?.role === 'patient'
 const initial = computed(() => auth_store.user_data?.user?.name?.charAt(0)?.toUpperCase() || '?')
 const consent_signed = computed(() => !!auth_store.user_data?.user?.consent_signed)
 
+// ── Estado de onboarding (solo pacientes) ──────────────────────────────
+const history_done = computed(() => (auth_store.user_data?.history?.length || 0) >= 13)
+const completed_test_names = computed(() => (auth_store.user_data?.test_results || []).map(t => t.test_name))
+const tests_done = computed(() =>
+    ['Arquetipo', 'Temperamento', 'Carta del Inconsciente'].every(n => completed_test_names.value.includes(n))
+)
+const onboarding_complete = computed(() => consent_signed.value && history_done.value && tests_done.value)
+const show_onboarding = computed(() => is_patient.value && !onboarding_complete.value)
+
+// Vista por defecto: onboarding si el paciente aún tiene pasos pendientes
+const current_view = ref(show_onboarding.value ? 'onboarding' : 'courses')
+const has_interacted = ref(false)
+
 const set_view = (view) => {
+    has_interacted.value = true
     current_view.value = view
     util_store.close_dashboard_sidebar()
 }
+
+// Si los datos del usuario llegan después de montar, recalculamos la vista
+// por defecto (solo mientras el usuario no haya navegado manualmente)
+watch(() => auth_store.user_data, () => {
+    if (!has_interacted.value) {
+        current_view.value = show_onboarding.value ? 'onboarding' : 'courses'
+    }
+})
+
+// Si el paciente completa el onboarding mientras lo ve, lo sacamos a cursos
+watch(show_onboarding, (visible) => {
+    if (!visible && current_view.value === 'onboarding') {
+        current_view.value = 'courses'
+    }
+})
 </script>
 
 <style scoped lang="scss">
