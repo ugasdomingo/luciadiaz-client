@@ -373,7 +373,7 @@ const go_test = () => {
     align-items: center;
     gap: 7px;
     padding: 10px 22px;
-    background: var(--gold-grad);
+    background: var(--blue);
     color: white;
     border: none;
     cursor: pointer;
@@ -381,12 +381,13 @@ const go_test = () => {
     font-size: 13px;
     font-weight: $fw-semibold;
     font-family: var(--font-body);
-    box-shadow: var(--shadow-gold-new);
-    transition: transform 0.2s var(--ease), box-shadow 0.2s;
+    box-shadow: 0 6px 16px rgba(7, 30, 77, 0.18);
+    transition: transform 0.2s var(--ease), box-shadow 0.2s, background 0.2s;
 
     &:hover {
+        background: var(--blue-deep);
         transform: translateY(-2px);
-        box-shadow: var(--shadow-gold-glow);
+        box-shadow: 0 10px 22px rgba(7, 30, 77, 0.26);
     }
 }
 
