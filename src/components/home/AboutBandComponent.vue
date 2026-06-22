@@ -8,7 +8,7 @@
             <div class="about-band__image-col">
                 <div class="about-band__img-wrap">
                     <img
-                        src="/lucia-about.png"
+                        src="/lucia-risa.jpeg"
                         alt="Lucía Díaz"
                         class="about-band__img"
                     />
